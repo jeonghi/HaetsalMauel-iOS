@@ -1,0 +1,13 @@
+disabled_rules:
+- line_length
+- trailing_whitespace
+- function_body_length
+- empty_enum_arguments
+
+excluded:
+  - Sources/Application/AppDelegate.swift
+  - Sources/Application/SceneDelegate.swift
+
+identifier_name:
+    excluded:
+        - id
