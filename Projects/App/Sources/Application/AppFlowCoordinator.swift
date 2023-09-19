@@ -31,12 +31,39 @@ final class AppFlowCoordinator {
         // 온보딩
         let onboardingSceneDIContainer = appDIContainer.makeOnboardingSceneDIContainer()
         
-        let flow = onboardingSceneDIContainer
+        let onboardingFlow = onboardingSceneDIContainer
             .makeOnboardingFlowCoordinator(navigationController: navigationController)
         
-        flow.start()
+//        onboardingFlow.start()
         
         // 메인 탭
+        let mainTabSceneDIContainer = appDIContainer.makeMainTabSceneDIContainer()
+        let mainTabFlow = mainTabSceneDIContainer.makeMainTabFlowCoordinator(navigationController: navigationController)
+        
+        mainTabFlow.start()
     }
 }
 
+#if DEBUG
+import SwiftUI
+
+@available(iOS 13, *)
+struct AppFlowCoordinatorPreview: PreviewProvider {
+    static var previews: some View {
+        let navigationController = UINavigationController()
+        let appDIContainer = AppDIContainer()
+        let appFlowCoordinator = AppFlowCoordinator(
+            navigationController: navigationController,
+            appDIContainer: appDIContainer
+        )
+        
+        // 시작 메서드를 호출하여 설정을 완료하고 초기 뷰를 로드한다.
+        appFlowCoordinator.start()
+        
+        return navigationController
+            .toPreview()
+            .previewLayout(.fixed(width: 400, height: 800))
+            .previewDisplayName("App Flow Coordinator Preview")
+    }
+}
+#endif
