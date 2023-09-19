@@ -19,7 +19,9 @@ final class AppDIContainer {
     
     // 이미지 데이터 전송 서비스를 설정
     
-    // 각각의 Scene의 DIContainer를 생성하는 메서드
+    // MARK: 각각의 Scene의 DIContainer를 생성하는 메서드
+    
+    // 온보딩
     func makeOnboardingSceneDIContainer() -> OnboardingSceneDIContainer {
         
         let dependencies = OnboardingSceneDIContainer.Dependencies()
@@ -27,12 +29,11 @@ final class AppDIContainer {
         return OnboardingSceneDIContainer(dependencies: dependencies)
     }
     
+    // 메인 탭
     func makeMainTabSceneDIContainer() -> MainTabSceneDIContainer {
         
         let dependencies = MainTabSceneDIContainer.Dependencies()
         
         return MainTabSceneDIContainer(dependencies: dependencies)
     }
-    
 }
-
