@@ -14,7 +14,8 @@ let project = Project.makeAppModule(
     product: .app,
     dependencies: [
         .Projcet.Network,
-        .Projcet.DesignSystem
+        .Projcet.DesignSystem,
+        .external(name: "SnapKit"),
     ],
     resources: ["Resources/**"],
     infoPlist: .file(path: "Sources/Info.plist"),

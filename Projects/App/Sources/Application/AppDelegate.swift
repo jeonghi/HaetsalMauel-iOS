@@ -1,6 +1,4 @@
 import UIKit
-import EumKit
-import EumUI
 
 @main // 앱의 진입점을 지정함. 앱을 실행할 때 아래 클래스가 자동으로 진입점으로 설정됨.
 class AppDelegate: UIResponder, UIApplicationDelegate {
