@@ -8,6 +8,7 @@
 
 import UIKit
 import SwiftUI
+import ComposableArchitecture
 
 final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   
@@ -15,7 +16,10 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   
   func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
     
-      let rootView = RootView()
+    let store = Store(initialState: Root.State()){
+      Root()
+    }
+    let rootView = RootView(store: store)
     
     if let windowScene = scene as? UIWindowScene {
       let window = UIWindow(windowScene: windowScene)
