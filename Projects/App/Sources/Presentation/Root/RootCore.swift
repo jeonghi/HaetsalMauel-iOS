@@ -8,18 +8,54 @@
 
 import ComposableArchitecture
 
-struct App: Reducer {
-    struct State {
-        
-    }
+struct Root: Reducer {
+  struct State {
+    var route: Route = .onboarding
     
-    enum Action {
-        
-    }
+    var onboardingState: Onboarding.State?
+    var mainTabState: MainTab.State?
+  }
+  
+  enum Route {
+    case onboarding // 온보딩
+    case mainTab // 메인탭
+  }
+  
+  enum Action {
+    case onAppear
+    case onDisappear
+    case setRoute(Route)
     
-    func reduce(into state: inout State, action: Action) -> Effect<Action> {
-        switch action {
-            
-        }
+    case onboardingAction(Onboarding.Action)
+    case mainTabAction(MainTab.Action)
+  }
+  
+  var body: some ReducerOf<Self> {
+    
+    Reduce<State, Action> { state, action in
+      switch action {
+      case .onAppear:
+        state.onboardingState = .init()
+        return .none
+      case .onDisappear:
+        return .none
+      case .setRoute(let selectedRoute):
+        state.route = selectedRoute
+        return .none
+      case .onboardingAction(.skipButtonTapped):
+        state.mainTabState = .init()
+        return .send(.setRoute(.mainTab))
+      case .onboardingAction:
+        return .none
+      case .mainTabAction:
+        return .none
+      }
     }
+    .ifLet(\.mainTabState, action: /Action.mainTabAction){
+      MainTab()
+    }
+    .ifLet(\.onboardingState, action: /Action.onboardingAction){
+      Onboarding()
+    }
+  }
 }
