@@ -9,8 +9,12 @@ import ProjectDescriptionHelpers
 
 let project = Project.makeDesignSystemModule(
     name: "DesignSystem",
-    product: .staticFramework,
-    packages: [],
-    dependencies: [],
+    platform: .iOS,
+    product: .framework,
+    packages: [
+    ],
+    dependencies: [
+        .external(name: "SnapKit")
+    ],
     resources: ["Resources/**"]
 )

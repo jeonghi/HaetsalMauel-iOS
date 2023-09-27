@@ -16,6 +16,7 @@ let project = Project.makeAppModule(
         .Projcet.Network,
         .Projcet.DesignSystem,
         .external(name: "SnapKit"),
+        .external(name: "ComposableArchitecture")
     ],
     resources: ["Resources/**"],
     infoPlist: .file(path: "Sources/Info.plist"),
