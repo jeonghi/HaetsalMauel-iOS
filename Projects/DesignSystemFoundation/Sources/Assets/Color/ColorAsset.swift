@@ -26,7 +26,7 @@ public struct ColorAsset {
     var alpha: Double
     var colorType: ColorType
     
-    init(red: Double, green: Double, blue: Double, alpha: Double) {
+    public init(red: Double, green: Double, blue: Double, alpha: Double) {
         self.red = red
         self.green = green
         self.blue = blue
@@ -34,7 +34,7 @@ public struct ColorAsset {
         self.colorType = .literal
     }
     
-    init(hex: String) {
+    public init(hex: String) {
         let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
         var int: UInt64 = 0
         
@@ -47,7 +47,7 @@ public struct ColorAsset {
         self.init(red: r, green: g, blue: b, alpha: 1.0)
     }
     
-    init(named: String, bundle: Bundle? = nil, alpha: Double = 1.0) {
+    public init(named: String, bundle: Bundle? = nil, alpha: Double = 1.0) {
         let color = UIColor(named: named, in: bundle, compatibleWith: nil)
         
         var red: CGFloat = 0.0
