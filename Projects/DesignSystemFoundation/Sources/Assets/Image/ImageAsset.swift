@@ -12,7 +12,7 @@ import SwiftUI
 
 public struct ImageAsset {
     
-    struct Format {
+    public struct Format {
         let fileExtension: String
         let convert: (ImageAsset) -> NSObjectProtocol
     }
@@ -21,7 +21,7 @@ public struct ImageAsset {
     var bundle: Bundle
     var format: Format
     
-    init(_ named: String, in bundle: Bundle, format: Format) {
+    public init(_ named: String, in bundle: Bundle, format: Format) {
         self.named = named
         self.bundle = bundle
         self.format = format
@@ -30,7 +30,7 @@ public struct ImageAsset {
 
 extension ImageAsset {
     
-    func toImage() -> Image {
+    public func toImage() -> Image {
         if let uiImage = format.convert(self) as? UIImage {
             return Image(uiImage: uiImage)
         }
@@ -38,7 +38,7 @@ extension ImageAsset {
         fatalError("Failed to convert ImageAsset to SwiftUI Image")
     }
     
-    func toUIImage() -> UIImage {
+    public func toUIImage() -> UIImage {
         if let uiImage = format.convert(self) as? UIImage {
             return uiImage
         }

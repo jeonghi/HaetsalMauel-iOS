@@ -8,7 +8,7 @@
 import SwiftUI
 
 extension Color {
-    init(_ asset: ColorAsset) {
+    public init(_ asset: ColorAsset) {
         self = asset.toColor()
     }
 }

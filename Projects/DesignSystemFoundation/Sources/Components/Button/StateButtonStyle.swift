@@ -9,17 +9,23 @@
 import Foundation
 import SwiftUI
 
-//struct StateButtonStyle {
-//
-//    let buttonSize: ButtonSize
-////    let buttonStyle: ButtonStyle
-////    let state:
-//
-//    init(buttonSize: ButtonSize) {
-//
-//    }
-//
-//    func style(_ configuration: StateButtonConfiguration, for state: ButtonState) {
-//
-//    }
-//}
+public struct StateButtonStyle {
+  
+  let buttonSize: ButtonSize
+  
+  public init(buttonSize: ButtonSize) {
+    self.buttonSize = buttonSize
+  }
+}
+
+public extension StateButtonStyle {
+  func style(_ config: StateButtonConfigure, for state: ButtonState) -> StateButtonStyle {
+    return self
+  }
+}
+
+extension StateButtonStyle: ButtonStyle {
+  public func makeBody(configuration: Configuration) -> some View {
+    configuration.label
+  }
+}

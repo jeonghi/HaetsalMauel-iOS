@@ -9,5 +9,7 @@
 import DesignSystemFoundation
 
 public extension ColorAsset {
-    
+  static let primary = ColorAsset(hex: "#07AD36")
+  static let secondary = ColorAsset(hex: "#FF9F2F")
+  static let white = ColorAsset(hex: "#000000")
 }

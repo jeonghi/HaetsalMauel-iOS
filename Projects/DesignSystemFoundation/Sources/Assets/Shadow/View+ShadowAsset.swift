@@ -9,7 +9,9 @@
 import SwiftUI
 
 extension View {
-    func shadowAsset(_ asset: ShadowAsset) -> some View {
-        self.shadow(color: asset.color.opacity(asset.opacity), radius: asset.blurRadius, x: asset.x, y: asset.y)
+    func shadowAsset(_ asset: ShadowAsset) -> some View {        self.shadow(color: asset.color.opacity(asset.opacity),
+                    radius: asset.blurRadius,
+                    x: asset.x,
+                    y: asset.y)
     }
 }

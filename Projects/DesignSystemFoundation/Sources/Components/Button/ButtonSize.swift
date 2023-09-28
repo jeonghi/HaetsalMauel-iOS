@@ -7,12 +7,20 @@
 //
 
 import Foundation
+import SwiftUI
 
-
-struct ButtonSize {
-    var iconStyle: IconStyle
-    var fontSize: CGFloat
-    var minWidth: CGFloat?
-    var minHeight: CGFloat?
-//    var insets: EdgeInsets
+// 버튼 사이즈 정보를 담고 있는 객체
+public struct ButtonSize {
+  var iconStyle: IconStyle
+  var fontSize: CGFloat
+  var minWidth: CGFloat?
+  var minHeight: CGFloat?
+  var insets: EdgeInsets?
+  public init(iconStyle: IconStyle, fontSize: CGFloat, minWidth: CGFloat? = nil, minHeight: CGFloat? = nil, insets: EdgeInsets? = nil) {
+    self.iconStyle = iconStyle
+    self.fontSize = fontSize
+    self.minWidth = minWidth
+    self.minHeight = minHeight
+    self.insets = insets
+  }
 }
