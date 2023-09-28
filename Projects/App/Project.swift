@@ -14,7 +14,8 @@ let project = Project.makeAppModule(
     product: .app,
     dependencies: [
         .Projcet.Network,
-        .Projcet.DesignSystem,
+        .Projcet.UISystem,
+        .Projcet.DesignSystemFoundation,
         .external(name: "SnapKit"),
         .external(name: "ComposableArchitecture")
     ],
