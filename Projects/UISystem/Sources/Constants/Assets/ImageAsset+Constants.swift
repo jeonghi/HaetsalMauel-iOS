@@ -1,5 +1,5 @@
 //
-//  Button.swift
+//  ImageAsset+Constants.swift
 //  UISystem
 //
 //  Created by JH Park on 2023/09/25.
@@ -8,6 +8,6 @@
 
 import DesignSystemFoundation
 
-//extension StateButtonStyle {
-//
-//}
+public extension ImageAsset {
+  
+}
