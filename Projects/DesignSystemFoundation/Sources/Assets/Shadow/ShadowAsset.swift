@@ -23,3 +23,4 @@ extension ShadowAsset {
     static let level2 = ShadowAsset(color: .black, opacity: 0.2, x: 0, y: 2, blurRadius: 2, spread: 0)
     // ... add other predefined shadows
 }
+
