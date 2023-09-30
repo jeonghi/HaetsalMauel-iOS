@@ -13,11 +13,11 @@ extension StateButtonStyle {
   static func primary(_ buttonSize: ButtonSize) -> StateButtonStyle {
     StateButtonStyle(buttonSize: buttonSize)
       .style(
-        StateButtonConfigure(fontConfig: .captionR, foreground: Color(.primary), background: Color(.secondary)),
+        StateButtonConfigure(fontConfig: .descriptionR, foreground: Color(.primary), background: Color(.secondary)),
         for: .normal
       )
       .style(
-        StateButtonConfigure(fontConfig: .captionR, foreground: Color(.primary), background: Color(.secondary)),
+        StateButtonConfigure(fontConfig: .descriptionR, foreground: Color(.primary), background: Color(.secondary)),
         for: .pressed
       )
   }
