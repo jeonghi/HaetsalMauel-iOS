@@ -91,6 +91,6 @@ extension FontAsset {
 }
 
 public extension FontAsset.FontConfig {
-  static let bold = FontAsset.FontConfig(fontFamily: "Pretandard-Bold", weight: .bold, fileType: .ttf)
-  static let regular = FontAsset.FontConfig(fontFamily: "Pretandard-Regular", weight: .regular, fileType: .ttf)
+  static let bold = FontAsset.FontConfig(fontFamily: "Pretandard", weight: .bold, fileType: .ttf)
+  static let regular = FontAsset.FontConfig(fontFamily: "Pretandard", weight: .regular, fileType: .ttf)
 }
