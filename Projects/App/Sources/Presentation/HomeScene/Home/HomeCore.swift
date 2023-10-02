@@ -12,28 +12,36 @@ struct Home: Reducer {
   
   struct State {
     var route: Route? = nil
+    var notificationState: Notification.State = .init()
   }
   
   enum Route {
   }
   
-  
   enum Action {
     case onAppear
     case onDisappear
     case setRoute(Route)
-    
+    case notificationAction(Notification.Action)
   }
   
-  func reduce(into state: inout State, action: Action) -> Effect<Action> {
-    switch action {
-    case .onAppear:
-      return .none
-    case .onDisappear:
-      return .none
-    case .setRoute(let selectedRoute):
-      state.route = selectedRoute
-      return .none
+  var body: some ReducerOf<Self> {
+    Reduce<State, Action> { state, action in
+      switch action {
+      case .onAppear:
+        return .none
+      case .onDisappear:
+        return .none
+      case .setRoute(let selectedRoute):
+        state.route = selectedRoute
+        return .none
+      case .notificationAction:
+        return .none
+      }
+    }
+    
+    Scope(state: \.notificationState, action: /Action.notificationAction){
+      Notification()
     }
   }
 }
