@@ -59,20 +59,22 @@ struct MainTabView: View {
               Text("커뮤니티")
             }
           }
+        
         Color.white
-          .tag(Route.pay)
+          .tag(Route.chat)
           .tabItem {
             VStack {
               Image(systemName: "house.fill")
-              Text("페이")
+              Text("채팅")
             }
           }
+        
         SettingView(store: settingStore)
-          .tag(Route.setting)
+          .tag(Route.etc)
           .tabItem {
             VStack {
               Image(systemName: "house.fill")
-              Text("설정")
+              Text("기타")
             }
           }
       }
