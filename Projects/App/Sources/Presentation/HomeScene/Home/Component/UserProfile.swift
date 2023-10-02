@@ -7,8 +7,13 @@
 //
 
 import SwiftUI
+import ComposableArchitecture
 
 struct UserProfile: View {
+  
+  let userProfileSettingStore = Store(initialState: UserProfileSetting.State()){
+    UserProfileSetting()
+  }
     var body: some View {
       
       VStack {
@@ -16,7 +21,7 @@ struct UserProfile: View {
         HStack {
           Text("최소융님 안녕하세요")
           Spacer()
-          Button(action:{}){
+          NavigationLink(destination: UserProfileSettingView(store: userProfileSettingStore)){
             Text("내 정보 수정")
           }
         }
@@ -45,6 +50,8 @@ struct UserProfile: View {
 
 struct UserProfile_Previews: PreviewProvider {
     static var previews: some View {
+      NavigationView {
         UserProfile()
+      }
     }
 }
