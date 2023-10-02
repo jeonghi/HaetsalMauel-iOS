@@ -19,8 +19,8 @@ struct MainTab: Reducer {
   enum Route {
     case home
     case communiy
-    case pay
-    case setting
+    case chat
+    case etc
   }
   
   enum Action {

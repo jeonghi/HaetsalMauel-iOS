@@ -9,8 +9,8 @@
 import DesignSystemFoundation
 import SwiftUI
 
-extension StateButtonStyle {
-  static func primary(_ buttonSize: ButtonSize) -> StateButtonStyle {
+public extension StateButtonStyle {
+  public static func primary(_ buttonSize: ButtonSize) -> StateButtonStyle {
     StateButtonStyle(buttonSize: buttonSize)
       .style(
         StateButtonConfigure(fontConfig: .descriptionR, foreground: Color(.primary), background: Color(.secondary)),

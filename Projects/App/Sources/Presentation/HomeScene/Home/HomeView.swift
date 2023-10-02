@@ -31,9 +31,16 @@ struct HomeView: View {
   init(store: StoreOf<Core>) {
     self.store = store
     self.viewStore = ViewStore(store, observe: ViewState.init)
+    configNavBar()
+  }
+  
+  func configNavBar() {
+    let navAppearance = UINavigationBarAppearance()
+    navAppearance.backgroundColor = UIColor(.primary)
   }
   
   var body: some View {
+    
     ScrollView {
       scrollContentView
     }
@@ -42,14 +49,13 @@ struct HomeView: View {
         Text("이음")
       },
       trailing: HStack {
-        NavigationLink(destination: NotificationView()) {
+        NavigationLink(destination: NotificationView(store: notificationStore)){
           Image(systemName: "bell.badge.fill")
             .resizable()
             .frame(width:24, height:24)
         }
       }
     )
-    .background(Color.black.opacity(0.1))
     .ignoresSafeArea(edges: [.bottom])
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .onAppear{
@@ -111,13 +117,21 @@ extension HomeView {
           ForEach(1...3, id: \.self){ _ in
             Rectangle()
               .frame(width: 160, height: 160)
-              .foregroundColor(Color.white)
+              .foregroundColor(Color.gray)
               .cornerRadius(10, corners: .allCorners)
           }
         }
       }
       .padding(.leading, 10)
     }
+  }
+}
+
+
+// MARK: Store init
+extension HomeView {
+  private var notificationStore: StoreOf<Notification> {
+    return store.scope(state: \.notificationState, action: Action.notificationAction)
   }
 }
 
