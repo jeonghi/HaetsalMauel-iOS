@@ -28,9 +28,9 @@ public struct ImageAsset {
     }
 }
 
-extension ImageAsset {
+public extension ImageAsset {
     
-    public func toImage() -> Image {
+    func toImage() -> Image {
         if let uiImage = format.convert(self) as? UIImage {
             return Image(uiImage: uiImage)
         }
@@ -38,7 +38,7 @@ extension ImageAsset {
         fatalError("Failed to convert ImageAsset to SwiftUI Image")
     }
     
-    public func toUIImage() -> UIImage {
+    func toUIImage() -> UIImage {
         if let uiImage = format.convert(self) as? UIImage {
             return uiImage
         }
@@ -46,7 +46,7 @@ extension ImageAsset {
     }
 }
 
-extension ImageAsset.Format {
+public extension ImageAsset.Format {
     static let image = ImageAsset.Format(fileExtension: "assets") {
         UIImage(named: $0.named, in: $0.bundle, with: nil)!
     }
@@ -60,7 +60,7 @@ extension ImageAsset.Format {
 //    }
 }
 
-extension ImageAsset {
+internal extension ImageAsset {
     // Initializing
     static let sampleImage = ImageAsset("sample_image", in: .main, format: .image)
 //    static let sampleAnimatedImage = ImageAsset("sample_gif", in: .main, format: .gif)

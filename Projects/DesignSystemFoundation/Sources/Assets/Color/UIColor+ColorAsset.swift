@@ -8,7 +8,7 @@
 
 import UIKit
 
-extension UIColor {
+public extension UIColor {
     convenience init(_ asset: ColorAsset) {
         let uiColor = asset.toUIColor()
         self.init(cgColor: uiColor.cgColor)
