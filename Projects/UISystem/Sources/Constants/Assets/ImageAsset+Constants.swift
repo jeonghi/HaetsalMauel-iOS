@@ -9,5 +9,7 @@
 import DesignSystemFoundation
 
 public extension ImageAsset {
-  
+  static let koreanLogo = ImageAsset("EumLogo", in: .module, format: .image)
+  static let character = ImageAsset("MyCharacter", in: .module, format: .image)
+  static let userBadge = ImageAsset("UserBadge", in: .module, format: .image)
 }
