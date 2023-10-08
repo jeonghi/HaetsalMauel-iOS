@@ -18,7 +18,8 @@ let project = Project.makeAppModule(
         .Projcet.DesignSystemFoundation,
         .external(name: "SnapKit"),
         .external(name: "ComposableArchitecture"),
-        .external(name: "SwiftUIPager")
+        .external(name: "SwiftUIPager"),
+        .external(name: "FirebaseAnalytics")
     ],
     resources: ["Resources/**"],
     infoPlist: .file(path: "Sources/Info.plist"),
