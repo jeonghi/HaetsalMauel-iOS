@@ -9,6 +9,7 @@
 import SwiftUI
 import ComposableArchitecture
 import UISystem
+import DesignSystemFoundation
 
 struct HomeView: View {
   
@@ -35,94 +36,141 @@ struct HomeView: View {
   }
   
   func configNavBar() {
-    let navAppearance = UINavigationBarAppearance()
-    navAppearance.backgroundColor = UIColor(.primary)
+    
+    let appearance = UINavigationBarAppearance()
+    let navigationBar = UINavigationBar()
+    appearance.configureWithTransparentBackground()
+    navigationBar.tintColor = .white
+    navigationBar.standardAppearance = appearance;
+    UINavigationBar.appearance().scrollEdgeAppearance = appearance
   }
   
+  // MARK: Layout init
   var body: some View {
     
-    ScrollView {
-      scrollContentView
+    VStack(spacing: 0){
+      ScrollView {
+        ZStack {
+          greetingText
+            .vTop()
+            .hLeading()
+          profileEditButton
+            .vTop()
+            .hTrailing()
+        }
+        .padding(.top, 10)
+        .padding(.horizontal, 30)
+        
+        ZStack {
+          userCharacter
+          userBadge
+            .vBottom()
+            .hLeading()
+            .padding(.leading, 10)
+        }
+        .hCenter()
+        .padding(.top, 27)
+        .padding(.horizontal, 104)
+        
+        levelText
+          .hCenter()
+          .padding(.top, 27)
+        
+        dashBoard
+          .hCenter()
+          .padding(.horizontal, 30)
+          .padding(.top, 46)
+      }
     }
+    .background(
+      LinearGradient(
+        gradient: Gradient(
+          colors: [
+            Color(red: 0.737, green: 0.89, blue: 0.996),
+            Color(red: 0.957, green: 0.961, blue: 0.965)
+          ]
+        ),
+        startPoint: .top,
+        endPoint: .bottom)
+    )
+    .navigationTitle("") // 네비게이션 타이틀 없음
+    .navigationBarTitleDisplayMode(.inline)
     .navigationBarItems(
       leading: HStack {
-        Text("이음")
+        ImageAsset.koreanLogo.toImage()
       },
       trailing: HStack {
-        NavigationLink(destination: NotificationView(store: notificationStore)){
-          Image(systemName: "bell.badge.fill")
-            .resizable()
-            .frame(width:24, height:24)
+        Button(action:{}){
+          Image(systemName: "line.3.horizontal")
+            .foregroundColor(Color.white)
         }
       }
     )
-    .ignoresSafeArea(edges: [.bottom])
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .onAppear{
-      
+      viewStore.send(.onAppear)
     }
     .onDisappear{
-      
+      viewStore.send(.onDisappear)
     }
   }
 }
 
 
+// MARK: Component init
 extension HomeView {
-  private var homeProfileView: some View {
-    HStack {
-      Circle()
-        .foregroundColor(Color.white)
-        .frame(width: 45, height: 45)
-      VStack(alignment: .leading) {
-        Text("아기 햇님")
-        Text("최소융")
+  // MARK: 인사말
+  private var greetingText: some View {
+    return Text("박정환 님 안녕하세요!")
+      .font(.body)
+  }
+  
+  // MARK: 내 정보 수정 내비게이션 버튼
+  private var profileEditButton: some View {
+    return Button(action:{}){
+      HStack {
+        Text("내 정보 수정")
+        Image(systemName: "chevron.right")
       }
+      .foregroundColor(Color.gray)
     }
   }
   
-  private var scrollContentView: some View {
-    
-    return VStack {
-      // MARK: 내 프로필
-      UserProfile()
-        .frame(maxWidth: .infinity)
-        .frame(height: 200)
-        .padding(.horizontal, 10)
-        .padding(.vertical, 20)
-        .background(
-          Rectangle()
-            .foregroundColor(Color(.primary))
-            .cornerRadius(10, corners: [.bottomLeft, .bottomRight])
-        )
-      
-      
-      // MARK: 햇살 대시보드
-      ZStack {
+  // MARK: 캐릭터
+  private var userCharacter: some View {
+    return ImageAsset.character.toImage()
+      .resizable()
+      .aspectRatio(contentMode: .fit)
+      .frame(maxWidth: .infinity)
+  }
+  
+  // MARK: 캐릭터 인증 뱃지
+  private var userBadge: some View {
+    return ImageAsset.userBadge.toImage()
+      .resizable()
+      .aspectRatio(contentMode: .fit)
+      .frame(maxWidth: 40)
+  }
+  
+  // MARK: 레벨표시
+  private var levelText: some View {
+    return Text("Lv 7. 아기 햇님")
+      .font(.headline)
+  }
+  
+  // MARK: 햇살 대시보드
+  private var dashBoard: some View {
+    DashBoard()
+      .background(
         RoundedRectangle(cornerRadius: 12)
           .foregroundColor(Color.white)
-        DashBoard()
-          .padding()
-      }.padding(.horizontal, 10)
+      )
+  }
+  
+  // MARK: 카드 탭
+  private var cardTap: some View {
+    VStack {
       
-      // TODO: 프로모션 배너 화면
-      PromotionBanner()
-        .cornerRadius(10, corners: .allCorners)
-        .frame(height: 92)
-        .padding(.horizontal, 10)
-      
-      // TODO: 동네 정보 화면
-      ScrollView(.horizontal, showsIndicators: false){
-        HStack {
-          ForEach(1...3, id: \.self){ _ in
-            Rectangle()
-              .frame(width: 160, height: 160)
-              .foregroundColor(Color.gray)
-              .cornerRadius(10, corners: .allCorners)
-          }
-        }
-      }
-      .padding(.leading, 10)
     }
   }
 }
