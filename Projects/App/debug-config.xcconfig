@@ -1,0 +1,14 @@
+//
+//  debug-config.xcconfig
+//  App
+//
+//  Created by JH Park on 2023/10/08.
+//  Copyright © 2023 kr.k-eum. All rights reserved.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+API_KEY = your_api_key_here
+API_BASE_URL = sunrise.k-eum.kr/
+IMAGE_BASE_URL = your_image_base_url_here
