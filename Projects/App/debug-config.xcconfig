@@ -12,3 +12,6 @@
 API_KEY = your_api_key_here
 API_BASE_URL = sunrise.k-eum.kr/
 IMAGE_BASE_URL = your_image_base_url_here
+GCP_IOS_CLIENT_ID = "761364583261-nd511ss7gqqng0cp7i0ch6pikb8d90ti.apps.googleusercontent.com"
+GCP_IOS_URL_SCHEME = "com.googleusercontent.apps.761364583261-nd511ss7gqqng0cp7i0ch6pikb8d90ti"
+GCP_SERVER_CLIENT_ID = "761364583261-tsiqfgv2a84km5ne37v7kvhtig6fre4o.apps.googleusercontent.com"
