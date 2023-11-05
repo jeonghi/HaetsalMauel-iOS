@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "img-logo(임시).png",
+      "filename" : "koreanLogo.svg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "img-logo(임시)@2x.png",
+      "filename" : "koreanLogo 1.svg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "img-logo(임시)@3x.png",
+      "filename" : "koreanLogo 2.svg",
       "idiom" : "universal",
       "scale" : "3x"
     }
