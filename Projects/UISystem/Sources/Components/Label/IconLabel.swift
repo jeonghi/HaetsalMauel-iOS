@@ -9,19 +9,19 @@
 import SwiftUI
 import DesignSystemFoundation
 
-struct IconLabel: View {
+public struct IconLabel: View {
   
   let leftIcon: Icon?
   let text: String
   let rightIcon: Icon?
   
-  init(leftIcon: Icon? = nil, text: String, rightIcon: Icon? = nil) {
+  public init(leftIcon: Icon? = nil, text: String, rightIcon: Icon? = nil) {
     self.leftIcon = leftIcon
     self.text = text
     self.rightIcon = rightIcon
   }
   
-  var body: some View {
+  public var body: some View {
     HStack {
       leftIcon
       Text(text)
@@ -30,8 +30,11 @@ struct IconLabel: View {
   }
 }
 
+
+
 struct IconLabel_Previews: PreviewProvider {
   static var previews: some View {
-    IconLabel(leftIcon: .pencil ,text: "라벨", rightIcon: .filledStar)
+    
+    Text("하")
   }
 }
