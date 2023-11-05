@@ -19,7 +19,8 @@ let project = Project.makeAppModule(
         .external(name: "SnapKit"),
         .external(name: "ComposableArchitecture"),
         .external(name: "SwiftUIPager"),
-        .external(name: "FirebaseAnalytics")
+        .external(name: "LinkNavigator"),
+        .external(name: "PopupView")
     ],
     resources: ["Resources/**"],
     infoPlist: .file(path: "Sources/Info.plist"),

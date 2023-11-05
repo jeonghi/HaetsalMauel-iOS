@@ -12,5 +12,6 @@ let project = Project.makeDesignSystemFoundationModule(
     product: .framework,
     packages: [],
     dependencies: [],
-    resources: ["Resources/**"]
+    resources: ["Resources/**"],
+    infoPlist: .file(path: "SupportingFile/Info.plist")
 )
