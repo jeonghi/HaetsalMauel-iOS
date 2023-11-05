@@ -22,16 +22,13 @@ public struct CountedTextField: View {
   
   public var body: some View {
     VStack(spacing: 5) {
-      HStack{
-        Spacer()
-        Text("\(text.count)/\(maxLength)")
-          .font(.footnote)
-          .foregroundColor(.gray)
-      }
       TextField(placeHolder, text: $text)
         .onChange(of: text) { newValue in
           if text.count > maxLength {
             text = String(text.prefix(maxLength))
+          }
+          else {
+            text = text
           }
         }
         .padding()
@@ -39,12 +36,18 @@ public struct CountedTextField: View {
           RoundedRectangle(cornerRadius: 8)
             .stroke(Color.gray, lineWidth: 1)
         )
+      HStack{
+        Spacer()
+        Text("\(text.count)/\(maxLength)")
+          .font(.footnote)
+          .foregroundColor(.gray)
+      }
     }
   }
 }
 
 struct CountedTextField_Previews: PreviewProvider {
-  @State static var sampleText = ""
+  @State static var sampleText = "aa"
   
   static var previews: some View {
     CountedTextField(text: $sampleText, placeHolder: "입력해주세요.")

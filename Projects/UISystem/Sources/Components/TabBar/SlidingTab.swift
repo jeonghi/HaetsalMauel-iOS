@@ -58,16 +58,17 @@ public struct SlidingTab<T>: View where T: RawRepresentable, T.RawValue == Strin
   
   public init(selection: Binding<T>,
               tabs: [T],
-              font: Font = .body,
+              font: Font = .headerB,
               animation: Animation = .spring(),
-              activeAccentColor: Color = .blue,
+              activeAccentColor: Color = Color(.deepBlue),
               inactiveAccentColor: Color = Color.black.opacity(0.4),
-              selectionBarColor: Color = .blue,
+              selectionBarColor: Color = Color(.deepBlue),
               inactiveTabColor: Color = .clear,
               activeTabColor: Color = .clear,
               selectionBarHeight: CGFloat = 2,
-              selectionBarBackgroundColor: Color = Color.gray.opacity(0.2),
-              selectionBarBackgroundHeight: CGFloat = 1, scrolling: Bool = false,
+              selectionBarBackgroundColor: Color = Color(.systemgray07),
+              selectionBarBackgroundHeight: CGFloat = 1,
+              scrolling: Bool = false,
               backgroundColor: Color = .white
   ) {
     self._selection = selection
@@ -172,10 +173,8 @@ struct SlidingTabConsumerView : View {
   var body: some View {
     VStack(alignment: .leading) {
       SlidingTab<Tab>(selection: self.$selectedTab,
-                      tabs: Tab.allCases,
-                      font: .body,
-                      activeAccentColor: Color.blue,
-                      selectionBarColor: Color.blue)
+                      tabs: Tab.allCases
+                    )
       switch selectedTab {
       default:
         Text(

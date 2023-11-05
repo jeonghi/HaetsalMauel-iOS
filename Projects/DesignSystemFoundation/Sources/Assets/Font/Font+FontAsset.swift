@@ -9,8 +9,8 @@
 import SwiftUI
 import UIKit
 
-extension Font {
-    public init(_ asset: FontAsset) {
+public extension Font {
+    init(_ asset: FontAsset) {
         if let leading = asset.leading {
             self = Font.custom(asset.config.fontName(), size: asset.size, relativeTo: .body)
         } else {

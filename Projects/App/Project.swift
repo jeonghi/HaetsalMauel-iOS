@@ -18,7 +18,9 @@ let project = Project.makeAppModule(
         .Projcet.DesignSystemFoundation,
         .external(name: "SnapKit"),
         .external(name: "ComposableArchitecture"),
-        .external(name: "SwiftUIPager")
+        .external(name: "SwiftUIPager"),
+        .external(name: "LinkNavigator"),
+        .external(name: "PopupView")
     ],
     resources: ["Resources/**"],
     infoPlist: .file(path: "Sources/Info.plist"),

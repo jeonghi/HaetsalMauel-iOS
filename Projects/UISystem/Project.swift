@@ -15,5 +15,6 @@ let project = Project.makeUISystemModule(
     dependencies: [
         .Projcet.DesignSystemFoundation
     ],
-    resources: ["Resources/**"]
+    resources: ["Resources/**"],
+    infoPlist: .file(path: "SupportingFile/Info.plist")
 )

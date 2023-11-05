@@ -2,6 +2,23 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>GIDClientID</key>
+	<string>$(GCP_IOS_CLIENT_ID)</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>$(GCP_IOS_URL_SCHEME)</string>
+			</array>
+		</dict>
+	</array>
+	<key>GIDServerClientID</key>
+	<string>$(GCP_SERVER_CLIENT_ID)</string>
+	<key>ApiBaseURL</key>
+	<string>$(API_BASE_URL)</string>
+	<key>ApiKey</key>
+	<string>$(API_KEY)</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>

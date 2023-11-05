@@ -60,7 +60,7 @@ public struct ColorAsset {
     }
 }
 
-extension ColorAsset {
+public extension ColorAsset {
     // Convert to SwiftUI's Color
     func toColor() -> Color {
         return Color(red: red, green: green, blue: blue, opacity: alpha)
