@@ -51,7 +51,7 @@ extension FontAsset {
 
 extension FontAsset {
   public struct FontConfig {
-    enum Weight: String {
+    public enum Weight: String {
       case regular
       case bold
       case light
@@ -59,7 +59,7 @@ extension FontAsset {
       // ... other weights
     }
     
-    enum FileType: String {
+    public enum FileType: String {
       case otf
       case ttf
       // ... other file types
@@ -70,7 +70,7 @@ extension FontAsset {
     var bundle: Bundle? // assuming the font might be in a specific bundle
     var fileType: FileType
     
-    init(fontFamily: String, weight: Weight, bundle: Bundle? = nil, fileType: FileType) {
+    public init(fontFamily: String, weight: Weight, bundle: Bundle? = nil, fileType: FileType) {
       self.fontFamily = fontFamily
       self.weight = weight
       self.bundle = bundle
@@ -78,12 +78,12 @@ extension FontAsset {
     }
     
     // You can also add a method to get the full font name or path based on the config
-    func fontName() -> String {
+    public func fontName() -> String {
       // Example: "FontFamily-Bold"
       return "\(fontFamily)-\(weight.rawValue.capitalized)"
     }
     
-    func fontPath() -> String {
+    public func fontPath() -> String {
       // Example: "FontFamily-Bold.otf"
       return "\(fontName()).\(fileType.rawValue)"
     }
@@ -91,6 +91,6 @@ extension FontAsset {
 }
 
 public extension FontAsset.FontConfig {
-  static let bold = FontAsset.FontConfig(fontFamily: "Pretandard", weight: .bold, fileType: .ttf)
-  static let regular = FontAsset.FontConfig(fontFamily: "Pretandard", weight: .regular, fileType: .ttf)
+  static let bold = FontAsset.FontConfig(fontFamily: "Pretandard", weight: .bold, fileType: .otf)
+  static let regular = FontAsset.FontConfig(fontFamily: "Pretandard", weight: .regular, fileType: .otf)
 }
