@@ -22,7 +22,6 @@ public extension Project {
   ) -> Project {
     
     let settings: Settings = .settings(
-//      base: fireBaseAnalyticsSetting,
       configurations: [
         .debug(name: .debug, xcconfig: .relativeToManifest("debug-config.xcconfig")),
         .release(name: .release, xcconfig: .relativeToManifest("release-config.xcconfig"))
