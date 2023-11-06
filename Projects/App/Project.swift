@@ -20,7 +20,9 @@ let project = Project.makeAppModule(
         .external(name: "ComposableArchitecture"),
         .external(name: "SwiftUIPager"),
         .external(name: "LinkNavigator"),
-        .external(name: "PopupView")
+        .external(name: "PopupView"),
+        .external(name: "ExyteChat"),
+        .external(name: "Kingfisher")
     ],
     resources: ["Resources/**"],
     infoPlist: .file(path: "Sources/Info.plist"),
