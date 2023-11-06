@@ -13,7 +13,8 @@ let project = Project.makeUISystemModule(
     product: .framework,
     packages: [],
     dependencies: [
-        .Projcet.DesignSystemFoundation
+        .Projcet.DesignSystemFoundation,
+        .external(name: "Kingfisher")
     ],
     resources: ["Resources/**"],
     infoPlist: .file(path: "SupportingFile/Info.plist")

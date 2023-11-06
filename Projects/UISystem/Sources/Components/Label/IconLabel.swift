@@ -13,11 +13,13 @@ public struct IconLabel: View {
   
   let leftIcon: Icon?
   let text: String
+  let textFont: Font
   let rightIcon: Icon?
   
-  public init(leftIcon: Icon? = nil, text: String, rightIcon: Icon? = nil) {
+  public init(leftIcon: Icon? = nil, _ text: String, textFont: Font = Font.subR, rightIcon: Icon? = nil) {
     self.leftIcon = leftIcon
     self.text = text
+    self.textFont = textFont
     self.rightIcon = rightIcon
   }
   
@@ -27,6 +29,7 @@ public struct IconLabel: View {
       Text(text)
       rightIcon
     }
+    .font(textFont)
   }
 }
 
@@ -34,7 +37,6 @@ public struct IconLabel: View {
 
 struct IconLabel_Previews: PreviewProvider {
   static var previews: some View {
-    
-    Text("하")
+    IconLabel("1")
   }
 }

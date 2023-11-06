@@ -7,7 +7,7 @@
 //
 
 public extension IconLabel {
-  static let kakaoLoginLabel = IconLabel(leftIcon: .kakao, text: "카카오로 로그인")
-  static let localLoginLabel = IconLabel(leftIcon: .local, text: "이메일로 로그인")
-  static let appleLoginLabel = IconLabel(leftIcon: .apple, text: "Apple로 로그인")
+  static let kakaoLoginLabel = IconLabel(leftIcon: .kakao, "카카오로 로그인")
+  static let localLoginLabel = IconLabel(leftIcon: .local, "이메일로 로그인")
+  static let appleLoginLabel = IconLabel(leftIcon: .apple, "Apple로 로그인")
 }
