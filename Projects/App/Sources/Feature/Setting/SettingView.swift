@@ -19,14 +19,18 @@ struct SettingView: View {
   
   private let store: StoreOf<Core>
   
+  @ObservedObject private var viewStore: ViewStore<ViewState, Action>
+  
   struct ViewState: Equatable {
+    var showingPopup: Bool
     init(state: State){
-      
+      showingPopup = state.showingPopup
     }
   }
   
   init(store: StoreOf<Core>){
     self.store = store
+    self.viewStore = ViewStore(store, observe: ViewState.init)
   }
   
   var body: some View {
@@ -34,10 +38,25 @@ struct SettingView: View {
     VStack(spacing: 0){
       list
     }
+    .eumPopup(isShowing: viewStore.binding(get: \.showingPopup, send: Action.showingPopup)){
+      EumPopupView.init(
+        title: "로그아웃 하시겠습니까?",
+        type: .twoLineTwoButton,
+        firstButtonName: "로그아웃",
+        secondButtonName: "취소",
+        firstButtonAction: {
+          viewStore.send(.showingPopup(false))
+          viewStore.send(.logout)
+        },
+        secondButtonAction: {
+          viewStore.send(.showingPopup(false))
+        }
+      )
+    }
+    .setCustomNavBarTitle("설정")
+    .setCustomNavBackButton()
+    .background(Color(.white))
     .frame(maxWidth: .infinity, maxHeight: .infinity)
-    .navigationBarTitle("설정")
-    .navigationBarHidden(false)
-    .navigationBarTitleDisplayMode(.inline)
   }
 }
 
@@ -50,9 +69,9 @@ extension SettingView {
         }
       }
       Section {
-        NavigationLink(destination: EmptyView()){
-          containerBox(leadingText: "글씨 크기", trailingText: "보통")
-        }
+        //        NavigationLink(destination: EmptyView()){
+        //          containerBox(leadingText: "글씨 크기", trailingText: "보통")
+        //        }
         NavigationLink(destination: EmptyView()){
           containerBox(leadingText: "관심 게시글")
         }
@@ -68,6 +87,9 @@ extension SettingView {
         NavigationLink(destination: EmptyView()){
           containerBox(leadingText: "문의하기")
         }
+        Button(action: {viewStore.send(.logoutButtonTapped)}){
+          containerBox(leadingText: "로그아웃")
+        }
       }
       .listRowSeparator(.hidden)
       Section {
@@ -79,10 +101,7 @@ extension SettingView {
       .listRowSeparator(.hidden)
       
       Section {
-        Button(action: {print("로그아웃")}){
-          containerBox(leadingText: "로그아웃")
-        }
-        Button(action: {print("로그아웃")}){
+        NavigationLink(destination: WithdrawalReasonView(store: withdrawalReasonStore)){
           containerBox(leadingText: "탈퇴하기")
         }
       }
@@ -102,6 +121,7 @@ extension SettingView {
         .foregroundColor(trailingColor)
     }
   }
+  
 }
 
 
@@ -109,6 +129,9 @@ extension SettingView {
 extension SettingView {
   private var userProfileSettingStore: StoreOf<UserProfileSetting> {
     return store.scope(state: \.userProfileSettingState, action: Action.userProfileSettingAction)
+  }
+  private var withdrawalReasonStore: StoreOf<WithdrawalReason> {
+    return store.scope(state: \.withdrawalReasonState, action: Action.withdrawalReasonAction)
   }
 }
 

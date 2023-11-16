@@ -41,6 +41,7 @@ extension WithdrawalReasonView: View {
         .padding(.horizontal, 22)
       Spacer()
     }
+    .setCustomNavBackButton()
     .frame(maxWidth: .infinity, maxHeight: .infinity)
   }
 }
@@ -74,5 +75,5 @@ extension WithdrawalReasonView {
 
 #Preview {
   let store = Store(initialState: WithdrawalReason.State()){WithdrawalReason()}
-  return WithdrawalReasonView(store: store)
+  return NavigationView{ WithdrawalReasonView(store: store) }
 }

@@ -65,7 +65,8 @@ struct UserProfileSettingView: View {
           .closeOnTapOutside(true)
           .backgroundColor(.black.opacity(0.5))
     }
-    .navigationBarTitle("내 정보 수정", displayMode: .inline)
+    .setCustomNavBarTitle("내 정보 수정")
+    .setCustomNavBackButton()
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .onAppear{
       viewStore.send(.onAppear)
