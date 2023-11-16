@@ -13,7 +13,7 @@ import UISystem
 
 struct MPHomeView {
   
-  typealias Core = MarketPlaceHome
+  typealias Core = MPHome
   typealias State = Core.State
   typealias Action = Core.Action
   
@@ -168,6 +168,6 @@ extension MPHomeView {
 }
 
 #Preview {
-  let store = Store(initialState: MarketPlaceHome.State()){MarketPlaceHome()}
+  let store = Store(initialState: MPHome.State()){MPHome()}
   return NavigationView {MPHomeView(store: store)}
 }

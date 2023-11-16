@@ -104,7 +104,7 @@ extension MPPostingReadView {
   }
   
   private var 포스트_내용: some View {
-    ExchangePostHeader(
+    MPPostContentHeader(
       avatar: URL(string: "https://kr.object.ncloudstorage.com/k-eum/characterAsset/sun_middle%402x.png"),
       userName: "최소융",
       locationName: "정릉제2동",
