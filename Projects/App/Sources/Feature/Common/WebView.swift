@@ -18,11 +18,12 @@ protocol WebViewHandlerDelegate {
 }
 
 class WebViewModel: ObservableObject {
-    var foo = PassthroughSubject<Bool, Never>()
-    var bar = PassthroughSubject<Bool, Never>()
+  
+  var foo = PassthroughSubject<Bool, Never>()
+  var bar = PassthroughSubject<Bool, Never>()
 }
 
-struct EumWebView: UIViewRepresentable {
+struct WebView: UIViewRepresentable {
   var url: String
   @ObservedObject var viewModel: WebViewModel
   
@@ -77,7 +78,7 @@ struct EumWebView: UIViewRepresentable {
                      decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
           if let host = navigationAction.request.url?.host {
               // 특정 도메인을 제외한 도메인을 연결하지 못하게 할 수 있다.
-              if host != "velog.io" {
+              if host != "eumweb.netlify.app" {
                  return decisionHandler(.cancel)
              }
           }
@@ -128,7 +129,7 @@ struct EumWebView: UIViewRepresentable {
   }
 }
 
-extension EumWebView: WebViewHandlerDelegate {
+extension WebView: WebViewHandlerDelegate {
   func receivedJsonValueFromWebView(value: [String : Any?]) {
       print("JSON 데이터가 웹으로부터 옴: \(value)")
   }
@@ -139,5 +140,8 @@ extension EumWebView: WebViewHandlerDelegate {
 }
 
 #Preview {
-  EumWebView()
+  @ObservedObject var viewModel = WebViewModel()
+  return VStack {
+    WebView(url: "https://eumweb.netlify.app/", viewModel: viewModel)
+  }
 }
