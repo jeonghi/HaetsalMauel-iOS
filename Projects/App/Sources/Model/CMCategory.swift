@@ -11,12 +11,12 @@ import DesignSystemFoundation
 
 enum CMCategory: String, CaseIterable {
   case 투표
-  case 의견
+  case 수다떨기
   func cvtAssetImage() -> ImageAsset {
     switch self {
     case .투표:
       return .소통_투표
-    case .의견:
+    case .수다떨기:
       return .소통_의견
     }
   }

@@ -7,3 +7,12 @@
 //
 
 import Foundation
+
+struct CommunityPostDescription: Identifiable, Equatable {
+  var id: String
+  var title: String
+  var locationName: String
+  var createdAt: Date
+  var good: Int
+  var comment: Int
+}
