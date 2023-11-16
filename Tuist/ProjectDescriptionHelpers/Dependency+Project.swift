@@ -5,7 +5,7 @@ public extension TargetDependency {
 }
 
 public extension TargetDependency.Projcet {
-    static let Network = TargetDependency.project(target: "Network", path: .relativeToRoot("Projects/Network"))
+    static let EumNetwork = TargetDependency.project(target: "EumNetwork", path: .relativeToRoot("Projects/EumNetwork"))
     static let DesignSystemFoundation = TargetDependency.project(target: "DesignSystemFoundation", path: .relativeToRoot("Projects/DesignSystemFoundation"))
     static let UISystem = TargetDependency.project(target: "UISystem", path: .relativeToRoot("Projects/UISystem"))
 }

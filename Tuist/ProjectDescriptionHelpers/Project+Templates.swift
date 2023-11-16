@@ -4,7 +4,7 @@ import ProjectDescriptionHelpers
 public extension Project {
   
   static let organizationName = "kr.k-eum"
-  static let targetVersion = "15.0"
+  static let targetVersion = "16.0"
   
   
   static func makeAppModule(

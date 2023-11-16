@@ -7,7 +7,7 @@ workspace 'Eum.xcworkspace'
 project 'Projects/App/App.xcodeproj'
 project 'Projects/DesignSystemFoundation/DesignSystemFoundation.xcodeproj'
 project 'Projects/UISystem/UISystem.xcodeproj'
-project 'Projects/Network/Network.xcodeproj'
+project 'Projects/Network/EumNetwork.xcodeproj'
 
 target 'App' do
   project 'Projects/App/App.xcodeproj'
@@ -28,7 +28,7 @@ target 'UISystem' do
 
 end
 
-target 'Network' do
-  project 'Projects/Network/Network.xcodeproj'
+target 'EumNetwork' do
+  project 'Projects/EumNetwork/EumNetwork.xcodeproj'
 
 end
