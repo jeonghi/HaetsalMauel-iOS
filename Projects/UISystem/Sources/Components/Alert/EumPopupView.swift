@@ -12,20 +12,20 @@ import DesignSystemFoundation
 public struct EumPopupView {
   let title: String?
   let subtitle: String?
-  let type: AlertType
+  let type: PopupType
   let firstButtonName: String?
   let secondButtonName: String?
   var firstButtonAction: (() -> Void)?
   var secondButtonAction: (() -> Void)?
   
-  public enum AlertType {
+  public enum PopupType {
     case oneLineOneButton
     case oneLineTwoButton
     case twoLineTwoButton
     case twoLineOneButton
   }
   
-  public init(title: String? = nil, subtitle: String? = nil, type: AlertType, firstButtonName: String? = nil, secondButtonName: String? = nil, firstButtonAction: (() -> Void)? = nil, secondButtonAction: (() -> Void)? = nil) {
+  public init(title: String? = nil, subtitle: String? = nil, type: PopupType, firstButtonName: String? = nil, secondButtonName: String? = nil, firstButtonAction: (() -> Void)? = nil, secondButtonAction: (() -> Void)? = nil) {
     self.title = title
     self.subtitle = subtitle
     self.type = type
@@ -49,6 +49,7 @@ extension EumPopupView: View {
           Text(subtitle)
             .foregroundColor(Color(.systemgray07))
             .font(.subR)
+            .multilineTextAlignment(.center)
         }
       }
       .padding(.horizontal, 16)
@@ -72,6 +73,10 @@ extension EumPopupView: View {
       .padding(.horizontal, 8)
     }
     .padding(.vertical, 12)
+    .background(
+      RoundedRectangle(cornerRadius: 12, style: /*@START_MENU_TOKEN@*/.continuous/*@END_MENU_TOKEN@*/)
+        .fill(Color(.white))
+    )
   }
 }
 

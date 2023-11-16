@@ -7,7 +7,7 @@
 //
 import DesignSystemFoundation
 
-extension IconSize {
+public extension IconSize {
   static var xxLarge = IconSize(width: 60, height: 60)
   static var large = IconSize(width: 24, height: 24)
   static var medium = IconSize(width: 16, height: 16)

@@ -7,13 +7,53 @@
 //
 
 import SwiftUI
+import DesignSystemFoundation
 
-struct CategoryButton: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-    }
+// MARK: Properties
+public struct CategoryButton {
+  let iconImage: ImageAsset
+  let text: String
+  var isSelected: Bool = false
+  
+  public init(_ iconImage: ImageAsset, _ text: String, _ isSelected: Bool) {
+    self.iconImage = iconImage
+    self.text = text
+    self.isSelected = isSelected
+  }
+}
+
+// MARK: Layout
+extension CategoryButton: View {
+  public var body: some View {
+    label
+      .padding(.horizontal, 16)
+      .padding(.vertical, 11)
+      .background(
+        RoundedRectangle(cornerRadius: 10)
+          .fill(isSelected ? Color(.primaryLight) : Color(.systemgray02))
+          .background(
+            RoundedRectangle(cornerRadius: 10)
+              .stroke(isSelected ? Color(.primary) : Color(.systemgray02), lineWidth: 3)
+          )
+      )
+  }
+}
+
+// MARK: Component init
+extension CategoryButton {
+  private var label: some View {
+    CategoryLabel(
+      icon: iconImage,
+      iconBackgroundColor: isSelected ? Color(.white).opacity(0.5) : Color(.white).opacity(0.5),
+      text: text,
+      textColor: isSelected ? Color(.primary) : Color(.black)
+    )
+  }
 }
 
 #Preview {
-    CategoryButton()
+  VStack {
+    CategoryButton(.카테고리_기타, "기타", true)
+    CategoryButton(.카테고리_기타, "기타", false)
+  }
 }

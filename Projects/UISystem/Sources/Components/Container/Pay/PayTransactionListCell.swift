@@ -39,7 +39,7 @@ extension PayTransactionListCell: View {
           Text(description)
             .lineLimit(1)
             .font(.subB)
-            .foregroundColor(Color(.systemgray07))
+            .foregroundColor(Color(.black))
           Spacer()
           Text(transactionAt.formattedTimeWithAmPm())
             .font(.descriptionR)
@@ -60,8 +60,8 @@ extension PayTransactionListCell: View {
               }()
             )
           Spacer()
-          Text("잔액 \(balance) 햇살")
-              .font(.descriptionR)
+          Text("\(balance) 햇살")
+              .font(.subB)
               .foregroundColor(Color(.systemgray07))
         }
       }

@@ -60,14 +60,14 @@ public struct SlidingTab<T>: View where T: RawRepresentable, T.RawValue == Strin
               tabs: [T],
               font: Font = .headerB,
               animation: Animation = .spring(),
-              activeAccentColor: Color = Color(.deepBlue),
+              activeAccentColor: Color = Color(.black),
               inactiveAccentColor: Color = Color.black.opacity(0.4),
-              selectionBarColor: Color = Color(.deepBlue),
+              selectionBarColor: Color = Color(.black),
               inactiveTabColor: Color = .clear,
               activeTabColor: Color = .clear,
               selectionBarHeight: CGFloat = 2,
               selectionBarBackgroundColor: Color = Color(.systemgray07),
-              selectionBarBackgroundHeight: CGFloat = 1,
+              selectionBarBackgroundHeight: CGFloat = 2,
               scrolling: Bool = false,
               backgroundColor: Color = .white
   ) {
@@ -117,7 +117,7 @@ public struct SlidingTab<T>: View where T: RawRepresentable, T.RawValue == Strin
             }
           }
           .frame(maxWidth: .infinity)
-          .padding(.vertical, 16)
+          .padding(.vertical, 10)
           .accentColor(
             self.isSelected(tabIdentifier: tab)
             ? self.activeAccentColor
@@ -134,9 +134,11 @@ public struct SlidingTab<T>: View where T: RawRepresentable, T.RawValue == Strin
           Rectangle()
             .fill(self.selectionBarBackgroundColor)
             .frame(width: geometry.size.width, height: self.selectionBarBackgroundHeight, alignment: .leading)
+            .cornerRadius(2, corners: .allCorners)
           Rectangle()
             .fill(self.selectionBarColor)
             .frame(width: self.tabWidth(from: geometry.size.width), height: self.selectionBarHeight, alignment: .leading)
+            .cornerRadius(2, corners: .allCorners)
             .offset(x: self.selectionBarXOffset(from: geometry.size.width), y: 0)
             .animation(self.animation)
         }.fixedSize(horizontal: false, vertical: true)
@@ -191,5 +193,6 @@ struct SlidingTabConsumerView : View {
 struct SlidingTab_Previews: PreviewProvider {
   static var previews: some View {
     SlidingTabConsumerView()
+      .padding(.horizontal, 10)
   }
 }

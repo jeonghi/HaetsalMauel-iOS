@@ -27,14 +27,15 @@ public struct DefaultLabel {
 
 extension DefaultLabel: View {
   public var body: some View {
-    ZStack {
-      Rectangle()
-        .fill(backgroundColor)
-        .cornerRadius(radius, corners: .allCorners)
       Text(text)
         .font(textFont)
         .foregroundColor(tintColor)
-    }
+        .padding(.horizontal, 5)
+        .padding(.vertical, 5)
+        .background(
+          RoundedRectangle(cornerRadius: 4)
+            .fill(backgroundColor)
+        )
   }
 }
 

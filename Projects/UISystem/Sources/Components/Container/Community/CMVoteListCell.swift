@@ -54,6 +54,8 @@ extension CMVoteListCell {
       Text(title)
         .font(.subB)
         .foregroundColor(Color(.black))
+        .multilineTextAlignment(.leading)
+        .lineLimit(1)
     }
     .hLeading()
   }

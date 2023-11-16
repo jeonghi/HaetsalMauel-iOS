@@ -31,11 +31,15 @@ public extension Font {
   static var headerB = UISystemFontFamily.Pretendard.bold.swiftUIFont(size: 20)
   static var titleB = UISystemFontFamily.Pretendard.bold.swiftUIFont(size: 24)
   static var largeTitleB = UISystemFontFamily.Pretendard.bold.swiftUIFont(size: 30)
+  static var largeB = UISystemFontFamily.Pretendard.bold.swiftUIFont(size: 40)
+  static var extraB = UISystemFontFamily.Pretendard.bold.swiftUIFont(size: 48)
   static let descriptionR = UISystemFontFamily.Pretendard.regular.swiftUIFont(size: 12)
   static var subR = UISystemFontFamily.Pretendard.regular.swiftUIFont(size: 16)
   static var headerR = UISystemFontFamily.Pretendard.regular.swiftUIFont(size: 20)
   static var titleR = UISystemFontFamily.Pretendard.regular.swiftUIFont(size: 24)
   static var largeTitleR = UISystemFontFamily.Pretendard.regular.swiftUIFont(size: 30)
+  static let largeR = UISystemFontFamily.Pretendard.regular.swiftUIFont(size: 40)
+  static let extraR = UISystemFontFamily.Pretendard.regular.swiftUIFont(size: 48)
 }
 
 #if(DEBUG)

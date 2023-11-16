@@ -11,12 +11,12 @@ import DesignSystemFoundation
 
 public struct OTPTextField: View {
   var textboxColor = Color(.systemgray07)
-  var code: String?
+  var code: String
   var isFilled: Bool {
-    return (code == nil) ? false : true
+    return (code.isEmpty) ? false : true
   }
   
-  public init(code: String? = nil) {
+  public init(code: String) {
     self.code = code
   }
   
@@ -30,9 +30,11 @@ public struct OTPTextField: View {
           .foregroundColor(Color(.primary))
       }
       else {
-        Circle()
+        ImageAsset.구름아이콘.toImage()
+          .renderingMode(.template)
+          .resizable()
+          .scaledToFit()
           .foregroundColor(Color(.systemgray05))
-          .padding(8)
       }
     }
     .frame(width: 40, height: 40)
@@ -42,8 +44,8 @@ public struct OTPTextField: View {
 #Preview {
   HStack {
     OTPTextField(code: "1")
-    OTPTextField(code: nil)
-    OTPTextField(code: nil)
-    OTPTextField(code: nil)
+    OTPTextField(code: "")
+    OTPTextField(code: "")
+    OTPTextField(code: "")
   }
 }
