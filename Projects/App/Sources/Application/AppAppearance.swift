@@ -7,13 +7,15 @@
 //
 import Foundation
 import UIKit
+import UISystem
+import DesignSystemFoundation
 
 final class AppAppearance {
   
   static func setupAppearance() {
-    setupTabBarAppearance() // 텝 바 설정
-//        setupNavigationBarAppearance() // 내비게이션 바 설정
-    //    setupToolBarAppearance() // 툴 바 설정
+      setupTabBarAppearance() // 텝 바 설정
+      setupNavigationBarAppearance() // 내비게이션 바 설정
+      //setupToolBarAppearance() // 툴 바 설정
   }
 }
 
@@ -24,8 +26,11 @@ extension AppAppearance {
     let appearance = UINavigationBarAppearance()
     let navigationBar = UINavigationBar()
     
-
+    let backButtonImage = ImageAsset.뒤로가기.toUIImage()
+    appearance.setBackIndicatorImage(backButtonImage, transitionMaskImage: backButtonImage)
     appearance.configureWithTransparentBackground()
+    UINavigationBar.appearance().backIndicatorImage = backButtonImage
+    UINavigationBar.appearance().backIndicatorTransitionMaskImage = backButtonImage
     navigationBar.tintColor = .white
     navigationBar.standardAppearance = appearance;
     UINavigationBar.appearance().scrollEdgeAppearance = appearance
@@ -37,8 +42,15 @@ extension AppAppearance {
   private static func setupTabBarAppearance() {
     let tabBarAppearance = UITabBar.appearance()
 
+    tabBarAppearance.shadowImage = UIImage()
+    tabBarAppearance.backgroundImage = UIImage()
+    tabBarAppearance.isTranslucent = true
+    tabBarAppearance.backgroundColor = .white
+    
     let tabBarStandardAppearance = UITabBarAppearance()
+    
     tabBarStandardAppearance.configureWithDefaultBackground()
+    
     tabBarStandardAppearance.backgroundColor = UIColor.white
 
     // 선택된 탭의 아이콘 색상을 오렌지로 설정
@@ -76,68 +88,3 @@ extension AppAppearance {
   }
 }
 
-extension UINavigationController {
-  @objc override open var preferredStatusBarStyle: UIStatusBarStyle {
-    return .lightContent // 상태바 스타일 설정 (흰색 텍스트 등)ggg
-  }
-}
-
-#if DEBUG
-import SwiftUI
-
-struct AppAppearancePreview: PreviewProvider {
-  static var previews: some View {
-    Group {
-      TabBarPreviewWrapper()
-        .previewLayout(.fixed(width: 400, height: 100))
-        .previewDisplayName("Tab Bar Preview")
-      
-      ToolBarPreviewWrapper()
-        .previewLayout(.fixed(width: 400, height: 100))
-        .previewDisplayName("Tool Bar Preview")
-    }
-  }
-}
-
-// Tab Bar Preview
-struct TabBarPreviewWrapper: UIViewRepresentable {
-  
-  func makeUIView(context: Context) -> UIView {
-    let view = UIView()
-    AppAppearance.setupAppearance() // apply appearance settings
-    
-    let tabBar = UITabBar(frame: CGRect(x: 0, y: 0, width: 400, height: 50))
-    let tabItem1 = UITabBarItem(title: "홈", image: nil, tag: 0)
-    let tabItem2 = UITabBarItem(title: "설정", image: nil, tag: 1)
-    tabBar.items = [tabItem1, tabItem2]
-    
-    view.addSubview(tabBar)
-    return view
-  }
-  
-  func updateUIView(_ uiView: UIView, context: Context) {
-    // update UI if needed
-  }
-}
-
-// Tool Bar Preview
-struct ToolBarPreviewWrapper: UIViewRepresentable {
-  
-  func makeUIView(context: Context) -> UIView {
-    let view = UIView()
-    AppAppearance.setupAppearance() // apply appearance settings
-    
-    let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: 400, height: 50))
-    let barItem1 = UIBarButtonItem(title: "메뉴", style: .plain, target: nil, action: nil)
-    let barItem2 = UIBarButtonItem(title: "설정", style: .plain, target: nil, action: nil)
-    toolbar.items = [barItem1, UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil), barItem2]
-    
-    view.addSubview(toolbar)
-    return view
-  }
-  
-  func updateUIView(_ uiView: UIView, context: Context) {
-    // update UI if needed
-  }
-}
-#endif
