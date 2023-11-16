@@ -36,7 +36,6 @@ struct OnboardingView: View {
   var body: some View {
     
     VStack(spacing: 0) {
-      
       VStack(alignment: .leading, spacing: 16){
         title
         subTitle
@@ -87,27 +86,35 @@ extension OnboardingView {
   }
   
   private var skipButton: some View {
-    Button(action: {viewStore.send(.skipButtonTapped)}){
-      HStack(spacing: 5){
-        Text("시작 전에 구경하고 싶다면?")
-          .font(.subB)
-          .foregroundColor(Color(.gray06))
-        Text("둘러보기")
+    
+    HStack(spacing: 5){
+      Text("기관 사용자이신가요?")
+        .font(.subR)
+        .foregroundColor(Color(.gray06))
+      NavigationLink(destination: SignUpView(store: signUpStore)){
+        Text("기관으로 로그인")
           .underline()
-          .font(.subB)
-          .foregroundColor(Color(.accent2))
+          .font(.subR)
+          .foregroundColor(Color(.primary))
       }
     }
   }
   
   private var loginButtonVStack: some View {
     VStack(spacing: 10){
-      TTLoginLabel(.kakao)
-      TTLoginLabel(.apple)
-      NavigationLink(destination: SignUpView()){
-        TTLoginLabel(.local)
+      Button(action: {viewStore.send(.skipButtonTapped)}){
+        TTLoginLabel(.kakao)
+      }
+      Button(action: {viewStore.send(.skipButtonTapped)}){
+        TTLoginLabel(.apple)
       }
     }
+  }
+}
+
+extension OnboardingView {
+  private var signUpStore: StoreOf<SignUp> {
+    return store.scope(state: \.signUpState, action: Action.signUpAction)
   }
 }
 

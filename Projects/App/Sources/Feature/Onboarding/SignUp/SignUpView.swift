@@ -68,6 +68,7 @@ extension SignUpView: View {
     .navigationBarTitleDisplayMode(.inline)
     .navigationBarHidden(false)
     .frame(maxWidth: .infinity, maxHeight: .infinity)
+    .setCustomNavBackButton()
     .onAppear{
       viewStore.send(.onAppear)
     }
