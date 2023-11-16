@@ -11,7 +11,7 @@ import DesignSystemFoundation
 import UISystem
 
 struct CMHomeView: View {
-
+  
   typealias Core = CMHome
   typealias State = Core.State
   typealias Action = Core.Action
@@ -35,21 +35,16 @@ struct CMHomeView: View {
   
   var body: some View {
     VStack {
-      ZStack {
-        ScrollView {
-          어떤소통을원하세요
-            .hLeading()
-            .padding(.top, 20)
-            .padding(.horizontal, 16)
-          분할
-            .padding(.vertical, 20)
-          핫게시글목록
-            .padding(.horizontal, 16)
-        }
-        newPostButton
-          .vBottom()
-          .hTrailing()
-          .padding()
+      Color.white.frame(height: 1)
+      ScrollView {
+        어떤소통을원하세요
+          .hLeading()
+          .padding(.top, 20)
+          .padding(.horizontal, 16)
+        분할
+          .padding(.vertical, 20)
+        핫게시글목록
+          .padding(.horizontal, 16)
       }
     }
     .fullScreenCover(isPresented: viewStore.binding(get: \.showingSheet, send: Action.dismissFullScreenOver)){
@@ -69,11 +64,11 @@ extension CMHomeView {
   
   private var 어떤소통을원하세요: some View {
     VStack(alignment: .leading, spacing: 34.5){
-      Text("어떤소통을 원하세요?")
+      Text("어떤 소통을 원하세요?")
         .font(.headerB)
         .hLeading()
       카테고리목록
-      .hLeading()
+        .hLeading()
     }
   }
   
@@ -90,7 +85,7 @@ extension CMHomeView {
         CategoryButton(Category.투표.cvtAssetImage(), Category.투표.rawValue, false)
       }
       NavigationLink(destination: CMDiscussionView(store: .init(initialState: CMDiscussion.State()){CMDiscussion()})){
-        CategoryButton(Category.의견.cvtAssetImage(), Category.의견.rawValue, false)
+        CategoryButton(Category.수다떨기.cvtAssetImage(), Category.수다떨기.rawValue, false)
       }
     }
   }
@@ -99,7 +94,11 @@ extension CMHomeView {
     VStack {
       핫게헤더
       LazyVStack {
-        
+        Text("지금은 인기있는 게시글이 없어요\n글을 작성해 마을을 따뜻하게 해주세요")
+          .multilineTextAlignment(.center)
+          .foregroundColor(Color(.systemgray06))
+          .padding(.vertical, 40)
+          .font(.subR)
       }
     }
   }
@@ -124,12 +123,6 @@ extension CMHomeView {
       }
     }
   }
-  
-  private var newPostButton: some View {
-    Button(action:{}){
-      NewPostLabel()
-    }
-  }
 }
 
 // MARK: - Store init
@@ -139,13 +132,11 @@ extension CMHomeView {
   }
 }
 
-struct CommunityHomeView_Previews: PreviewProvider {
-    static var previews: some View {
-      let store = Store(initialState: CMHome.State()){
-        CMHome()
-      }
-      NavigationView {
-        CMHomeView(store: store)
-      }
-    }
+#Preview {
+  let store = Store(initialState: CMHome.State()){
+    CMHome()
+  }
+  return NavigationView {
+    CMHomeView(store: store)
+  }
 }

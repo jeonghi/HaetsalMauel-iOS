@@ -12,6 +12,7 @@ struct CMDiscussion: Reducer {
   
   struct State {
     var CMDiscussionReadState: CMDiscussionRead.State = .init()
+    var CMDiscussionCreateState: CMDiscussionCreate.State = .init()
   }
   
   enum Action {
@@ -20,6 +21,7 @@ struct CMDiscussion: Reducer {
     case onDisappear
     
     case CMDiscussionReadAction(CMDiscussionRead.Action)
+    case CMDiscussionCreateAction(CMDiscussionCreate.Action)
   }
   
   var body: some ReducerOf<Self> {
@@ -32,10 +34,15 @@ struct CMDiscussion: Reducer {
         return .none
       case .CMDiscussionReadAction(let act):
         return .none
+      case .CMDiscussionCreateAction(let act):
+        return .none
       }
     }
     Scope(state: \.CMDiscussionReadState, action: /Action.CMDiscussionReadAction){
       CMDiscussionRead()
+    }
+    Scope(state: \.CMDiscussionCreateState, action: /Action.CMDiscussionCreateAction){
+      CMDiscussionCreate()
     }
   }
 }

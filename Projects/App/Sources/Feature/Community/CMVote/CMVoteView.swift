@@ -34,21 +34,35 @@ struct CMVoteView: View {
   }
   
   var body: some View {
-    VStack {
-      Color.white
-        .frame(height: 1)
-      ScrollView {
-        voteList
-          .background(Color(.white))
-          .padding(.top, 5)
+    ZStack {
+      VStack {
+        Color.white
+          .frame(height: 1)
+        ScrollView {
+          voteList
+            .background(Color(.white))
+            .padding(.top, 5)
+        }
+        .background(
+          Color(.systemgray02)
+        )
       }
-      .background(
-        Color(.systemgray02)
-      )
+      newPostButton
+        .vBottom()
+        .hTrailing()
+        .padding()
     }
     .background(Color(.white))
     .setCustomNavBackButton()
     .setCustomNavBarTitle("투표")
+    .toolbar {
+      ToolbarItemGroup(placement: .navigationBarTrailing){
+        Button(action:{}){
+          fitToImage(.검색, 24)
+        }
+        .foregroundColor(Color(.black))
+      }
+    }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .onAppear{
       viewStore.send(.onAppear)
@@ -60,6 +74,16 @@ struct CMVoteView: View {
 }
 
 extension CMVoteView {
+  
+  private func fitToImage(_ image: ImageAsset, _ imageHeight: CGFloat) -> some View {
+    image.toImage()
+      .renderingMode(.template)
+      .resizable()
+      .aspectRatio(contentMode: .fit)
+      .frame(height: imageHeight)
+  }
+
+  
   private var voteList: some View {
     LazyVStack(spacing: 0){
       NavigationLink(destination: CMVoteReadView(store: CMVoteReadStore)){
@@ -78,6 +102,12 @@ extension CMVoteView {
       Divider()
     }
     .padding(.horizontal, 16)
+  }
+  
+  private var newPostButton: some View {
+    Button(action:{}){
+      NewPostLabel()
+    }
   }
 }
 

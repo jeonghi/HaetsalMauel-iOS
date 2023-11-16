@@ -34,21 +34,35 @@ struct CMDiscussionView: View {
   }
   
   var body: some View {
-    VStack {
-      Color.white
-        .frame(height: 1)
-      ScrollView {
-        discussionList
-          .background(Color(.white))
-          .padding(.top, 5)
+    ZStack {
+      VStack {
+        Color.white
+          .frame(height: 1)
+        ScrollView {
+          discussionList
+            .background(Color(.white))
+            .padding(.top, 5)
+        }
+        .background(
+          Color(.systemgray02)
+        )
       }
-      .background(
-        Color(.systemgray02)
-      )
+      newPostButton
+        .vBottom()
+        .hTrailing()
+        .padding()
     }
     .background(Color(.white))
     .setCustomNavBackButton()
-    .setCustomNavBarTitle("의견")
+    .setCustomNavBarTitle("수다떨기")
+    .toolbar {
+      ToolbarItemGroup(placement: .navigationBarTrailing){
+        Button(action:{}){
+          fitToImage(.검색, 24)
+        }
+        .foregroundColor(Color(.black))
+      }
+    }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .onAppear{
       viewStore.send(.onAppear)
@@ -60,20 +74,29 @@ struct CMDiscussionView: View {
 }
 
 extension CMDiscussionView {
+  
+  private func fitToImage(_ image: ImageAsset, _ imageHeight: CGFloat) -> some View {
+    image.toImage()
+      .renderingMode(.template)
+      .resizable()
+      .aspectRatio(contentMode: .fit)
+      .frame(height: imageHeight)
+  }
+  
   private var discussionList: some View {
     LazyVStack(spacing: 0){
       NavigationLink(destination: CMDiscussionReadView(store: CMDiscussionReadStore)){
-        CMDiscussionListCell(title: "제목", likeCnt: 0, commentCnt: 2, locationName: "정릉 제 2동", createdAt: Date())
+        CMDiscussionListCell(title: "다들 오늘 수능 잘보자 퐈이팅 넘나 떨려용 ㅎㅎㅎㅎ!! ㅎㅎㅎㅎ ", likeCnt: 3, commentCnt: 2, locationName: "정릉 제 2동", createdAt: Date())
           .padding(.vertical, 16)
       }
       Divider()
-      CMDiscussionListCell(title: "제목", likeCnt: 0, commentCnt: 2, locationName: "정릉 제 2동", createdAt: Date())
+      CMDiscussionListCell(title: "제목", likeCnt: 2, commentCnt: 100, locationName: "정릉 제 2동", createdAt: Date())
         .padding(.vertical, 16)
       Divider()
       CMDiscussionListCell(title: "제목", likeCnt: 0, commentCnt: 2, locationName: "정릉 제 2동", createdAt: Date())
         .padding(.vertical, 16)
       Divider()
-      CMDiscussionListCell(title: "제목", likeCnt: 0, commentCnt: 2, locationName: "정릉 제 2동", createdAt: Date())        .padding(.vertical, 16)
+      CMDiscussionListCell(title: "제목", likeCnt: 1, commentCnt: 2, locationName: "정릉 제 2동", createdAt: Date())        .padding(.vertical, 16)
       Divider()
     }
     .padding(.horizontal, 16)
@@ -83,6 +106,12 @@ extension CMDiscussionView {
 extension CMDiscussionView {
   private var CMDiscussionReadStore: StoreOf<CMDiscussionRead> {
     return store.scope(state: \.CMDiscussionReadState, action: Action.CMDiscussionReadAction)
+  }
+  
+  private var newPostButton: some View {
+    Button(action:{}){
+      NewPostLabel()
+    }
   }
 }
 

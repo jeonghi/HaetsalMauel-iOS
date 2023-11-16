@@ -6,14 +6,49 @@
 //  Copyright © 2023 kr.k-eum. All rights reserved.
 //
 
+import ComposableArchitecture
 import SwiftUI
+import DesignSystemFoundation
+import UISystem
 
 struct CMDiscussionReadView: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+
+  typealias Core = CMDiscussionRead
+  typealias State = Core.State
+  typealias Action = Core.Action
+  
+  private let store: StoreOf<Core>
+  
+  @ObservedObject private var viewStore: ViewStore<ViewState, Action>
+  
+  struct ViewState: Equatable {
+    
+    init(state: State) {
+      
     }
+  }
+  
+  init(store: StoreOf<Core>) {
+    self.store = store
+    self.viewStore = ViewStore(store, observe: ViewState.init)
+  }
+  
+  var body: some View {
+    VStack {
+      Color.white
+    }
+    .setCustomNavBackButton()
+    .frame(maxWidth: .infinity, maxHeight: .infinity)
+    .onAppear{
+      viewStore.send(.onAppear)
+    }
+    .onDisappear{
+      viewStore.send(.onDisappear)
+    }
+  }
 }
 
 #Preview {
-    CMDiscussionReadView()
+  let store = Store(initialState: CMDiscussionRead.State()){CMDiscussionRead()}
+  return NavigationView {CMDiscussionReadView(store: store)}
 }
