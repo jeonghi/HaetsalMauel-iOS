@@ -60,8 +60,8 @@ extension PayHomeView: View {
         IfLetStore(setPasswordStore, then: SetPasswordView.init)
       }
     }
-    .frame(maxWidth: .infinity, maxHeight: .infinity)
-    .navigationBarTitle("햇살 카드", displayMode: .inline)
+    .setCustomNavBarTitle("햇살카드")
+    .setCustomNavBackButton()
     .onAppear{
       viewStore.send(.onAppear)
     }
@@ -146,20 +146,15 @@ extension PayHomeView {
   }
   
   private var 탭바: some View {
-    return VStack {
-      SlidingTab(
-        selection: viewStore.binding(
-          get: \.selectedTab,
-          send: Action.setTab
-        ),
-        tabs: Tab.allCases
-      )
-      switch viewStore.selectedTab {
-      case .보냄:
-        Text("")
-      case .받음:
-        Text("")
-      }
+    return LazyVStack(spacing: 0) {
+      PayTransactionListCell(description: "햇살 활동 장려금 (댓글 달기)", transactionAt: Date(), type: .받음, amount: 20, balance: 1980)
+        .padding(.vertical, 16)
+      PayTransactionListCell(description: "금메달 마트 장보기 도움", transactionAt: Date(), type: .보냄, amount: 40, balance: 1960)
+        .padding(.vertical, 16)
+      PayTransactionListCell(description: "전구 교체 도움", transactionAt: Date(), type: .보냄, amount: 40, balance: 2000)
+        .padding(.vertical, 16)
+      PayTransactionListCell(description: "마을 정착 지원금", transactionAt: Date(), type: .받음, amount: 300, balance: 300)
+        .padding(.vertical, 16)
     }
   }
   
