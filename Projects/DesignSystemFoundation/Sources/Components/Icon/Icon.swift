@@ -9,14 +9,14 @@ import Foundation
 import SwiftUI
 
 public struct Icon: View {
-  @Environment(\.iconTint) var iconTint: Color
-  @Environment(\.iconSize) var iconSize: IconSize
-  @Environment(\.renderingMode) var renderingMode: Image.TemplateRenderingMode // orginal or template
+  @Environment(\.iconTint) public var iconTint: Color
+  @Environment(\.iconSize) public var iconSize: IconSize
+  @Environment(\.renderingMode) public var renderingMode: Image.TemplateRenderingMode // orginal or template
   
   public var image: Image
   public var tintColor: Color?
   
-  public init(image: Image, tintColor: Color?) {
+  public init(image: Image, tintColor: Color? = nil) {
     self.image = image
     self.tintColor = tintColor
   }
