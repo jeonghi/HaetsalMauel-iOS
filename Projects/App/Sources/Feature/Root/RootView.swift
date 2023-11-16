@@ -37,15 +37,19 @@ struct RootView: View {
         Color.white
         switch viewStore.route {
         case .onboarding:
-          IfLetStore(
-            onboardingStore,
-            then: OnboardingView.init
-          )
+          NavigationView {
+            IfLetStore(
+              onboardingStore,
+              then: OnboardingView.init
+            )
+          }
         case .mainTab:
-          IfLetStore(
-            mainTabStore,
-            then: MainTabView.init
-          )
+          NavigationView {
+            IfLetStore(
+              mainTabStore,
+              then: MainTabView.init
+            )
+          }
         }
       }
     }
@@ -70,6 +74,7 @@ struct RootView_Previews: PreviewProvider {
     let store = Store(initialState: Root.State()){
       Root()
     }
-    RootView(store: store)
+    
+      RootView(store: store)
   }
 }

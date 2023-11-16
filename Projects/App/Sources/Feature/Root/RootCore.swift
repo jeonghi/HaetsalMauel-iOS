@@ -14,6 +14,13 @@ struct Root: Reducer {
     
     var onboardingState: Onboarding.State?
     var mainTabState: MainTab.State?
+    
+    var fromSetting: FromSetting?
+    
+    enum FromSetting {
+      case logout
+      case signOut
+    }
   }
   
   enum Route {
@@ -22,10 +29,19 @@ struct Root: Reducer {
   }
   
   enum Action {
+    /// Life cycle
     case onAppear
     case onDisappear
     case setRoute(Route)
     
+    /// Authentication
+    case signOut
+    case signIn
+    case withdrawal
+    
+    /// Alert
+    
+    /// Child
     case onboardingAction(Onboarding.Action)
     case mainTabAction(MainTab.Action)
   }
@@ -34,6 +50,7 @@ struct Root: Reducer {
     
     Reduce<State, Action> { state, action in
       switch action {
+        /// Life cycle
       case .onAppear:
         state.onboardingState = .init()
         return .none
@@ -42,11 +59,27 @@ struct Root: Reducer {
       case .setRoute(let selectedRoute):
         state.route = selectedRoute
         return .none
+        
+        /// Authentication
+      case .signOut:
+        return .none
+      case .signIn:
+        return .none
+      case .withdrawal:
+        return .none
+      
+      case .onboardingAction(.signUpAction(.tappedLoginButton)):
+        state.mainTabState = .init()
+        return .send(.setRoute(.mainTab))
       case .onboardingAction(.skipButtonTapped):
         state.mainTabState = .init()
         return .send(.setRoute(.mainTab))
       case .onboardingAction:
         return .none
+      case .mainTabAction(.settingAction(.logout)):
+        return .send(.setRoute(.onboarding))
+      case .mainTabAction(.settingAction(.signOut)):
+        return .send(.setRoute(.onboarding))
       case .mainTabAction:
         return .none
       }
