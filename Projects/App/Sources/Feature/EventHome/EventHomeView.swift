@@ -7,13 +7,41 @@
 //
 
 import SwiftUI
+import ComposableArchitecture
 
-struct EventHomeView: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+struct EventHomeView {
+  typealias Core = EventHome
+  typealias State = Core.State
+  typealias Action = Core.Action
+  
+  private let store: StoreOf<Core>
+  @ObservedObject var viewStore: ViewStore<ViewState, Action>
+  
+  struct ViewState: Equatable {
+    
+    init(state: State){
     }
+  }
+  
+  init(store: StoreOf<Core>){
+    self.store = store
+    self.viewStore = ViewStore(store, observe: ViewState.init)
+  }
+}
+
+
+extension EventHomeView: View {
+  var body: some View {
+    VStack {
+      WebView(url: "https://eumweb.netlify.app/", viewModel: WebViewModel())
+    }
+    .navigationBarTitleDisplayMode(.inline)
+  }
 }
 
 #Preview {
-    EventHomeView()
+  let store = Store(initialState: EventHome.State()){EventHome()}
+  return VStack {
+    EventHomeView(store: store)
+  }
 }
