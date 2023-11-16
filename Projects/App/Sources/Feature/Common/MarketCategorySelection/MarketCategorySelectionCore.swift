@@ -12,14 +12,14 @@ struct MarketCategorySelection: Reducer {
   
   typealias Category = MarketCategory
   
-  struct State {
+  struct State: Equatable {
     var selectedCategory: Category?
     var isSelectedAnyOne: Bool {
       selectedCategory != nil
     }
   }
   
-  enum Action {
+  enum Action: Equatable {
     case onAppear
     case onDisappear
     case selectCategory(Category)

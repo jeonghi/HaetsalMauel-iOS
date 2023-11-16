@@ -7,3 +7,46 @@
 //
 
 import Foundation
+import ComposableArchitecture
+
+struct MarketPlaceCategorySelection: Reducer {
+  struct State: Equatable {
+    var marketCategorySelectionState: MarketCategorySelection.State = .init()
+    var isSelected: Bool {
+      marketCategorySelectionState.isSelectedAnyOne
+    }
+    var selectedCat: MarketCategory? {
+      marketCategorySelectionState.selectedCategory
+    }
+  }
+  
+  enum Action: Equatable {
+    /// Life cycle
+    case onAppear
+    case onDisappear
+    
+    case marketCategorySelectionAction(MarketCategorySelection.Action)
+    case tappedSelectDoneButton
+  }
+  
+  var body: some ReducerOf<Self> {
+    
+    Reduce<State, Action> { state, action in
+      switch action {
+        /// Life cycle
+      case .onAppear:
+        return .none
+      case .onDisappear:
+        return .none
+      case .marketCategorySelectionAction(_):
+        return .none
+      case .tappedSelectDoneButton:
+        return .none
+      }
+    }
+    
+    Scope(state: \.marketCategorySelectionState, action: /Action.marketCategorySelectionAction){
+      MarketCategorySelection()
+    }
+  }
+}
