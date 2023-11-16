@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import UIKit
 import ComposableArchitecture
 import UISystem
 import DesignSystemFoundation
@@ -33,143 +34,125 @@ struct MainTabView: View {
   init(store: StoreOf<Core>) {
     self.store = store
     self.viewStore = ViewStore(store, observe: ViewState.init)
+    
   }
   
   var body: some View {
     
-    NavigationView {
-      TabView(
-        selection: viewStore.binding(
-          get: \.selectedTab,
-          send: Action.setTab
-        )
-      ){
-        
-        /// 홈
-        HomeView(store: homeStore)
-          .tag(Tab.홈)
-          .tabItem {
-            VStack {
-              Group {
-                if(viewStore.selectedTab == .홈){
-                  ImageAsset.홈fill.toImage()
-                    .renderingMode(.template)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                }else{
-                  ImageAsset.홈.toImage()
-                    .renderingMode(.template)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                }
+    TabView(
+      selection: viewStore.binding(
+        get: \.selectedTab,
+        send: Action.setTab
+      )
+    ){
+      HomeView(store: homeStore)
+        .tag(Tab.홈)
+        .tabItem {
+          VStack {
+            Group {
+              if(viewStore.selectedTab == .홈){
+                fitToImage(ImageAsset.홈fill, 28)
+              } else{
+                fitToImage(ImageAsset.홈, 28)
               }
-              .frame(height: 28)
-              Text("홈")
             }
+            Text("홈")
           }
+        }
+      
+      MPHomeView(store: marketPlaceHomeStore)
+        .tag(Tab.햇터)
+        .tabItem {
+          VStack {
+            viewStore.selectedTab == .햇터 ? fitToImage(ImageAsset.햇터fill, 28) : fitToImage(ImageAsset.햇터, 28)
+            Text("햇터")
+          }
+        }
+      
+      
+      /// 채팅
+      ChatHomeView(store: chatHomeStore)
+        .tag(Tab.채팅)
+        .tabItem {
+          VStack {
+            viewStore.selectedTab == .채팅 ? fitToImage(.채팅fill, 28) : fitToImage(.채팅, 28)
+            Text("채팅")
+          }
+        }
+      
+      /// 소통
+      CMHomeView(store: communityStore)
+        .tag(Tab.소통)
+        .tabItem {
+          VStack {
+            viewStore.selectedTab == .소통 ? fitToImage(.소통fill, 28) : fitToImage(.소통, 28)
+            Text("소통")
+          }
+        }
+      
+      /// 우리 마을
+      EventHomeView(store: eventHomeStore)
+        .tag(Tab.행사)
+        .tabItem {
+          VStack {
+            viewStore.selectedTab == .행사 ? fitToImage(.우리마을fill, 28) : fitToImage(.우리마을, 28)
+            Text("행사")
+          }
+        }
+    }
+    .navigationBarTitleDisplayMode(.inline)
+    .accentColor(Color(.primary))
+    .toolbar {
+      switch viewStore.selectedTab {
+      case .홈:
+        ToolbarItemGroup(placement: .navigationBarLeading){
+          HStack(spacing: 0) {
+            fitToImage(.localLogo, 24)
+            fitToImage(.koreanLogo, 24)
+          }
+          .foregroundColor(Color(.white))
+        }
+        ToolbarItemGroup(placement: .navigationBarTrailing){
+          HStack {
+            NavigationLink(
+              destination: SettingView(store: settingStore)
+            ){
+              fitToImage(.setting, 24)
+            }
+            .foregroundColor(Color(.white))
+          }
+        }
         
-        /// 햇터
-        Color.white
-          .tag(Tab.햇터)
-          .tabItem {
-            VStack {
-              Group {
-                if(viewStore.selectedTab == .햇터){
-                  ImageAsset.햇터fill.toImage()
-                    .renderingMode(.template)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                }else{
-                  ImageAsset.햇터.toImage()
-                    .renderingMode(.template)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                }
-              }
-              .frame(height: 28)
-              Text("햇터")
-            }
+      case .햇터:
+        ToolbarItemGroup(placement: .principal){
+          Text(viewStore.selectedTab.rawValue)
+            .foregroundColor(Color(.black))
+            .font(.headerB)
+        }
+        ToolbarItemGroup(placement: .navigationBarTrailing){
+          Button(action:{}){
+            fitToImage(.검색, 24)
           }
+          .foregroundColor(Color(.black))
+        }
         
-        /// 채팅
-        ChatHomeView(store: chatHomeStore)
-          .tag(Tab.채팅)
-          .tabItem {
-            VStack {
-              Group {
-                if(viewStore.selectedTab == .채팅){
-                  ImageAsset.채팅fill.toImage()
-                    .renderingMode(.template)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                }else{
-                  ImageAsset.채팅.toImage()
-                    .renderingMode(.template)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                }
-              }
-              .frame(height: 28)
-              Text("채팅")
-            }
-          }
-        
-        /// 소통
-        CommunityHomeView(store: communityStore)
-          .tag(Tab.소통)
-          .tabItem {
-            VStack {
-              Group {
-                if(viewStore.selectedTab == .소통){
-                  ImageAsset.소통fill.toImage()
-                    .renderingMode(.template)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                }else{
-                  ImageAsset.소통.toImage()
-                    .renderingMode(.template)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                }
-              }
-              .frame(height: 28)
-              Text("소통")
-            }
-          }
-        
-        /// 우리 마을
-        Color.white
-          .tag(Tab.우리마을)
-          .tabItem {
-            VStack {
-              Group {
-                if(viewStore.selectedTab == .우리마을){
-                  ImageAsset.우리마을fill.toImage()
-                    .renderingMode(.template)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                }else{
-                  ImageAsset.우리마을.toImage()
-                    .renderingMode(.template)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                }
-              }
-              .frame(height: 28)
-              Text("우리마을")
-            }
-          }
+      default:
+        ToolbarItemGroup(placement: .principal){
+          Text(viewStore.selectedTab.rawValue)
+            .foregroundColor(Color(.black))
+            .font(.headerB)
+        }
       }
-      .accentColor(Color(.primary))
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
-    .navigationViewStyle(.stack)
     .onAppear{
       viewStore.send(.onAppear)
     }
+    .onDisappear {
+      viewStore.send(.onDisappear)
+    }
   }
 }
-
 // MARK: - Store init
 extension MainTabView {
   private var homeStore: StoreOf<Home> {
@@ -179,12 +162,32 @@ extension MainTabView {
     )
   }
   
-  private var communityStore: StoreOf<CommunityHome> {
+  private var communityStore: StoreOf<CMHome> {
     return store.scope(state: \.communityHomeState, action: Action.communityAction)
   }
   
   private var chatHomeStore: StoreOf<ChatHome> {
     return store.scope(state: \.chatHomeState, action: Action.chatHomeAction)
+  }
+  
+  private var marketPlaceHomeStore: StoreOf<MPHome> {
+    return store.scope(state: \.marketPlaceHomeState, action: Action.marketPlaceHomeAction)
+  }
+  
+  private var eventHomeStore: StoreOf<EventHome> {
+    return store.scope(state: \.eventHomeState, action: Action.eventHomeAction)
+  }
+  
+  private var settingStore: StoreOf<Setting> {
+    return store.scope(state: \.settingState, action: Action.settingAction)
+  }
+  
+  private func fitToImage(_ image: ImageAsset, _ imageHeight: CGFloat) -> some View {
+    image.toImage()
+      .renderingMode(.template)
+      .resizable()
+      .aspectRatio(contentMode: .fit)
+      .frame(height: imageHeight)
   }
 }
 
@@ -193,6 +196,9 @@ struct MainTab_Previews: PreviewProvider {
   static var previews: some View {
     
     let store = Store(initialState: MainTab.State()){MainTab()}
-    MainTabView(store: store)
+    
+    NavigationView {
+      MainTabView(store: store)
+    }
   }
 }

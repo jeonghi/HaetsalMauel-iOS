@@ -12,9 +12,15 @@ struct MainTab: Reducer {
   
   struct State {
     var selectedTab: Tab = .홈
+    
+    /// TabBar
     var homeState: Home.State = .init()
-    var communityHomeState: CommunityHome.State = .init()
+    var marketPlaceHomeState: MPHome.State = .init()
+    var communityHomeState: CMHome.State = .init()
     var chatHomeState: ChatHome.State = .init()
+    var eventHomeState: EventHome.State = .init()
+    
+    /// Navigation Bar
     var settingState: Setting.State = .init()
   }
   
@@ -23,7 +29,7 @@ struct MainTab: Reducer {
     case 햇터
     case 채팅
     case 소통
-    case 우리마을
+    case 행사
   }
   
   enum Action {
@@ -31,12 +37,17 @@ struct MainTab: Reducer {
     case onAppear
     case onDisappear
     
-    /// Tab
+    /// TabBar
     case setTab(Tab)
-    /// Child
+    
     case homeAction(Home.Action) // 홈
-    case communityAction(CommunityHome.Action) // 햇터
+    case marketPlaceHomeAction(MPHome.Action) // 햇터
+    case communityAction(CMHome.Action) // 의견 나누기
     case chatHomeAction(ChatHome.Action) // 채팅
+    case eventHomeAction(EventHome.Action) // 행사
+    
+    /// NavigationBar
+    case settingAction(Setting.Action) // 설정
   }
   
   var body: some ReducerOf<Self> {
@@ -48,17 +59,23 @@ struct MainTab: Reducer {
       case .onDisappear:
         return .none
         
-        /// Tab
+        /// Tab Bar
       case .setTab(let selectedTab):
         state.selectedTab = selectedTab
         return .none
-        
-        /// Child
       case .homeAction:
+        return .none
+      case .marketPlaceHomeAction:
         return .none
       case .communityAction:
         return .none
       case .chatHomeAction:
+        return .none
+      case .eventHomeAction:
+        return .none
+        
+        /// NavigationBar
+      case .settingAction:
         return .none
       }
     }
@@ -67,12 +84,24 @@ struct MainTab: Reducer {
       Home()
     }
     
+    Scope(state: \.marketPlaceHomeState, action: /Action.marketPlaceHomeAction){
+      MPHome()
+    }
+    
     Scope(state: \.communityHomeState, action: /Action.communityAction){
-      CommunityHome()
+      CMHome()
     }
     
     Scope(state: \.chatHomeState, action: /Action.chatHomeAction){
       ChatHome()
+    }
+    
+    Scope(state: \.eventHomeState, action: /Action.eventHomeAction){
+      EventHome()
+    }
+    
+    Scope(state: \.settingState, action: /Action.settingAction){
+      Setting()
     }
   }
 }
