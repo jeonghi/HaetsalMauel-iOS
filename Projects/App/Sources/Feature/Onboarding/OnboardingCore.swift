@@ -7,6 +7,8 @@
 //
 
 import ComposableArchitecture
+import KakaoSDKUser
+import KakaoSDKAuth
 
 struct Onboarding: Reducer {
   
@@ -35,6 +37,9 @@ struct Onboarding: Reducer {
     
     case skipButtonTapped
     
+    /// Kakao Login Handler
+    case kakaoLoginCallback(OAuthToken?, Error?)
+    
     /// Child
     case signUpAction(SignUp.Action)
     case newProfileAction(NewProfile.Action)
@@ -45,6 +50,9 @@ struct Onboarding: Reducer {
       switch action {
         /// Life cycle
       case .onAppear:
+        if authService.isLoggedIn {
+          return .send(.skipButtonTapped)
+        }
         return .none
       case .onDisappear:
         return .none
@@ -52,6 +60,15 @@ struct Onboarding: Reducer {
         state.route = selectedRoute
         return .none
       case .skipButtonTapped:
+        return .none
+        
+        /// Kakao Login Handler
+      case .kakaoLoginCallback(let token, let error):
+        if let error {
+          print(error)
+        }else {
+          print(token)
+        }
         return .none
         
         /// Child
@@ -70,4 +87,7 @@ struct Onboarding: Reducer {
       NewProfile()
     }
   }
+  
+  // MARK: Dependency
+  @Dependency(\.appService.authService) var authService
 }

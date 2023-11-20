@@ -38,6 +38,7 @@ struct MPHomeView {
   }
 }
 
+// MARK: Layout init
 extension MPHomeView: View {
   var body: some View {
     ZStack {
@@ -73,6 +74,7 @@ extension MPHomeView: View {
   }
 }
 
+// MARK: Component init
 extension MPHomeView {
   
   private var header: some View {
@@ -157,6 +159,7 @@ extension MPHomeView {
   }
 }
 
+// MARK: Store init
 extension MPHomeView {
   private var marketPlaceCategorySelectionStore: StoreOf<MarketPlaceCategorySelection> {
     return store.scope(state: \.marketPlaceCategorySelectionState, action: Action.marketPlaceCategorySelectionAction)
@@ -167,6 +170,7 @@ extension MPHomeView {
   }
 }
 
+// MARK: Preview
 #Preview {
   let store = Store(initialState: MPHome.State()){MPHome()}
   return NavigationView {MPHomeView(store: store)}

@@ -76,12 +76,12 @@ struct WebView: UIViewRepresentable {
       func webView(_ webView: WKWebView,
                      decidePolicyFor navigationAction: WKNavigationAction,
                      decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-          if let host = navigationAction.request.url?.host {
-              // 특정 도메인을 제외한 도메인을 연결하지 못하게 할 수 있다.
-              if host != "eumweb.netlify.app" {
-                 return decisionHandler(.cancel)
-             }
-          }
+//          if let host = navigationAction.request.url?.host {
+//              // 특정 도메인을 제외한 도메인을 연결하지 못하게 할 수 있다.
+//              if !(host == "eumweb.netlify.app" || host == "accounts.kakao.com" || host == "k-eum.kr") {
+//                 return decisionHandler(.cancel)
+//             }
+//          }
           
           // bar에 값을 send 해보자!
           parent.viewModel.bar.send(false)
@@ -142,6 +142,6 @@ extension WebView: WebViewHandlerDelegate {
 #Preview {
   @ObservedObject var viewModel = WebViewModel()
   return VStack {
-    WebView(url: "https://eumweb.netlify.app/", viewModel: viewModel)
+    WebView(url: "https://accounts.kakao.com/login/?continue=https%3A%2F%2Fkauth.kakao.com%2Foauth%2Fauthorize%3Fresponse_type%3Dcode%26redirect_uri%3Dhttp%253A%252F%252Fsunrise.k-eum.kr%253A8080%252Fuser%252Fauth%252Fkakao%26through_account%3Dtrue%26client_id%3D1a354a3d4dc989747906944c3c188196#login", viewModel: viewModel)
   }
 }

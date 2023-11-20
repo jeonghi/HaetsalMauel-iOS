@@ -10,6 +10,7 @@ import SwiftUI
 import UISystem
 import DesignSystemFoundation
 import ComposableArchitecture
+import KakaoSDKUser
 
 struct OnboardingView: View {
   
@@ -102,7 +103,9 @@ extension OnboardingView {
   
   private var loginButtonVStack: some View {
     VStack(spacing: 10){
-      Button(action: {viewStore.send(.skipButtonTapped)}){
+      Button(action: {
+        UserApi.shared.loginWithKakaoTalk {viewStore.send(.kakaoLoginCallback($0, $1))}
+      }){
         TTLoginLabel(.kakao)
       }
       Button(action: {viewStore.send(.skipButtonTapped)}){
