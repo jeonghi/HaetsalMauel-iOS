@@ -33,22 +33,30 @@ struct ChatHomeView {
   }
 }
 
+// MARK: Layout init
 extension ChatHomeView: View {
   var body: some View {
-    VStack(spacing: 0) {
-      탭바
-      ScrollView {
-        탭바내용
+    ZStack {
+      VStack(spacing: 0) {
+        Color.white.frame(height: 1)
+        탭바
+        ScrollView {
+          탭바내용
+        }
       }
     }
-    .vTop()
+    .background(Color(.white))
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .onAppear{
       viewStore.send(.onAppear)
     }
+    .onDisappear{
+      viewStore.send(.onDisappear)
+    }
   }
 }
 
+// MARK: Component init
 extension ChatHomeView {
   private var 탭바: some View {
     SlidingTab(
@@ -81,9 +89,9 @@ extension ChatHomeView {
       NavigationLink( destination: EumChatView(store: eumChatStore)){
         ChatListCell(profileUrl: URL(string: ""), userName: "마을 이장님", description: "더미데이터더미데이터데이터더미데이터더미데이터더미데이터데이터더미데이터", createdAt: Date(), unread: 1)
       }
-        
+      
       ChatListCell(profileUrl: URL(string: ""), userName: "정릉동 수호신", description: "더미데이터더미데이터데이터더미데이터", createdAt: Date(), unread: 0)
-      }
+    }
   }
   
   private var 이웃_게시글: some View {
@@ -97,21 +105,19 @@ extension ChatHomeView {
   }
 }
 
+// MARK: Store init
 extension ChatHomeView {
   private var eumChatStore: StoreOf<EumChat> {
     return Store(initialState: EumChat.State()){EumChat()}
   }
 }
 
-struct ChatHomeView_Previews: PreviewProvider {
-  static var previews: some View {
-    ZStack {
-      let store = Store(initialState: ChatHome.State()){
-        ChatHome()
-      }
-      NavigationView {
-        ChatHomeView(store: store)
-      }
-    }
+// MARK: Preview
+#Preview {
+  let store = Store(initialState: ChatHome.State()){
+    ChatHome()
+  }
+  return NavigationView {
+    ChatHomeView(store: store)
   }
 }

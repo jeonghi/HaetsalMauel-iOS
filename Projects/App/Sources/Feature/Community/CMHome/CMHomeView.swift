@@ -34,17 +34,19 @@ struct CMHomeView: View {
   }
   
   var body: some View {
-    VStack {
-      Color.white.frame(height: 1)
-      ScrollView {
-        어떤소통을원하세요
-          .hLeading()
-          .padding(.top, 20)
-          .padding(.horizontal, 16)
-        분할
-          .padding(.vertical, 20)
-        핫게시글목록
-          .padding(.horizontal, 16)
+    ZStack {
+      VStack {
+        Color.white.frame(height: 1)
+        ScrollView {
+          어떤소통을원하세요
+            .hLeading()
+            .padding(.top, 20)
+            .padding(.horizontal, 16)
+          분할
+            .padding(.vertical, 20)
+          핫게시글목록
+            .padding(.horizontal, 16)
+        }
       }
     }
     .fullScreenCover(isPresented: viewStore.binding(get: \.showingSheet, send: Action.dismissFullScreenOver)){

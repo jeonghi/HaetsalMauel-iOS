@@ -27,7 +27,8 @@ let project = Project.makeAppModule(
         .external(name: "SwiftUIPager"),
         .external(name: "LinkNavigator"),
         .external(name: "PopupView"),
-        .external(name: "Kingfisher")
+        .external(name: "Kingfisher"),
+        .external(name: "KakaoSDK")
 //        .external(name: "ExyteChat"),
 //        .external(name: "ExyteMediaPicker")
     ],
