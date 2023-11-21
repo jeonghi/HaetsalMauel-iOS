@@ -24,9 +24,9 @@ struct MPPostingCreate: Reducer {
     var maximumNoPeople: Int // 최대 모집 인원
     
     /// Child
-    var marketCategorySelectionState: MarketCategorySelection.State
+    var marketCategorySelectionState: MCSelection.State
     
-    init(TransactionType: String = "", activityDate: Date = .init(), activityTime: String = "", estimatedTime: Date = .init(), maximumNoPeople: Int = 0, marketCategorySelectionState: MarketCategorySelection.State = .init()) {
+    init(TransactionType: String = "", activityDate: Date = .init(), activityTime: String = "", estimatedTime: Date = .init(), maximumNoPeople: Int = 0, marketCategorySelectionState: MCSelection.State = .init()) {
       self.TransactionType = TransactionType
       self.activityDate = activityDate
       self.activityTime = activityTime
@@ -42,7 +42,7 @@ struct MPPostingCreate: Reducer {
     case onDisappear
     
     /// Child
-    case marketCategorySelectionAction(MarketCategorySelection.Action)
+    case marketCategorySelectionAction(MCSelection.Action)
   }
   
   var body: some ReducerOf<Self> {
@@ -61,7 +61,7 @@ struct MPPostingCreate: Reducer {
     }
     
     Scope(state: \.marketCategorySelectionState, action: /Action.marketCategorySelectionAction){
-      MarketCategorySelection()
+      MCSelection()
     }
   }
 }

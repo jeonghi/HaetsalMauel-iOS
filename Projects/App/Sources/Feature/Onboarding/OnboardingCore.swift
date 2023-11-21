@@ -15,7 +15,7 @@ struct Onboarding: Reducer {
   struct State {
     var route: Route? = nil
     var signUpState: SignUp.State = .init()
-    var newProfileState: NewProfile.State = .init()
+    var newProfileState: UPCreate.State = .init()
   }
   
   enum Route {
@@ -42,7 +42,7 @@ struct Onboarding: Reducer {
     
     /// Child
     case signUpAction(SignUp.Action)
-    case newProfileAction(NewProfile.Action)
+    case newProfileAction(UPCreate.Action)
   }
   
   var body: some ReducerOf<Self> {
@@ -84,7 +84,7 @@ struct Onboarding: Reducer {
       SignUp()
     }
     Scope(state: \.newProfileState, action: /Action.newProfileAction){
-      NewProfile()
+      UPCreate()
     }
   }
   

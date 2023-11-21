@@ -10,6 +10,9 @@ import Foundation
 import ComposableArchitecture
 
 struct MPHome: Reducer {
+  
+  typealias Category = MarketCategory
+  
   struct State {
     var isShowingFullSheet: Bool = false
     var marketPlaceCategorySelectionState: MarketPlaceCategorySelection.State = .init()
@@ -18,11 +21,17 @@ struct MPHome: Reducer {
     }
     var fullSheetType: FullSheetType? = nil
     var MPPostingCreateState: MPPostingCreate.State = .init()
+    var selectedTab: Tab? = nil
   }
   
   enum FullSheetType {
     case 카테고리선택
     case 글쓰기
+  }
+  
+  enum Tab: String, CaseIterable {
+    case 줄래요 = "햇살 줄래요"
+    case 받을래요 = "햇살 받을래요"
   }
   
   enum Action {
@@ -40,6 +49,7 @@ struct MPHome: Reducer {
     
     case 카테고리선택하기
     case 글쓰기
+    case selectTab(Tab?)
     
     /// Child
     case marketPlaceCategorySelectionAction(MarketPlaceCategorySelection.Action)
@@ -83,6 +93,10 @@ struct MPHome: Reducer {
           .send(.updateFullSheetType(.글쓰기)),
           .send(.isShowingFullSheet)
         )
+        
+      case .selectTab(let selectedTab):
+        state.selectedTab = selectedTab
+        return .none
         
         /// Child
       case .marketPlaceCategorySelectionAction(.tappedSelectDoneButton):

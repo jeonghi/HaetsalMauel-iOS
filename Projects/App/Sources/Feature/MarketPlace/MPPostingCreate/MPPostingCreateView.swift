@@ -103,7 +103,7 @@ extension MPPostingCreateView {
   
   private var 비추기종류: some View {
     containerBox("비추기 종류"){
-      MarketCategorySelectionView(store: MarketCategorySelectionStore)
+      MCSelectionView(store: MarketCategorySelectionStore)
     }
   }
   
@@ -170,7 +170,7 @@ extension MPPostingCreateView {
 
 // MARK: Store init
 extension MPPostingCreateView {
-  private var MarketCategorySelectionStore: StoreOf<MarketCategorySelection> {
+  private var MarketCategorySelectionStore: StoreOf<MCSelection> {
     return store.scope(state: \.marketCategorySelectionState, action: Action.marketCategorySelectionAction)
   }
 }

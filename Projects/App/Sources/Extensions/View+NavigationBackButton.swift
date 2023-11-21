@@ -75,6 +75,7 @@ struct CustomNavTitleModifier: ViewModifier {
   let title: String
   func body(content: Content) -> some View {
     content
+      .navigationBarHidden(false)
       .navigationBarTitleDisplayMode(.inline)
       .toolbar {
         ToolbarItemGroup(placement: .principal){

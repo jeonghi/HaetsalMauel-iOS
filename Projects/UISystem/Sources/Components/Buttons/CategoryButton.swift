@@ -25,17 +25,16 @@ public struct CategoryButton {
 // MARK: Layout
 extension CategoryButton: View {
   public var body: some View {
-    label
-      .padding(.horizontal, 16)
-      .padding(.vertical, 11)
-      .background(
-        RoundedRectangle(cornerRadius: 10)
-          .fill(isSelected ? Color(.primaryLight) : Color(.systemgray02))
-          .background(
-            RoundedRectangle(cornerRadius: 10)
-              .stroke(isSelected ? Color(.primary) : Color(.systemgray02), lineWidth: 3)
-          )
-      )
+    ZStack {
+      RoundedRectangle(cornerRadius: 10)
+        .fill(isSelected ? Color(.primaryLight) : Color(.systemgray02))
+        .background(
+          RoundedRectangle(cornerRadius: 10)
+            .stroke(isSelected ? Color(.primary) : Color(.systemgray02), lineWidth: 3)
+        )
+        .aspectRatio(1/1, contentMode: .fit)
+      label
+    }
   }
 }
 

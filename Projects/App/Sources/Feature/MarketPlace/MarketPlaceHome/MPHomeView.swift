@@ -21,14 +21,19 @@ struct MPHomeView {
   
   @ObservedObject private var viewStore: ViewStore<ViewState, Action>
   
+  typealias Category = Core.Category
+  typealias Tab = Core.Tab
+  
   struct ViewState: Equatable {
-    var selectedCat: MarketCategory?
+    var selectedCat: Category?
+    var selectedTab: Tab?
     var isShowingFullSheet: Bool
     var fullSheetType: Core.FullSheetType?
     init(state: State) {
       selectedCat = state.selectedCat
       isShowingFullSheet = state.isShowingFullSheet
       fullSheetType = state.fullSheetType
+      selectedTab = state.selectedTab
     }
   }
   
@@ -95,27 +100,24 @@ extension MPHomeView {
         .padding(.horizontal, 10)
       }
       .frame(maxWidth: .infinity)
-      Divider()
-      ScrollView(.horizontal) {
-        HStack {
-          filterList
-        }
-        .padding(.leading, 10)
-      }
-      Divider()
+      filterList
     }
   }
   
   private var filterList: some View {
-    ForEach(["햇살 줄래요", "햇살 받을래요", "모집중만 보기"], id: \.self){ text in
-      tagButton(text)
+    VStack {
+      Divider()
+      HStack {
+        ScrollingTab(selection: viewStore.binding(get: \.selectedTab, send: Action.selectTab), tabs: Tab.allCases)
+        Spacer()
+      }
+      .padding(.horizontal, 10)
+      Divider()
     }
   }
   
   private var contentVList: some View {
     ScrollView {
-
-      
       LazyVStack(spacing: 0) {
 
         NavigationLink(destination: MPPostingReadView(store: .init(initialState: MPPostingRead.State()){MPPostingRead()})) {
@@ -141,20 +143,6 @@ extension MPHomeView {
   private var newPostButton: some View {
     Button(action:{viewStore.send(.tappedCreatePostButton)}){
       NewPostLabel()
-    }
-  }
-  
-  private func tagButton(_ text: String) -> some View {
-    Button(action: {}){
-      Text(text)
-        .font(.descriptionR)
-        .foregroundColor(Color(.systemgray07))
-        .padding(.horizontal, 10)
-        .padding(.vertical, 6.5)
-        .background(
-          RoundedRectangle(cornerRadius: 7)
-            .fill(Color(.systemgray05).opacity(0.3))
-        )
     }
   }
 }

@@ -19,7 +19,7 @@ public struct CategoryLabel {
   var textColor: Color
   
   
-  public init(icon: ImageAsset, iconBackgroundColor: Color = Color(.white).opacity(0.5), text: String, textFont: Font = Font.subR, textColor: Color = Color.black) {
+  public init(icon: ImageAsset, iconBackgroundColor: Color = Color(.white).opacity(0.5), text: String, textFont: Font = Font.subB, textColor: Color = Color.black) {
     self.iconImage = icon
     self.iconBackgroundColor = iconBackgroundColor
     self.text = text
@@ -30,21 +30,30 @@ public struct CategoryLabel {
 
 extension CategoryLabel: View {
   public var body: some View {
-    VStack(spacing: 10){
-      ZStack {
-        iconImage.toImage()
-          .resizable()
-          .aspectRatio(contentMode: .fit)
-          .background(iconBackgroundColor)
-          .clipShape(Circle())
-          .frame(maxHeight: .infinity)
+    ZStack {
+      VStack(spacing: 10){
+        ZStack {
+          iconImage.toImage()
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .background(iconBackgroundColor)
+            .clipShape(Circle())
+            .frame(maxWidth: .infinity)
+        }
+        .frame(width: 74, height:52)
+        .scaledToFit()
+        .frame(maxWidth: .infinity)
+        Text(text)
+          .font(textFont)
+          .foregroundColor(textColor)
+          .frame(width: 74, height: 21)
+          .scaledToFit()
+          .frame(maxWidth: .infinity)
       }
-      .frame(width: 74, height:52)
-      Text(text)
-        .font(textFont)
-        .foregroundColor(textColor)
-        .frame(width: 74, height: 21)
+      .padding(16)
     }
+    .aspectRatio(1/1, contentMode: .fit)
+    .frame(maxWidth: .infinity)
   }
 }
 
