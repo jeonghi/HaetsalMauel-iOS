@@ -11,9 +11,9 @@ import ComposableArchitecture
 import UISystem
 import DesignSystemFoundation
 
-struct MarketCategorySelectionView: View {
+struct MCSelectionView: View {
   
-  typealias Core = MarketCategorySelection
+  typealias Core = MCSelection
   typealias State = Core.State
   typealias Action = Core.Action
   typealias Category = Core.Category
@@ -40,7 +40,7 @@ struct MarketCategorySelectionView: View {
   }
 }
 
-extension MarketCategorySelectionView {
+extension MCSelectionView {
   private var buttonGrid: some View {
     LazyVGrid(
       columns: Array(repeating: GridItem(.flexible(), spacing: 5),
@@ -60,10 +60,10 @@ extension MarketCategorySelectionView {
 struct CommunityCategorySelectionView_Previews: PreviewProvider {
   static var previews: some View {
     
-    let store = Store(initialState: MarketCategorySelection.State()){
-      MarketCategorySelection()
+    let store = Store(initialState: MCSelection.State()){
+      MCSelection()
     }
-    MarketCategorySelectionView(store: store)
+    MCSelectionView(store: store)
       .padding(10)
   }
 }
