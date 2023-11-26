@@ -11,5 +11,12 @@ public struct OAuthToken: Codable {
   public let tokenType: String
   public let accessToken: String
   public let refreshToken: String
-  public let expireAt: Date
+  public let expirationTime: TimeInterval
+  
+  public init(tokenType: String, accessToken: String, refreshToken: String, expirationTime: TimeInterval) {
+    self.tokenType = tokenType
+    self.accessToken = accessToken
+    self.refreshToken = refreshToken
+    self.expirationTime = expirationTime
+  }
 }
