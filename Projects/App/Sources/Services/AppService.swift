@@ -10,6 +10,9 @@ import ComposableArchitecture
 
 protocol AppServiceType {
   var authService: AuthService { get }
+  var profileService: ProfileService { get }
+  var marketService: MarketService { get }
+  var regionService: RegionService { get }
 }
 
 final class AppService: AppServiceType {
@@ -19,8 +22,15 @@ final class AppService: AppServiceType {
   
   // MARK: Private
   var authService: AuthService
+  var profileService: ProfileService
+  var marketService: MarketService
+  var regionService: RegionService
+  
   private init(){
     authService = AuthService.shared
+    profileService = ProfileService.shared
+    marketService = MarketService.shared
+    regionService = RegionService.shared
   }
 }
 extension DependencyValues {
