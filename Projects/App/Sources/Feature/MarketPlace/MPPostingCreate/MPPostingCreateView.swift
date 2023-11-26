@@ -19,12 +19,29 @@ struct MPPostingCreateView {
   typealias State = Core.State
   typealias Action = Core.Action
   
+  typealias TransactionType = Core.TransactionType
+  typealias ActivityTime = Core.ActivityTime
+  
   private let store: StoreOf<Core>
   
   @ObservedObject private var viewStore: ViewStore<ViewState, Action>
   
   struct ViewState: Equatable {
+    var isAllFormFilled: Bool
+    var selectedTransactionType: TransactionType?
+    var selectedActivityTime: ActivityTime?
+    var activityLocation: String
+    var activityDate: Date
+    var estimatedTime: Int
+    var maxPeople: Int
     init(state: State) {
+      isAllFormFilled = state.isAllFormFilled
+      selectedTransactionType = state.selectedTransactionType
+      selectedActivityTime = state.selectedActivityTime
+      activityLocation = state.activityLocation
+      activityDate = state.activityDate
+      estimatedTime = state.estimatedTime
+      maxPeople = state.maxPeople
     }
   }
   
@@ -49,11 +66,12 @@ extension MPPostingCreateView: View {
         입력폼
           .padding(.horizontal, 23.5)
         분할
-        글내용
-        버튼들
-          .padding(.horizontal, 16)
-          .padding(.bottom, 58)
-          .padding(.top, 10)
+        VStack(spacing: 10) {
+          글내용
+          버튼들
+        }
+        .padding(.horizontal, 16)
+        .padding(.bottom, 54)
       }
     }
     .setCustomNavCloseButton()
@@ -96,63 +114,146 @@ extension MPPostingCreateView {
   }
   
   private var 글내용: some View {
-    VStack {
-      
-    }
+    PostTextFormView(store: postTextFormStore)
+      .frame(height: 236)
   }
   
   private var 비추기종류: some View {
     containerBox("비추기 종류"){
-      MCSelectionView(store: MarketCategorySelectionStore)
+      MCSelectionView(store: MCSelectionStore)
     }
   }
   
   private var 거래유형: some View {
     containerBox("거래 유형"){
-      
+      ScrollingTab(selection: viewStore.binding(get: \.selectedTransactionType, send: Action.selectTransactionType), tabs: TransactionType.allCases, inactiveTintColor: Color(.systemgray06), inactiveTabStrokeColor: Color(.systemgray06), inactiveTabBackgroundColor: Color(.white) ,radius: 12, horizontalPadding: 16, verticalPaddingg: 10)
     }
   }
   
   private var 활동장소: some View {
     containerBox("활동 장소"){
-      
+      EumTextField(text: viewStore.binding(get: \.activityLocation, send: Action.updateLocation), mode: .normal, placeholder: "활동 상세 주소를 입력해주세요")
     }
   }
   
   private var 활동날짜: some View {
     containerBox("활동 날짜"){
-      
+      Text("\(viewStore.activityDate.toString(.yyyyMMddE))")
+        .foregroundColor(Color(.primary))
+        .font(.subR)
+        .padding(.horizontal, 16)
+          .padding(.vertical, 12)
+          .background(
+            RoundedRectangle(cornerRadius: 12)
+              .fill(Color(.primaryLight))
+              .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                  .stroke(Color(.primary), lineWidth: 1)
+              )
+          )
+        .overlay(
+          DatePicker("",
+                     selection: viewStore.binding(get: \.activityDate, send: Action.updateDate),
+                     displayedComponents: .date
+          )
+          .blendMode(.destinationOver)
+          .labelsHidden()
+          .font(.subR)
+          .background(Color.clear)
+          .tint(Color(.primary))
+          .pickerStyle(.inline)
+        )
     }
   }
   
   private var 활동시간대: some View {
     containerBox("활동 시간대"){
-      
+      ScrollingTab(selection: viewStore.binding(get: \.selectedActivityTime, send: Action.selectActivityTime), tabs: ActivityTime.allCases, inactiveTintColor: Color(.systemgray06), inactiveTabStrokeColor: Color(.systemgray06), inactiveTabBackgroundColor: Color(.white), radius: 12, horizontalPadding: 16, verticalPaddingg: 10)
     }
   }
   
   private var 예상소요시간: some View {
-    containerBox("예상 소요 시간"){
-      
+    
+    var isFilledTime: Bool {
+      viewStore.estimatedTime > 0
+    }
+    
+    return containerBox("예상 소요 시간"){
+      Text("\(viewStore.estimatedTime) 분")
+        .foregroundColor(isFilledTime ? Color(.primary) : Color(.systemgray06))
+          .font(.subR)
+          .padding(.horizontal, 16)
+          .padding(.vertical, 12)
+          .background(
+            RoundedRectangle(cornerRadius: 12)
+              .fill(isFilledTime ? Color(.primaryLight) : Color(.white))
+              .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                  .stroke(isFilledTime ? Color(.primary) : Color(.systemgray06), lineWidth: 1)
+              )
+          )
+          .overlay(
+            Picker("", selection: viewStore.binding(get: \.estimatedTime, send: Action.updateTime)){
+              ForEach(Array(stride(from: 0, through: 240, by: 30)), id: \.self) { i in
+                Text("\(i) 분")
+                  .foregroundColor(Color.black)
+                  .tag(i)
+              }
+            }
+            .font(.descriptionR)
+            .pickerStyle(.menu)
+            .tint(Color(.clear))
+          )
     }
   }
   
   private var 최대모집인원: some View {
-    containerBox("최대 모집 인원"){
-      
+    
+    var isFilledPeople: Bool {
+      viewStore.maxPeople > 0
+    }
+    
+    return containerBox("최대 모집 인원"){
+        Text("\(viewStore.maxPeople) 명")
+        .foregroundColor(isFilledPeople ? Color(.primary) : Color(.systemgray06))
+          .font(.subR)
+          .padding(.horizontal, 16)
+          .padding(.vertical, 12)
+          .background(
+            RoundedRectangle(cornerRadius: 12)
+              .fill(isFilledPeople ? Color(.primaryLight) : Color(.white))
+              .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                  .stroke(isFilledPeople ? Color(.primary) : Color(.systemgray06), lineWidth: 1)
+              )
+          )
+          .overlay(
+            Picker("", selection: viewStore.binding(get: \.maxPeople, send: Action.updateMaxPeople)){
+              ForEach(Array(stride(from: 0, through: 50, by: 1)), id: \.self) { i in
+                Text("\(i)")
+                  .foregroundColor(Color.black)
+                  .tag(i)
+              }
+            }
+//            .blendMode(.destinationOver)
+            .font(.descriptionR)
+            .pickerStyle(.menu)
+            .tint(Color(.clear))
+          )
     }
   }
   
   private var 버튼들: some View {
     HStack {
-      Button(action:{}){
+      Button(action:{dismiss()}){
         Text("작성취소")
       }
       .buttonStyle(SecondaryButtonStyle())
-      Button(action: {}){
+      Button(action:{dismiss()}){
         Text("작성완료")
       }
       .buttonStyle(PrimaryButtonStyle())
+      .disabled(!viewStore.isAllFormFilled)
     }
   }
   
@@ -170,8 +271,11 @@ extension MPPostingCreateView {
 
 // MARK: Store init
 extension MPPostingCreateView {
-  private var MarketCategorySelectionStore: StoreOf<MCSelection> {
+  private var MCSelectionStore: StoreOf<MCSelection> {
     return store.scope(state: \.marketCategorySelectionState, action: Action.marketCategorySelectionAction)
+  }
+  private var postTextFormStore: StoreOf<PostTextForm> {
+    return store.scope(state: \.postTextFormState, action: Action.postTextFormAction)
   }
 }
 
