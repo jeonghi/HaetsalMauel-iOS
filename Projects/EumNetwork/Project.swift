@@ -13,5 +13,7 @@ let project = Project.makeNetworkModule(
     name: "EumNetwork",
     product: .staticFramework,
     dependencies: [
+      .external(name: "Moya"),
+      .external(name: "CombineMoya")
     ]
 )
