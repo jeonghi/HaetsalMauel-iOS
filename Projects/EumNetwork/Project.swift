@@ -14,7 +14,7 @@ let project = Project.makeNetworkModule(
     product: .staticFramework,
     dependencies: [
       .external(name: "Moya"),
-      .external(name: "CombineMoya")
+      .external(name: "CombineMoya"),
       .Projcet.EumAuth
     ]
 )
