@@ -16,7 +16,8 @@ let dependencies = Dependencies(
         .remote(url: "https://github.com/exyte/PopupView.git", requirement: .upToNextMajor(from: "2.7.0")),
         //.remote(url: "https://github.com/exyte/Chat.git", requirement: .upToNextMajor(from: "1.2.2")),
         .remote(url: "https://github.com/onevcat/Kingfisher.git", requirement: .upToNextMajor(from: "7.10.0")),
-        .remote(url: "https://github.com/kakao/kakao-ios-sdk.git", requirement: .upToNextMajor(from: "2.19.0"))
+        .remote(url: "https://github.com/kakao/kakao-ios-sdk.git", requirement: .upToNextMajor(from: "2.19.0")),
+        .remote(url: "https://github.com/kishikawakatsumi/KeychainAccess.git", requirement: .upToNextMajor(from: "4.2.2"))
     ],
     platforms: [.iOS]
 )
