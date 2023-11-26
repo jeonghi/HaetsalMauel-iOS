@@ -101,7 +101,7 @@ extension OnboardingView {
       Text("기관 사용자이신가요?")
         .font(.subR)
         .foregroundColor(Color(.gray06))
-      NavigationLink(destination: SignUpView(store: signUpStore)){
+      NavigationLink(destination: SignInView(store: signUpStore)){
         Text("기관으로 로그인")
           .underline()
           .font(.subR)
@@ -125,8 +125,8 @@ extension OnboardingView {
 }
 
 extension OnboardingView {
-  private var signUpStore: StoreOf<SignUp> {
-    return store.scope(state: \.signUpState, action: Action.signUpAction)
+  private var signUpStore: StoreOf<SignIn> {
+    return store.scope(state: \.signInState, action: Action.signInAction)
   }
   private var UPCreateStore: StoreOf<UPCreate> {
     return store.scope(state: \.newProfileState, action: Action.newProfileAction)

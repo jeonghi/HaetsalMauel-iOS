@@ -14,7 +14,7 @@ struct Onboarding: Reducer {
   
   struct State {
     var selectedRoute: Route? = nil
-    var signUpState: SignUp.State = .init()
+    var signInState: SignIn.State = .init()
     var newProfileState: UPCreate.State = .init()
   }
   
@@ -40,7 +40,7 @@ struct Onboarding: Reducer {
     case kakaoLoginCallback(OAuthToken?, Error?)
     
     /// Child
-    case signUpAction(SignUp.Action)
+    case signInAction(SignIn.Action)
     case newProfileAction(UPCreate.Action)
   }
   
@@ -74,7 +74,9 @@ struct Onboarding: Reducer {
         
         
         /// Child
-      case .signUpAction:
+      case .signInAction(.loginDone):
+        return .send(.setRoute(.createProfile))
+      case .signInAction:
         return .none
       case .newProfileAction(.tappedNextButton):
         return .none
@@ -82,8 +84,8 @@ struct Onboarding: Reducer {
         return .none
       }
     }
-    Scope(state: \.signUpState, action: /Action.signUpAction){
-      SignUp()
+    Scope(state: \.signInState, action: /Action.signInAction){
+      SignIn()
     }
     Scope(state: \.newProfileState, action: /Action.newProfileAction){
       UPCreate()
