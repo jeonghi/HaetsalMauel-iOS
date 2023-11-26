@@ -43,10 +43,10 @@ struct MCSelectionView: View {
 extension MCSelectionView {
   private var buttonGrid: some View {
     LazyVGrid(
-      columns: Array(repeating: GridItem(.flexible(), spacing: 5),
+      columns: Array(repeating: GridItem(.flexible(), spacing: 7),
                     count: 3),
       alignment: .center,
-      spacing: 10
+      spacing: 7
     ){
       ForEach(Category.allCases, id: \.self ){ cat in
         Button(action: {viewStore.send(.selectCategory(cat))}){
