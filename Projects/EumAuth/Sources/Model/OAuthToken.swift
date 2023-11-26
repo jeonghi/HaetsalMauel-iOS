@@ -6,3 +6,10 @@
 //
 
 import Foundation
+
+public struct OAuthToken: Codable {
+  public let tokenType: String
+  public let accessToken: String
+  public let refreshToken: String
+  public let expireAt: Date
+}
