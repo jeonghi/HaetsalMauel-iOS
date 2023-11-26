@@ -19,6 +19,7 @@ let project = Project.makeAppModule(
         .Projcet.EumNetwork,
         .Projcet.UISystem,
         .Projcet.DesignSystemFoundation,
+        .Projcet.EumAuth,
         .sdk(name: "WebKit", type: .framework, status: .required),
         .package(product: "ExyteChat"),
         .package(product: "ExyteMediaPicker"),
