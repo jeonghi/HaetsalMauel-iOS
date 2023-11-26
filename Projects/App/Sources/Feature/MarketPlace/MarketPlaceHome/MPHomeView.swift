@@ -56,6 +56,9 @@ extension MPHomeView: View {
         .vBottom()
         .hTrailing()
         .padding()
+      if let _ = viewStore.selectedCat {} else {
+        Color.white
+      }
     }
     .background(Color(.white))
     .fullScreenCover(isPresented: viewStore.binding(get: \.isShowingFullSheet, send: Action.dismissFullSheet)){

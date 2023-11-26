@@ -106,6 +106,9 @@ struct MPHome: Reducer {
         )
       case .marketPlaceCategorySelectionAction:
         return .none
+      case .MPPostingCreateAction(.onAppear):
+        state.MPPostingCreateState = .init()
+        return .none
       case .MPPostingCreateAction(let act):
         return .none
       }
