@@ -7,6 +7,8 @@
 //
 
 import EumNetwork
+import EumAuth
+import Foundation
 
 enum SignInEntity {
   
@@ -38,4 +40,15 @@ enum UserRole: String, Codable {
   case temporaryUser = "ROLE_TEMPORARY_USER"
   case user = "ROLE_USER"
   case test = "TEST"
+}
+
+extension SignInEntity.Response {
+  func toOAuthToken() -> OAuthToken {
+      return OAuthToken(
+          tokenType: self.grantType,
+          accessToken: self.accessToken,
+          refreshToken: self.refreshToken,
+          expirationTime: TimeInterval(self.refreshTokenExpirationTime / 1000) // 밀리초를 초로 변환
+      )
+  }
 }
