@@ -25,7 +25,7 @@ public struct CategoryButton {
 // MARK: Layout
 extension CategoryButton: View {
   public var body: some View {
-    ZStack {
+    
       RoundedRectangle(cornerRadius: 10)
         .fill(isSelected ? Color(.primaryLight) : Color(.systemgray02))
         .background(
@@ -33,8 +33,9 @@ extension CategoryButton: View {
             .stroke(isSelected ? Color(.primary) : Color(.systemgray02), lineWidth: 3)
         )
         .aspectRatio(1/1, contentMode: .fit)
-      label
-    }
+        .overlay(
+          label
+        )
   }
 }
 
