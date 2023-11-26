@@ -11,6 +11,8 @@ import ComposableArchitecture
 struct CMDiscussion: Reducer {
   
   struct State {
+    var isShowingFullSheet: Bool = false
+    
     var CMDiscussionReadState: CMDiscussionRead.State = .init()
     var CMDiscussionCreateState: CMDiscussionCreate.State = .init()
   }
@@ -20,6 +22,11 @@ struct CMDiscussion: Reducer {
     case onAppear
     case onDisappear
     
+    /// fulloverSheet
+    case showingFullSheet
+    case dismissFullSheet
+    
+    /// Child
     case CMDiscussionReadAction(CMDiscussionRead.Action)
     case CMDiscussionCreateAction(CMDiscussionCreate.Action)
   }
@@ -32,7 +39,18 @@ struct CMDiscussion: Reducer {
         return .none
       case .onDisappear:
         return .none
+        
+      case .showingFullSheet:
+        state.isShowingFullSheet = true
+        return .none
+      case .dismissFullSheet:
+        state.isShowingFullSheet = false
+        return .none
+        
       case .CMDiscussionReadAction(let act):
+        return .none
+      case .CMDiscussionCreateAction(.onAppear):
+        state.CMDiscussionCreateState = .init()
         return .none
       case .CMDiscussionCreateAction(let act):
         return .none

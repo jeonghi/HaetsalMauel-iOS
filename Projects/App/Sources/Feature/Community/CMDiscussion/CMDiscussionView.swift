@@ -22,9 +22,9 @@ struct CMDiscussionView: View {
   @ObservedObject private var viewStore: ViewStore<ViewState, Action>
   
   struct ViewState: Equatable {
-    
+    var isShowingFullSheet: Bool
     init(state: State) {
-      
+      isShowingFullSheet = state.isShowingFullSheet
     }
   }
   
@@ -62,6 +62,9 @@ struct CMDiscussionView: View {
         }
         .foregroundColor(Color(.black))
       }
+    }
+    .fullScreenCover(isPresented: viewStore.binding(get: \.isShowingFullSheet, send: Action.dismissFullSheet)){
+      NavigationView{CMDiscussionCreateView(store: CMDiscussionCreateStore)}
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .onAppear{
@@ -108,8 +111,12 @@ extension CMDiscussionView {
     return store.scope(state: \.CMDiscussionReadState, action: Action.CMDiscussionReadAction)
   }
   
+  private var CMDiscussionCreateStore: StoreOf<CMDiscussionCreate> {
+    return store.scope(state: \.CMDiscussionCreateState, action: Action.CMDiscussionCreateAction)
+  }
+  
   private var newPostButton: some View {
-    Button(action:{}){
+    Button(action:{viewStore.send(.showingFullSheet)}){
       NewPostLabel()
     }
   }
