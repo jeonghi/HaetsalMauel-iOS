@@ -82,9 +82,10 @@ extension CMHomeView {
   }
   
   private var 카테고리목록: some View {
-    HStack(spacing: 10) {
+    HStack(alignment: .center, spacing: 10) {
       NavigationLink(destination: CMVoteView(store: .init(initialState: CMVote.State()){CMVote()})){
         CategoryButton(Category.투표.cvtAssetImage(), Category.투표.rawValue, false)
+          
       }
       NavigationLink(destination: CMDiscussionView(store: .init(initialState: CMDiscussion.State()){CMDiscussion()})){
         CategoryButton(Category.수다떨기.cvtAssetImage(), Category.수다떨기.rawValue, false)

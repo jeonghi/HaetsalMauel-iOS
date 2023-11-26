@@ -11,7 +11,7 @@ import ComposableArchitecture
 
 struct MarketPlaceCategorySelection: Reducer {
   struct State: Equatable {
-    var marketCategorySelectionState: MarketCategorySelection.State = .init()
+    var marketCategorySelectionState: MCSelection.State = .init()
     var isSelected: Bool {
       marketCategorySelectionState.isSelectedAnyOne
     }
@@ -25,7 +25,7 @@ struct MarketPlaceCategorySelection: Reducer {
     case onAppear
     case onDisappear
     
-    case marketCategorySelectionAction(MarketCategorySelection.Action)
+    case marketCategorySelectionAction(MCSelection.Action)
     case tappedSelectDoneButton
   }
   
@@ -46,7 +46,7 @@ struct MarketPlaceCategorySelection: Reducer {
     }
     
     Scope(state: \.marketCategorySelectionState, action: /Action.marketCategorySelectionAction){
-      MarketCategorySelection()
+      MCSelection()
     }
   }
 }

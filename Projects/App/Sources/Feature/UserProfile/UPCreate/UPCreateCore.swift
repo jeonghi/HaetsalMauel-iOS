@@ -9,11 +9,18 @@
 import Foundation
 import ComposableArchitecture
 
-struct NewProfile: Reducer {
+struct UPCreate: Reducer {
+  
+  typealias Category = CharacterCategory
+  
   struct State: Equatable {
     var nickName: String = ""// 닉네임
     var location: String = ""// 지역
-    var selectedCharacter: String = ""// 선택된 캐릭터
+    var selectedCategory: Category? {
+      CCSelectionState.selectedCategory
+    }
+    var CCSelectionState: CCSelection.State = .init()
+    
     var isAllInfoFilled: Bool {
       true
     }
@@ -25,8 +32,9 @@ struct NewProfile: Reducer {
     case onDisappear
     
     case updateNickName(String)
-    case selectCharacter(String)
     case tappedNextButton
+    
+    case CCSelectionAction(CCSelection.Action)
   }
   
   var body: some ReducerOf<Self> {
@@ -43,12 +51,16 @@ struct NewProfile: Reducer {
         state.nickName = updatedNickName
         return .none
         
-      case .selectCharacter(let selectedCharacter):
-        state.selectedCharacter = selectedCharacter
-        return .none
       case .tappedNextButton:
         return .none
+        
+      case .CCSelectionAction(let act):
+        return .none
       }
+    }
+    
+    Scope(state: \.CCSelectionState, action: /Action.CCSelectionAction){
+      CCSelection()
     }
   }
 }

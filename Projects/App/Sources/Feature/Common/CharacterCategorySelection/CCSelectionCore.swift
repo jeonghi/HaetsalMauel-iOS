@@ -1,16 +1,16 @@
 //
-//  CommunityCategorySelectionCore.swift
+//  CCSelectionCore.swift
 //  App
 //
-//  Created by JH Park on 2023/10/02.
-//  Copyright © 2023 com.eum. All rights reserved.
+//  Created by 쩡화니 on 11/20/23.
+//  Copyright © 2023 kr.k-eum. All rights reserved.
 //
 
 import ComposableArchitecture
 
-struct MarketCategorySelection: Reducer {
+struct CCSelection: Reducer {
   
-  typealias Category = MarketCategory
+  typealias Category = CharacterCategory
   
   struct State: Equatable {
     var selectedCategory: Category?

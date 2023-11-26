@@ -21,7 +21,7 @@ struct PayHomeView {
   @ObservedObject var viewStore: ViewStore<ViewState, Action>
   
   struct ViewState: Equatable {
-    var selectedTab: Tab
+    var selectedTab: Tab?
     var showingSetPasswordSheet: Bool
     var showingPopup: Bool
     init(state: State){
@@ -146,15 +146,20 @@ extension PayHomeView {
   }
   
   private var 탭바: some View {
-    return LazyVStack(spacing: 0) {
-      PayTransactionListCell(description: "햇살 활동 장려금 (댓글 달기)", transactionAt: Date(), type: .받음, amount: 20, balance: 1980)
-        .padding(.vertical, 16)
-      PayTransactionListCell(description: "금메달 마트 장보기 도움", transactionAt: Date(), type: .보냄, amount: 40, balance: 1960)
-        .padding(.vertical, 16)
-      PayTransactionListCell(description: "전구 교체 도움", transactionAt: Date(), type: .보냄, amount: 40, balance: 2000)
-        .padding(.vertical, 16)
-      PayTransactionListCell(description: "마을 정착 지원금", transactionAt: Date(), type: .받음, amount: 300, balance: 300)
-        .padding(.vertical, 16)
+    return VStack {
+      
+      ScrollingTab(selection: viewStore.binding(get: \.selectedTab, send: Action.selectTab), tabs: Tab.allCases)
+      
+      LazyVStack(spacing: 0) {
+        PayTransactionListCell(description: "햇살 활동 장려금 (댓글 달기)", transactionAt: Date(), type: .받음, amount: 20, balance: 1980)
+          .padding(.vertical, 16)
+        PayTransactionListCell(description: "금메달 마트 장보기 도움", transactionAt: Date(), type: .보냄, amount: 40, balance: 1960)
+          .padding(.vertical, 16)
+        PayTransactionListCell(description: "전구 교체 도움", transactionAt: Date(), type: .보냄, amount: 40, balance: 2000)
+          .padding(.vertical, 16)
+        PayTransactionListCell(description: "마을 정착 지원금", transactionAt: Date(), type: .받음, amount: 300, balance: 300)
+          .padding(.vertical, 16)
+    }
     }
   }
   

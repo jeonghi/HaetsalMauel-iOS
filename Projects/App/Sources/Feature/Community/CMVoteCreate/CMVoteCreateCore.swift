@@ -11,12 +11,18 @@ import ComposableArchitecture
 struct CMVoteCreate: Reducer {
   
   struct State {
+    var isFilledAllForm: Bool {
+      !textFormState.content.isEmpty && !textFormState.title.isEmpty
+    }
+    var textFormState: PostTextForm.State = .init()
   }
   
   enum Action {
     /// Life cycle
     case onAppear
     case onDisappear
+    
+    case textFormAction(PostTextForm.Action)
   }
   
   var body: some ReducerOf<Self> {
@@ -27,7 +33,14 @@ struct CMVoteCreate: Reducer {
         return .none
       case .onDisappear:
         return .none
+        
+      case .textFormAction:
+        return .none
       }
+    }
+    
+    Scope(state: \.textFormState, action: /Action.textFormAction){
+      PostTextForm()
     }
   }
 }

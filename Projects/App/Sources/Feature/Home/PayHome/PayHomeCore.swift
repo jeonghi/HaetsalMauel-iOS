@@ -11,7 +11,7 @@ import ComposableArchitecture
 
 struct PayHome: Reducer {
   struct State: Equatable {
-    var selectedTab: Tab = .보냄
+    var selectedTab: Tab? = nil
     
     var setPasswordState: SetPassword.State? = nil
     var showingSetPasswordSheet: Bool = false
@@ -37,12 +37,12 @@ struct PayHome: Reducer {
     case tappedRemittanceButton
     
     /// Child
-    case setTab(Tab)
+    case selectTab(Tab?)
   }
   
   enum Tab: String, CaseIterable, Equatable {
-    case 보냄
-    case 받음
+    case 보냄 = "보낸 내역만"
+    case 받음 = "받은 내역만"
   }
   
   var body: some ReducerOf<Self> {
@@ -85,7 +85,7 @@ struct PayHome: Reducer {
         return .none
         
         /// Child
-      case .setTab(let selectedTab):
+      case .selectTab(let selectedTab):
         state.selectedTab = selectedTab
         return .none
       }

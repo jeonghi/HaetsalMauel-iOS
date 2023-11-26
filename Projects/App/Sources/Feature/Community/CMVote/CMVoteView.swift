@@ -22,9 +22,9 @@ struct CMVoteView: View {
   @ObservedObject private var viewStore: ViewStore<ViewState, Action>
   
   struct ViewState: Equatable {
-    
+    var isShowingFullSheet: Bool
     init(state: State) {
-      
+      isShowingFullSheet = state.isShowingFullSheet
     }
   }
   
@@ -62,6 +62,9 @@ struct CMVoteView: View {
         }
         .foregroundColor(Color(.black))
       }
+    }
+    .fullScreenCover(isPresented: viewStore.binding(get: \.isShowingFullSheet, send: Action.dismissFullSheet)){
+      NavigationView{CMVoteCreateView(store: CMVoteCreateStore)}
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .onAppear{
@@ -105,7 +108,7 @@ extension CMVoteView {
   }
   
   private var newPostButton: some View {
-    Button(action:{}){
+    Button(action:{viewStore.send(.showingFullSheet)}){
       NewPostLabel()
     }
   }
@@ -115,6 +118,10 @@ extension CMVoteView {
   
   private var CMVoteReadStore: StoreOf<CMVoteRead> {
     return store.scope(state: \.CMVoteReadState, action: Action.CMVoteReadAction)
+  }
+  
+  private var CMVoteCreateStore: StoreOf<CMVoteCreate> {
+    return store.scope(state: \.CMVoteCreateState, action: Action.CMVoteCreateAction)
   }
 }
 

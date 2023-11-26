@@ -37,7 +37,7 @@ struct MarketPlaceCategorySelectionView: View {
       
       VStack(spacing: 20) {
         guideComment
-        MarketCategorySelectionView(store: marketCategorySelectionStore)
+        MCSelectionView(store: marketCategorySelectionStore)
       }
       .padding(.top, 70)
       .padding(.horizontal, 22)
@@ -73,7 +73,7 @@ extension MarketPlaceCategorySelectionView {
 }
 
 extension MarketPlaceCategorySelectionView {
-  private var marketCategorySelectionStore: StoreOf<MarketCategorySelection> {
+  private var marketCategorySelectionStore: StoreOf<MCSelection> {
     return store.scope(state: \.marketCategorySelectionState, action: Action.marketCategorySelectionAction)
   }
 }

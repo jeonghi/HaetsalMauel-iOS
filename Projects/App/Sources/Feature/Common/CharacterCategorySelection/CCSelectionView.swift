@@ -1,9 +1,9 @@
 //
-//  CommunityCategorySelectionView.swift
+//  CCSelectionView.swift
 //  App
 //
-//  Created by JH Park on 2023/10/02.
-//  Copyright © 2023 com.eum. All rights reserved.
+//  Created by 쩡화니 on 11/20/23.
+//  Copyright © 2023 kr.k-eum. All rights reserved.
 //
 
 import SwiftUI
@@ -11,9 +11,9 @@ import ComposableArchitecture
 import UISystem
 import DesignSystemFoundation
 
-struct MarketCategorySelectionView: View {
+struct CCSelectionView: View {
   
-  typealias Core = MarketCategorySelection
+  typealias Core = CCSelection
   typealias State = Core.State
   typealias Action = Core.Action
   typealias Category = Core.Category
@@ -40,13 +40,13 @@ struct MarketCategorySelectionView: View {
   }
 }
 
-extension MarketCategorySelectionView {
+extension CCSelectionView {
   private var buttonGrid: some View {
     LazyVGrid(
-      columns: Array(repeating: GridItem(.flexible(), spacing: 5),
-                    count: 3),
+      columns: Array(repeating: GridItem(.flexible(), spacing: 7, alignment: .center),
+                    count: 2),
       alignment: .center,
-      spacing: 10
+      spacing: 7
     ){
       ForEach(Category.allCases, id: \.self ){ cat in
         Button(action: {viewStore.send(.selectCategory(cat))}){
@@ -57,13 +57,10 @@ extension MarketCategorySelectionView {
   }
 }
 
-struct CommunityCategorySelectionView_Previews: PreviewProvider {
-  static var previews: some View {
-    
-    let store = Store(initialState: MarketCategorySelection.State()){
-      MarketCategorySelection()
-    }
-    MarketCategorySelectionView(store: store)
-      .padding(10)
+#Preview {
+  let store = Store(initialState: CCSelection.State()){
+    CCSelection()
   }
+  return CCSelectionView(store: store)
+    .padding(.horizontal, 20)
 }

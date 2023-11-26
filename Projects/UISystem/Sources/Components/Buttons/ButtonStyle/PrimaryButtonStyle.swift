@@ -39,7 +39,7 @@ public struct SecondaryButtonStyle: ButtonStyle {
   public func makeBody(configuration: Self.Configuration) -> some View {
     ZStack {
       RoundedRectangle(cornerRadius: 12)
-        .fill(isEnabled ? Color(.white) : Color(.white))
+        .fill(isEnabled ? Color(.systemgray02) : Color(.systemgray02))
         .frame(height: 60)
       configuration.label
         .font(.headerB)

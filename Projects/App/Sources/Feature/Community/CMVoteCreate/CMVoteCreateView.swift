@@ -12,7 +12,9 @@ import DesignSystemFoundation
 import UISystem
 
 struct CMVoteCreateView: View {
-
+  
+  @Environment(\.dismiss) private var dismiss
+  
   typealias Core = CMVoteCreate
   typealias State = Core.State
   typealias Action = Core.Action
@@ -22,9 +24,9 @@ struct CMVoteCreateView: View {
   @ObservedObject private var viewStore: ViewStore<ViewState, Action>
   
   struct ViewState: Equatable {
-    
+    var isFilledAllForm: Bool
     init(state: State) {
-      
+      isFilledAllForm = state.isFilledAllForm
     }
   }
   
@@ -35,12 +37,13 @@ struct CMVoteCreateView: View {
   
   var body: some View {
     VStack {
-      Color.white.frame(height: 1)
-      ScrollView {
-        버튼들
-          .padding(.horizontal, 16)
-          .padding(.bottom, 28)
-      }
+      PostTextFormView(store: textFormStore)
+        .padding(16)
+        .frame(maxHeight: .infinity)
+      버튼들
+        .padding(.horizontal, 16)
+        .padding(.bottom, 28)
+      
     }
     .setCustomNavCloseButton()
     .setCustomNavBarTitle("새로운 투표만들기")
@@ -57,15 +60,22 @@ struct CMVoteCreateView: View {
 extension CMVoteCreateView {
   private var 버튼들: some View {
     HStack(spacing: 10) {
-      Button(action: {}){
+      Button(action: {dismiss()}){
         Text("이전")
       }
       .buttonStyle(SecondaryButtonStyle())
-      Button(action: {}){
+      Button(action: {dismiss()}){
         Text("다음")
       }
       .buttonStyle(PrimaryButtonStyle())
+      .disabled(!viewStore.isFilledAllForm)
     }
+  }
+}
+
+extension CMVoteCreateView {
+  private var textFormStore: StoreOf<PostTextForm> {
+    return store.scope(state: \.textFormState, action: Action.textFormAction)
   }
 }
 

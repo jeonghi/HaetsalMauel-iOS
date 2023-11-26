@@ -12,7 +12,9 @@ import DesignSystemFoundation
 import UISystem
 
 struct CMDiscussionCreateView: View {
-
+  
+  @Environment(\.dismiss) private var dismiss
+  
   typealias Core = CMDiscussionCreate
   typealias State = Core.State
   typealias Action = Core.Action
@@ -22,9 +24,9 @@ struct CMDiscussionCreateView: View {
   @ObservedObject private var viewStore: ViewStore<ViewState, Action>
   
   struct ViewState: Equatable {
-    
+    var isFilledAllForm: Bool
     init(state: State) {
-      
+      isFilledAllForm = state.isFilledAllForm
     }
   }
   
@@ -36,11 +38,12 @@ struct CMDiscussionCreateView: View {
   var body: some View {
     VStack {
       Color.white.frame(height: 1)
-      ScrollView {
-        버튼들
-          .padding(.horizontal, 16)
-          .padding(.bottom, 28)
-      }
+      PostTextFormView(store: textFormStore)
+        .padding(16)
+        .frame(maxHeight: .infinity)
+      버튼들
+        .padding(.horizontal, 16)
+        .padding(.bottom, 28)
     }
     .setCustomNavCloseButton()
     .setCustomNavBarTitle("새로운 의견쓰기")
@@ -57,15 +60,22 @@ struct CMDiscussionCreateView: View {
 extension CMDiscussionCreateView {
   private var 버튼들: some View {
     HStack(spacing: 10) {
-      Button(action: {}){
+      Button(action: {dismiss()}){
         Text("이전")
       }
       .buttonStyle(SecondaryButtonStyle())
-      Button(action: {}){
+      Button(action: {dismiss()}){
         Text("다음")
       }
       .buttonStyle(PrimaryButtonStyle())
+      .disabled(!viewStore.isFilledAllForm)
     }
+  }
+}
+
+extension CMDiscussionCreateView {
+  private var textFormStore: StoreOf<PostTextForm> {
+    return store.scope(state: \.textFormState, action: Action.textFormAction)
   }
 }
 

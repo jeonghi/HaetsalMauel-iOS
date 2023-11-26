@@ -24,8 +24,9 @@ struct OnboardingView: View {
   @ObservedObject private var viewStore: ViewStore<ViewState, Action>
   
   struct ViewState: Equatable {
+    var selectedRoute: Route?
     init(state: State) {
-      
+      selectedRoute = state.selectedRoute
     }
   }
   
@@ -37,6 +38,14 @@ struct OnboardingView: View {
   var body: some View {
     
     VStack(spacing: 0) {
+      
+      NavigationLink(
+        tag: Route.createProfile,
+        selection: viewStore.binding(get: \.selectedRoute, send: Action.setRoute),
+        destination: {UPCreateView(store: UPCreateStore)},
+        label: EmptyView.init
+      )
+      
       VStack(alignment: .leading, spacing: 16){
         title
         subTitle
@@ -104,7 +113,7 @@ extension OnboardingView {
   private var loginButtonVStack: some View {
     VStack(spacing: 10){
       Button(action: {
-        UserApi.shared.loginWithKakaoTalk {viewStore.send(.kakaoLoginCallback($0, $1))}
+        UserApi.shared.loginWithKakaoAccount{viewStore.send(.kakaoLoginCallback($0, $1))}
       }){
         TTLoginLabel(.kakao)
       }
@@ -118,6 +127,9 @@ extension OnboardingView {
 extension OnboardingView {
   private var signUpStore: StoreOf<SignUp> {
     return store.scope(state: \.signUpState, action: Action.signUpAction)
+  }
+  private var UPCreateStore: StoreOf<UPCreate> {
+    return store.scope(state: \.newProfileState, action: Action.newProfileAction)
   }
 }
 
