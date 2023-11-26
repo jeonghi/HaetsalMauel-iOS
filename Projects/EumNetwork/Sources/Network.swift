@@ -19,7 +19,7 @@ public struct Network<T: TargetType> {
   }
   
   static func makeProvider() -> MoyaProvider<T> {
-    var plugins: [PluginType] = []
+    var plugins: [PluginType] = [MoyaHeaderTokenPlugin.shared]
     #if(DEBUG)
     plugins.append(MoyaLoggerPlugin.shared)
     #endif
