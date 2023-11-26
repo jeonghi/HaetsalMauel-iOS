@@ -2,17 +2,17 @@
 //  Project.swift
 //  ProjectDescriptionHelpers
 //
-//  Created by JH Park on 2023/09/18.
+//  Created by 쩡화니 on 11/27/23.
 //
 
 import Foundation
 import ProjectDescription
 import ProjectDescriptionHelpers
 
-let project = Project.makeNetworkModule(
-    name: "EumNetwork",
+let project = Project.makeAuthModule(
+    name: "EumAuth",
     product: .staticFramework,
     dependencies: [
-      .Projcet.EumAuth
+      .external(name: "KeychainAccess")
     ]
 )
