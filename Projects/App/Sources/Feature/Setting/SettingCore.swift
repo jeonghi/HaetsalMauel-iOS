@@ -35,6 +35,9 @@ struct Setting: Reducer {
         state.showingPopup = showingPopup
         return .none
       case .logout:
+        guard authService.logout() else {
+          return .none
+        }
         return .none
       case .signOut:
         return .none
@@ -51,4 +54,6 @@ struct Setting: Reducer {
       WithdrawalReason()
     }
   }
+  
+  @Dependency(\.appService.authService) var authService
 }
