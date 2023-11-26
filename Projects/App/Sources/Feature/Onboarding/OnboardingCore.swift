@@ -13,14 +13,13 @@ import KakaoSDKAuth
 struct Onboarding: Reducer {
   
   struct State {
-    var route: Route? = nil
+    var selectedRoute: Route? = nil
     var signUpState: SignUp.State = .init()
     var newProfileState: UPCreate.State = .init()
   }
   
   enum Route {
-    case login
-    case logout
+    case createProfile
   }
   
   enum SocialLoginAdvisor {
@@ -33,7 +32,7 @@ struct Onboarding: Reducer {
     /// Life cycle
     case onAppear
     case onDisappear
-    case setRoute(Route)
+    case setRoute(Route?)
     
     case skipButtonTapped
     
@@ -57,7 +56,7 @@ struct Onboarding: Reducer {
       case .onDisappear:
         return .none
       case .setRoute(let selectedRoute):
-        state.route = selectedRoute
+        state.selectedRoute = selectedRoute
         return .none
       case .skipButtonTapped:
         return .none
@@ -66,10 +65,13 @@ struct Onboarding: Reducer {
       case .kakaoLoginCallback(let token, let error):
         if let error {
           print(error)
+          return .send(.setRoute(.createProfile))
         }else {
           print(token)
+          /// 프로필 정보가 없다면,
+          return .send(.setRoute(.createProfile))
         }
-        return .none
+        
         
         /// Child
       case .signUpAction:
