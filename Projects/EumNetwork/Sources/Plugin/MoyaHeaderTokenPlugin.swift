@@ -10,7 +10,10 @@ import Moya
 import Foundation
 
 final class MoyaHeaderTokenPlugin: PluginType {
-  public init() {}
+  
+  static let shared = MoyaHeaderTokenPlugin()
+  
+  private init() {}
   
   public func prepare(_ request: URLRequest, target: TargetType) -> URLRequest {
     guard let token = retrieveToken() else {
