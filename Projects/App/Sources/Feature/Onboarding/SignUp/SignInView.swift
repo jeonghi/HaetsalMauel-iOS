@@ -10,9 +10,9 @@ import SwiftUI
 import ComposableArchitecture
 import UISystem
 
-struct SignUpView {
+struct SignInView {
   
-  typealias Core = SignUp
+  typealias Core = SignIn
   typealias State = Core.State
   typealias Action = Core.Action
   
@@ -41,7 +41,7 @@ struct SignUpView {
   }
 }
 
-extension SignUpView: View {
+extension SignInView: View {
   var body: some View {
     return VStack(spacing: 48) {
       guideComment
@@ -78,7 +78,7 @@ extension SignUpView: View {
   }
 }
 
-extension SignUpView {
+extension SignInView {
   
   private var guideComment: some View {
     Text("로그인 정보를 입력해주세요.")
@@ -161,10 +161,10 @@ extension SignUpView {
 #Preview {
   VStack(spacing: 0){
     NavigationView {
-      let store = Store(initialState: SignUp.State()){
-        SignUp()
+      let store = Store(initialState: SignIn.State()){
+        SignIn()
       }
-      SignUpView(store: store)
+      SignInView(store: store)
     }
   }
 }

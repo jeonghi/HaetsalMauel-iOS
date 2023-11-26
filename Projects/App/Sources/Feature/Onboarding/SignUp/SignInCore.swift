@@ -8,20 +8,22 @@
 
 import Foundation
 import ComposableArchitecture
+import EumNetwork
+import Combine
 
-struct SignUp: Reducer {
+struct SignIn: Reducer {
   
-  struct State: Equatable {
+  struct State {
     var isTextFieldAllFilled: Bool {
       !id.isEmpty && !password.isEmpty
     }
-    var id: String = ""
-    var password: String = ""
+    var id: String = "test2@email"
+    var password: String = "1234"
     var showPassword: Bool = false
     var isShowingSheet: Bool = false
   }
   
-  enum Action: Equatable {
+  enum Action {
     case onAppear
     case onDisappear
     
@@ -33,6 +35,12 @@ struct SignUp: Reducer {
     case dismissSheet
     
     case tappedLoginButton
+    
+    /// Network
+    case requestSignIn
+    case requestSignInResponse(Result<SignInEntity.Response?, HTTPError>)
+    
+    case loginDone
   }
   
   var body: some ReducerOf<Self> {
@@ -62,10 +70,33 @@ struct SignUp: Reducer {
       case .dismissSheet:
         state.isShowingSheet = false
         return .none
-        
       case .tappedLoginButton:
+        return .send(.requestSignIn)
+        
+        /// network
+      case .requestSignIn:
+        let request = SignInEntity.LocalLoginRequest(email: state.id, password: state.password)
+        return .publisher { authService.localLogin(request)
+            .receive(on: mainQueue)
+            .map{Action.requestSignInResponse(.success($0))}
+            .catch{Just(Action.requestSignInResponse(.failure($0)))}
+        }
+        return .none 
+      case .requestSignInResponse(.success(let res)):
+        guard let token = res?.toOAuthToken(), authService.saveToken(token) else {
+          return .none
+        }
+        return .send(.loginDone)
+      case .requestSignInResponse(.failure(let error)):
+        print(error)
+        return .none
+        
+      case .loginDone:
         return .none
       }
     }
   }
+  
+  @Dependency(\.appService.authService) var authService
+  @Dependency(\.mainQueue) var mainQueue
 }
