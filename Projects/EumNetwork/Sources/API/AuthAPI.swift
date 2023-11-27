@@ -26,15 +26,15 @@ extension AuthAPI: TargetType {
   public var path: String {
     switch self {
     case .localLogin:
-      return "/auth/signin"
+      return "/auth/signin/local"
     case .kakaoLogin:
-      return "/auth/kakao"
+      return "/auth/signin/kakao"
     case .appleLogin:
-      return "/auth/apple"
+      return "/auth/signin/apple"
     case .logout:
       return "/logout"
     case .reissue:
-      return "/reissue"
+      return "/auth/reissue"
     }
   }
   
