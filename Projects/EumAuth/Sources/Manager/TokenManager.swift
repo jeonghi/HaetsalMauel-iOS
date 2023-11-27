@@ -31,6 +31,7 @@ final public class TokenManager: TokenManagable {
   
   public func setToken(_ token: OAuthToken?) {
     Properties.saveCodable(key: OAuthTokenKey, data: token)
+    self.token = Properties.loadCodable(key: OAuthTokenKey)
   }
   
   public func getToken() -> OAuthToken? {
