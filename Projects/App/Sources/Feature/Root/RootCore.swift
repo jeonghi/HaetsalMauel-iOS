@@ -7,14 +7,14 @@
 //
 
 import ComposableArchitecture
+import EumAuth
 
 struct Root: Reducer {
   struct State {
-    var route: Route = .onboarding
     
+    var route: Route = .onboarding
     var onboardingState: Onboarding.State?
     var mainTabState: MainTab.State?
-    
     var fromSetting: FromSetting?
     
     enum FromSetting {
@@ -52,11 +52,22 @@ struct Root: Reducer {
       switch action {
         /// Life cycle
       case .onAppear:
-        state.onboardingState = .init()
-        return .none
+        if authService.isLoggedIn {
+          state.mainTabState = .init()
+          return .send(.setRoute(.mainTab))
+        } else {
+          state.onboardingState = .init()
+          return .send(.setRoute(.onboarding))
+        }      
       case .onDisappear:
         return .none
       case .setRoute(let selectedRoute):
+        switch selectedRoute {
+        case .mainTab:
+          state.mainTabState = .init()
+        case .onboarding:
+          state.onboardingState = .init()
+        }
         state.route = selectedRoute
         return .none
         
@@ -68,15 +79,17 @@ struct Root: Reducer {
       case .withdrawal:
         return .none
       
-      case .onboardingAction(.signUpAction(.tappedLoginButton)):
-        state.mainTabState = .init()
-        return .send(.setRoute(.mainTab))
-      case .onboardingAction(.skipButtonTapped):
-        state.mainTabState = .init()
-        return .send(.setRoute(.mainTab))
+      case .onboardingAction(.loginDone):
+        if authService.isLoggedIn {
+          return .send(.setRoute(.mainTab))
+        }
+        return .none
+        
       case .onboardingAction:
         return .none
+        
       case .mainTabAction(.settingAction(.logout)):
+        state.mainTabState = .init()
         return .send(.setRoute(.onboarding))
       case .mainTabAction(.settingAction(.signOut)):
         return .send(.setRoute(.onboarding))
@@ -91,4 +104,6 @@ struct Root: Reducer {
       Onboarding()
     }
   }
+  
+  @Dependency(\.appService.authService) var authService
 }

@@ -9,6 +9,8 @@
 import ComposableArchitecture
 import KakaoSDKUser
 import KakaoSDKAuth
+import EumNetwork
+import Combine
 
 struct Onboarding: Reducer {
   
@@ -34,10 +36,14 @@ struct Onboarding: Reducer {
     case onDisappear
     case setRoute(Route?)
     
-    case skipButtonTapped
+    case loginDone
     
     /// Kakao Login Handler
     case kakaoLoginCallback(OAuthToken?, Error?)
+    
+    /// Network
+    case requestKakaoLogin(String)
+    case requestKakaoLoginResponse(Result<SignInEntity.Response?, HTTPError>)
     
     /// Child
     case signInAction(SignIn.Action)
@@ -49,33 +55,56 @@ struct Onboarding: Reducer {
       switch action {
         /// Life cycle
       case .onAppear:
-        if authService.isLoggedIn {
-          return .send(.skipButtonTapped)
-        }
         return .none
       case .onDisappear:
         return .none
+      
+        /// Custom
       case .setRoute(let selectedRoute):
         state.selectedRoute = selectedRoute
         return .none
-      case .skipButtonTapped:
+      case .loginDone:
         return .none
         
         /// Kakao Login Handler
       case .kakaoLoginCallback(let token, let error):
         if let error {
-          print(error)
-          return .send(.setRoute(.createProfile))
+          logger.log(.error, error)
+          return .none
         }else {
-          print(token)
-          /// 프로필 정보가 없다면,
-          return .send(.setRoute(.createProfile))
+          guard let accessToken = token?.accessToken else {
+            logger.log(.warning, "엑세스토큰 없음")
+            return .none
+          }
+          return .send(.requestKakaoLogin(accessToken))
         }
         
+        /// Network
+      case .requestKakaoLogin(let accessToken):
+        let request = SignInEntity.KakaoLoginRequest(token: accessToken)
+        
+        logger.log(.debug, "카카오 로그인 콜백 서버에 액세스 토큰 전달 \(accessToken)")
+        
+        return .publisher {
+          authService.kakaoLogin(request)
+            .receive(on: mainQueue)
+            .map{Action.requestKakaoLoginResponse(.success($0))}
+            .catch{Just(Action.requestKakaoLoginResponse(.failure($0)))}
+        }
+      case .requestKakaoLoginResponse(.success(let res)):
+        guard let token = res?.toOAuthToken(), authService.saveToken(token) else {
+          logger.log(.error, "서버 응답 토큰 없음")
+          return .none
+        }
+        logger.log(.debug, "서버 응답 토큰 정상")
+        return .send(.loginDone)
+      case .requestKakaoLoginResponse(.failure(let error)):
+        print(error)
+        return .none
         
         /// Child
       case .signInAction(.loginDone):
-        return .send(.setRoute(.createProfile))
+        return .send(.loginDone)
       case .signInAction:
         return .none
       case .newProfileAction(.tappedNextButton):
@@ -94,4 +123,6 @@ struct Onboarding: Reducer {
   
   // MARK: Dependency
   @Dependency(\.appService.authService) var authService
+  @Dependency(\.mainQueue) var mainQueue
+  @Dependency(\.logger) var logger
 }

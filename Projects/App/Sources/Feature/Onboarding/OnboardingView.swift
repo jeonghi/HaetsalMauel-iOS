@@ -117,7 +117,7 @@ extension OnboardingView {
       }){
         TTLoginLabel(.kakao)
       }
-      Button(action: {viewStore.send(.skipButtonTapped)}){
+      Button(action: {}){
         TTLoginLabel(.apple)
       }
     }
