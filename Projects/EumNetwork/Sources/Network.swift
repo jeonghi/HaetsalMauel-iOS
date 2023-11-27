@@ -18,15 +18,18 @@ public struct Network<T: TargetType> {
     self.provider = Network<T>.makeProvider()
   }
   
-  static func makeProvider() -> MoyaProvider<T> {
+  private static func makeProvider() -> MoyaProvider<T> {
     var plugins: [PluginType] = [MoyaHeaderTokenPlugin.shared]
-    #if(DEBUG)
+#if(DEBUG)
     plugins.append(MoyaLoggerPlugin.shared)
-    #endif
+#endif
     return MoyaProvider<T>(plugins: plugins)
   }
   
-  public func request<R>(_ target: T, responseType: R.Type) -> AnyPublisher<R?, HTTPError> where R: Codable {
+}
+  
+public extension Network {
+  func request<R>(_ target: T, responseType: R.Type) -> AnyPublisher<R?, HTTPError> where R: Codable {
     return provider.requestPublisher(target)
       .tryMap { response -> R? in
         let decoder = JSONDecoder()
