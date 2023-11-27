@@ -18,11 +18,11 @@ enum SignInEntity {
   }
   
   struct AppleLoginRequest: Codable, JSONConvertible {
-    let accessToken: String
+    let token: String
   }
   
   struct KakaoLoginRequest: Codable, JSONConvertible {
-    let accessToken: String
+    let token: String
   }
   
   struct Response: Codable {
