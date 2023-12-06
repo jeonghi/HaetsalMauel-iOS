@@ -9,5 +9,5 @@
 import Foundation
 
 struct Constants {
-  static let baseUrl = "http://sunrise.k-eum.kr:8080"
+  static let baseUrl = "http://175.45.203.78:8080"
 }
