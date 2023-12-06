@@ -9,6 +9,7 @@
 import SwiftUI
 import ComposableArchitecture
 import UISystem
+import DesignSystemFoundation
 
 struct TransferReadyView: View {
   
@@ -50,6 +51,7 @@ extension TransferReadyView {
         .padding(.horizontal, 20)
         .padding(.bottom, 20)
     }
+    .setCustomNavBackButton()
     .frame(maxWidth: .infinity, maxHeight: .infinity)
   }
 }
@@ -60,7 +62,7 @@ extension TransferReadyView {
     Group {
       Text("\(viewStore.userName)")
         .foregroundColor(Color(.accent3))
-        .bold()
+        .font(.title2)
       +
       Text("님께\n")
       +
@@ -89,6 +91,8 @@ struct TransferReadyView_Previews: PreviewProvider {
     let store = Store(initialState: TransferReady.State(userName: "박소융", amount: 10)){
       TransferReady()
     }
-    TransferReadyView(store: store)
+    NavigationView {
+      TransferReadyView(store: store)
+    }
   }
 }

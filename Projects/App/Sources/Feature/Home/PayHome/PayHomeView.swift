@@ -24,10 +24,20 @@ struct PayHomeView {
     var selectedTab: Tab?
     var showingSetPasswordSheet: Bool
     var showingPopup: Bool
+    var payCardName: String
+    var payBalance: Int64
+    var transactionList: [TransactionEntity.History]
+    var isLoadingTransaction: Bool
+    var isLoadingPage: Bool
     init(state: State){
       selectedTab = state.selectedTab
       showingSetPasswordSheet = state.showingSetPasswordSheet
       showingPopup = state.showingPopup
+      payCardName = state.payCardName
+      payBalance = state.payBalance
+      transactionList = state.transactionList
+      isLoadingTransaction = state.isLoadingTransaction
+      isLoadingPage = state.isLoadingPage
     }
   }
   
@@ -39,34 +49,62 @@ struct PayHomeView {
 
 extension PayHomeView: View {
   var body: some View {
-    VStack(spacing: 0) {
-      ScrollView {
-        카드대시보드
-          .padding(.top, 20)
-          .padding(.horizontal, 16)
-        
-        분리
-          .padding(.vertical, 20)
-        
-        교환내역
-          .padding(.horizontal, 16)
+    ZStack {
+      VStack(spacing: 0) {
+        ScrollView {
+          카드대시보드
+            .padding(.top, 20)
+            .padding(.horizontal, 16)
+          
+          분리
+            .padding(.vertical, 20)
+          
+          교환내역탭
+            .padding(.horizontal, 16)
+          
+          ZStack {
+            VStack(spacing: 0) {
+              if(!viewStore.transactionList.isEmpty){
+                거래내역결과
+              }else {
+                거래내역없음
+              }
+            }
+            if(viewStore.isLoadingTransaction){
+              Color.white
+              ProgressView()
+                .padding(.vertical, 70)
+            }
+          }
+        }
+        .refreshable{
+          viewStore.send(.onAppear)
+        }
+      }
+      if(viewStore.isLoadingPage){
+        Color.white
+        ProgressView()
       }
     }
     .eumPopup(isShowing: viewStore.binding(get: \.showingPopup, send: Action.dismissPopup)){
-      EumPopupView(title: "설정완료", subtitle: "비밀번호가 성공적으로 설정되었습니다", type: .twoLineOneButton, firstButtonName: "확인", firstButtonAction: {viewStore.send(.dismissPopup)})
+      AnyView(
+        EumPopupView(title: "설정완료", subtitle: "비밀번호가 성공적으로 설정되었습니다", type: .twoLineOneButton, firstButtonName: "확인", firstButtonAction: {viewStore.send(.dismissPopup)})
+      )
     }
     .fullScreenCover(isPresented: viewStore.binding(get: \.showingSetPasswordSheet, send: Action.dismissSetPasswordSheet)){
       NavigationView {
         IfLetStore(setPasswordStore, then: SetPasswordView.init)
       }
     }
-    .setCustomNavBarTitle("햇살카드")
+    .setCustomNavBarTitle("햇살 카드")
     .setCustomNavBackButton()
+    .background(Color(.white))
+    .foregroundColor(Color(.black))
     .onAppear{
       viewStore.send(.onAppear)
     }
     .onDisappear {
-      
+      viewStore.send(.onDisappear)
     }
   }
 }
@@ -81,6 +119,9 @@ extension PayHomeView {
   
   private var 카드: some View {
     VStack(alignment: .leading){
+      
+      카드별명
+      
       HStack {
         
         ImageAsset.햇살아이콘.toImage()
@@ -90,7 +131,7 @@ extension PayHomeView {
           .frame(height: 29.3)
         
         HStack(alignment: .center) {
-          Text("20")
+          Text("\(viewStore.payBalance)")
             .font(.extraB)
           Text("햇살")
             .font(.titleB)
@@ -112,11 +153,11 @@ extension PayHomeView {
   }
   
   private var 햇살보내기_버튼: some View {
-    Button(action: {viewStore.send(.tappedRemittanceButton)}){
+    NavigationLink(destination: TransferInputView(store: transferInputStore)){
       HStack {
         Text("햇살 보내기")
           .foregroundColor(Color(.primary))
-          .font(.headerR)
+          .font(.subB)
       }
       .padding(.horizontal, 15)
       .padding(.vertical, 10)
@@ -127,13 +168,30 @@ extension PayHomeView {
     }
   }
   
-  private var 교환내역: some View {
-    VStack {
+  private var 카드별명: some View {
+    ZStack {
+      TextField(text: viewStore.binding(get: \.payCardName, send: Action.updatePayCardName), prompt: nil){
+        Text("카드 별명을 설정해보세요")
+          .font(.headerR)
+          .foregroundColor(Color(.white))
+      }
+    }
+    .frame(maxWidth: .infinity)
+    .padding(10)
+    .background(
+      RoundedRectangle(cornerRadius: 10)
+        .fill(Color(.black).opacity(0.3))
+    )
+  }
+  
+  private var 교환내역탭: some View {
+    VStack(spacing: 0) {
       Text("교환 내역")
         .font(.titleB)
         .hLeading()
         .padding(.horizontal, 5)
       탭바
+        .padding(.vertical, 16)
     }
   }
   
@@ -146,21 +204,29 @@ extension PayHomeView {
   }
   
   private var 탭바: some View {
-    return VStack {
-      
-      ScrollingTab(selection: viewStore.binding(get: \.selectedTab, send: Action.selectTab), tabs: Tab.allCases)
-      
+    return ScrollingTab(selection: viewStore.binding(get: \.selectedTab, send: Action.selectTab), tabs: Tab.allCases, horizontalPadding: 10, verticalPaddingg: 6)
+  }
+  
+  
+  private var 거래내역결과: some View {
+    ScrollView {
       LazyVStack(spacing: 0) {
-        PayTransactionListCell(description: "햇살 활동 장려금 (댓글 달기)", transactionAt: Date(), type: .받음, amount: 20, balance: 1980)
-          .padding(.vertical, 16)
-        PayTransactionListCell(description: "금메달 마트 장보기 도움", transactionAt: Date(), type: .보냄, amount: 40, balance: 1960)
-          .padding(.vertical, 16)
-        PayTransactionListCell(description: "전구 교체 도움", transactionAt: Date(), type: .보냄, amount: 40, balance: 2000)
-          .padding(.vertical, 16)
-        PayTransactionListCell(description: "마을 정착 지원금", transactionAt: Date(), type: .받음, amount: 300, balance: 300)
-          .padding(.vertical, 16)
+        ForEach(viewStore.transactionList, id:\.self){
+          PayTransactionListCell(transaction: $0)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 16)
+            .background(Color(.white))
+        }
+      }
     }
-    }
+  }
+  
+  private var 거래내역없음: some View {
+    Text("아직 햇살 교환 내역이 없어요.\n햇터를 통해 이웃과 햇살을 교환해보세요.")
+      .font(.subR)
+      .foregroundColor(Color(.systemgray06))
+      .multilineTextAlignment(.center)
+      .vCenter()
   }
   
   private func fitToImage(_ image: ImageAsset, _ imageHeight: CGFloat) -> some View {
@@ -175,6 +241,12 @@ extension PayHomeView {
 extension PayHomeView {
   private var setPasswordStore: Store<SetPassword.State?, SetPassword.Action> {
     return store.scope(state: \.setPasswordState, action: Action.setPasswordAction)
+  }
+  
+  private var transferInputStore: StoreOf<TransferInput> {
+    return Store(initialState: TransferInput.State()){
+      TransferInput()
+    }
   }
 }
 
