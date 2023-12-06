@@ -28,7 +28,7 @@ struct MainTab: Reducer {
     case 홈
     case 햇터
     case 채팅
-    case 소통
+//    case 소통
     case 행사
   }
   
@@ -62,7 +62,9 @@ struct MainTab: Reducer {
         /// Tab Bar
       case .setTab(let selectedTab):
         state.selectedTab = selectedTab
+        hapticService.hapticSelection()
         return .none
+        
       case .homeAction:
         return .none
       case .marketPlaceHomeAction:
@@ -104,4 +106,6 @@ struct MainTab: Reducer {
       Setting()
     }
   }
+  
+  @Dependency(\.appService.hapticService) var hapticService
 }
