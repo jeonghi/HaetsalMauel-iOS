@@ -22,6 +22,15 @@ extension View {
   func setCustomNavCloseButton() -> some View {
     modifier(CustomCloseButtonModifier())
   }
+  
+  func navigate<Content: View>(if condition: Binding<Bool>, to content: Content) -> some View {
+    NavigationView {
+      ZStack {
+        self
+        NavigationLink("", destination: content, isActive: condition)
+      }
+    }
+  }
 }
 
 struct CustomBackButtonModifier: ViewModifier {
@@ -30,11 +39,13 @@ struct CustomBackButtonModifier: ViewModifier {
   func body(content: Content) -> some View {
     content
       .navigationBarBackButtonHidden(true)
-      .gesture(DragGesture().onEnded({ value in
-                  if value.translation.width > 70 { // 스와이프 거리 조정
-                      self.presentationMode.wrappedValue.dismiss()
-                  }
-      }))
+      .highPriorityGesture(
+        DragGesture().onEnded({ value in
+          if value.translation.width > 70 { // 스와이프 거리 조정
+            self.presentationMode.wrappedValue.dismiss()
+          }
+        })
+      )
       .toolbar {
         ToolbarItemGroup(placement: .navigationBarLeading){
           Button(action: {self.presentationMode.wrappedValue.dismiss()}){
@@ -88,11 +99,11 @@ struct CustomNavTitleModifier: ViewModifier {
 }
 
 #Preview {
-    NavigationView {
-      List {
-        Text("Sample Code")
-      }
-      .setCustomNavBackButton()
-      .setCustomNavBarTitle("테스트")
+  NavigationView {
+    List {
+      Text("Sample Code")
     }
+    .setCustomNavBackButton()
+    .setCustomNavBarTitle("테스트")
+  }
 }
