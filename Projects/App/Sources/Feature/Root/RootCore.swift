@@ -8,12 +8,14 @@
 
 import ComposableArchitecture
 import EumAuth
+import EumNetwork
+import Combine
 
 struct Root: Reducer {
   struct State {
     
     var route: Route = .onboarding
-    var onboardingState: Onboarding.State?
+    var onboardingState: Onboarding.State? = .init()
     var mainTabState: MainTab.State?
     var fromSetting: FromSetting?
     
@@ -41,6 +43,10 @@ struct Root: Reducer {
     
     /// Alert
     
+    /// 네트워크 처리
+    case requestVerifyToken
+    case requestVerifyTokenResponse(Result<SignInEntity.VerifyResponse?, HTTPError>)
+    
     /// Child
     case onboardingAction(Onboarding.Action)
     case mainTabAction(MainTab.Action)
@@ -53,10 +59,8 @@ struct Root: Reducer {
         /// Life cycle
       case .onAppear:
         if authService.isLoggedIn {
-          state.mainTabState = .init()
-          return .send(.setRoute(.mainTab))
+          return .send(.requestVerifyToken)
         } else {
-          state.onboardingState = .init()
           return .send(.setRoute(.onboarding))
         }      
       case .onDisappear:
@@ -79,17 +83,49 @@ struct Root: Reducer {
       case .withdrawal:
         return .none
       
-      case .onboardingAction(.loginDone):
-        if authService.isLoggedIn {
+        /// 네트워크 처리
+      case .requestVerifyToken:
+        return .publisher {
+          authService.verifyToken()
+            .receive(on: mainQueue)
+            .map{Action.requestVerifyTokenResponse(.success($0))}
+            .catch{Just(Action.requestVerifyTokenResponse(.failure($0)))}
+        }
+      case .requestVerifyTokenResponse(.success(let res)):
+        guard let res = res else {
+          logger.log(.warning, res)
+          return .none
+        }
+        switch res.role {
+        case .unprofileUser:
+          logger.log(.debug, "프로필이 없는 유저입니다. 프로필 생성 화면으로 이동합니다")
+          return .send(.onboardingAction(.setRoute(.createProfile)))
+        case .unpasswordUser:
+          logger.log(.debug, "패스워드 설정이 되지 않은 유저입니다. 패스워드 설정 화면으로 이동합니다.")
+          return .send(.onboardingAction(.showFullSheet))
+        default:
+          logger.log(.info, "메인 탭으로 이동합니다. 사용자 권한: \(res.role)")
           return .send(.setRoute(.mainTab))
         }
-        return .none
+      case .requestVerifyTokenResponse(.failure(let error)):
+        logger.log(.error, error)
+        return .send(.setRoute(.onboarding))
+        
+        /// Child
+      case .onboardingAction(.loginDone):
+        return .send(.onAppear)
+      case .onboardingAction(.setPasswordDone):
+        return .send(.onAppear)
+      case .onboardingAction(.newProfileAction(.requestCreateProfileResponse(.success(_)))):
+        return .send(.onAppear)
         
       case .onboardingAction:
         return .none
         
       case .mainTabAction(.settingAction(.logout)):
-        state.mainTabState = .init()
+        state.mainTabState = nil
+        return .send(.setRoute(.onboarding))
+      case .mainTabAction(.settingAction(.withdrawalReasonAction(.withdrawalDetailReasonAction(.tappedWithdrawalButton)))):
         return .send(.setRoute(.onboarding))
       case .mainTabAction(.settingAction(.signOut)):
         return .send(.setRoute(.onboarding))
@@ -106,4 +142,6 @@ struct Root: Reducer {
   }
   
   @Dependency(\.appService.authService) var authService
+  @Dependency(\.mainQueue) var mainQueue
+  @Dependency(\.logger) var logger
 }
