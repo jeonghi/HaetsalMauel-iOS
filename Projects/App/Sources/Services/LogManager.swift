@@ -46,13 +46,13 @@ extension LogManager {
       
       switch level {
       case .debug:
-        logMessage += "🚀 \(message)" // 흰색과 이모지
+        logMessage += "[🚀] \(message)" // 흰색과 이모지
       case .info:
-        logMessage += "✅ \(message)" // 녹색과 이모지
+        logMessage += "[✅] \(message)" // 녹색과 이모지
       case .warning:
-        logMessage += "⚠️ \(message)" // 노란색과 이모지
+        logMessage += "[⚠️] \(message)" // 노란색과 이모지
       case .error:
-        logMessage += "❌ \(message)" // 빨간색과 이모지
+        logMessage += "[❌] \(message)" // 빨간색과 이모지
       }
       print(logMessage)
     }

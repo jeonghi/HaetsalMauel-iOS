@@ -13,8 +13,9 @@ import EumAuth
 protocol AuthServiceType {
   var isLoggedIn: Bool { get }
   func kakaoLogin(_ request: SignInEntity.KakaoLoginRequest) -> AnyPublisher<SignInEntity.Response?, HTTPError>
-  func appleLogin(_ request: SignInEntity.AppleLoginRequest) -> AnyPublisher<SignInEntity.Response?, HTTPError>
+  func firebaseLogin(_ request: SignInEntity.AppleLoginRequest) -> AnyPublisher<SignInEntity.Response?, HTTPError>
   func localLogin(_ request: SignInEntity.LocalLoginRequest) -> AnyPublisher<SignInEntity.Response?, HTTPError>
+  func verifyToken() -> AnyPublisher<SignInEntity.VerifyResponse?, HTTPError>
   func saveToken(_ token: OAuthToken) -> Bool
   func resetToken() -> Bool
   func logout() -> Bool
@@ -36,12 +37,16 @@ final class AuthService: AuthServiceType {
     return network.request(.kakaoLogin(request), responseType: SignInEntity.Response.self)
   }
   
-  func appleLogin(_ request: SignInEntity.AppleLoginRequest) -> AnyPublisher<SignInEntity.Response?, EumNetwork.HTTPError> {
-    network.request(.appleLogin(request), responseType: SignInEntity.Response.self)
+  func firebaseLogin(_ request: SignInEntity.AppleLoginRequest) -> AnyPublisher<SignInEntity.Response?, EumNetwork.HTTPError> {
+    network.request(.firebaseLogin(request), responseType: SignInEntity.Response.self)
   }
   
   func localLogin(_ request: SignInEntity.LocalLoginRequest) -> AnyPublisher<SignInEntity.Response?, EumNetwork.HTTPError> {
     network.request(.localLogin(request), responseType: SignInEntity.Response.self)
+  }
+  
+  func verifyToken() -> AnyPublisher<SignInEntity.VerifyResponse?, HTTPError> {
+    return network.request(.verify, responseType: SignInEntity.VerifyResponse.self)
   }
   
   func saveToken(_ token: OAuthToken) -> Bool {
