@@ -15,6 +15,7 @@ public struct EumTextField: View {
     case email
     case password
     case confirmPassword
+    case number
   }
   
   @Binding public var text: String
@@ -50,12 +51,15 @@ public struct EumTextField: View {
         })
         .textStyle(.init(font: .subR, color: .black))
         .font(.subR)
+        .keyboardType(mode == Mode.number ? .numberPad : .default)
       } else {
         HStack {
           if isSecure ?? false {
             SecureField(placeholder ?? "", text: $text)
+              .keyboardType(mode == Mode.number ? .numberPad : .default)
           } else {
             TextField(placeholder ?? "", text: $text)
+              .keyboardType(mode == Mode.number ? .numberPad : .default)
           }
           
           if mode == .password {
@@ -80,7 +84,6 @@ public struct EumTextField: View {
       }
     }
     .padding()
-    .frame(height: 46)
     .frame(maxWidth: .infinity)
     .background(
       RoundedRectangle(cornerRadius: 6)
