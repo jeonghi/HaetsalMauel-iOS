@@ -16,24 +16,29 @@ struct MPHomeView {
   typealias Core = MPHome
   typealias State = Core.State
   typealias Action = Core.Action
+  typealias Route = Core.Route
+  typealias Tab = Core.Tab
   
   private let store: StoreOf<Core>
   
   @ObservedObject private var viewStore: ViewStore<ViewState, Action>
   
-  typealias Category = Core.Category
-  typealias Tab = Core.Tab
-  
   struct ViewState: Equatable {
-    var selectedCat: Category?
+    var selectedRoute: Route?
+    var postList: [MarketPostEntity.Response]
+    var selectedCat: MPCategory?
     var selectedTab: Tab?
     var isShowingFullSheet: Bool
     var fullSheetType: Core.FullSheetType?
+    var isCheckedShowOnlyProceeding: Bool
     init(state: State) {
+      selectedRoute = state.selectedRoute
+      postList = state.postList
       selectedCat = state.selectedCat
       isShowingFullSheet = state.isShowingFullSheet
       fullSheetType = state.fullSheetType
       selectedTab = state.selectedTab
+      isCheckedShowOnlyProceeding = state.showOnlyProceeding
     }
   }
   
@@ -47,18 +52,18 @@ struct MPHomeView {
 extension MPHomeView: View {
   var body: some View {
     ZStack {
+      NavigationLink(destination: MPPostingReadView(store: MPPostingReadStore), tag: Route.readPost, selection: viewStore.binding(get: \.selectedRoute, send: Action.setRoute)){
+        EmptyView()
+      }
       VStack(spacing: 0) {
         header
-        contentVList
-        
+        contentVList 
       }
       newPostButton
         .vBottom()
         .hTrailing()
         .padding()
-      if let _ = viewStore.selectedCat {} else {
-        Color.white
-      }
+
     }
     .background(Color(.white))
     .fullScreenCover(isPresented: viewStore.binding(get: \.isShowingFullSheet, send: Action.dismissFullSheet)){
@@ -69,7 +74,8 @@ extension MPHomeView: View {
             MPPostingCreateView(store: MPPostingCreateStore)
           }
         case .카테고리선택:
-          MarketPlaceCategorySelectionView(store: marketPlaceCategorySelectionStore)
+          NavigationView {MarketPlaceCategorySelectionView(store: marketPlaceCategorySelectionStore)
+          }
         }
       }
     }
@@ -89,14 +95,12 @@ extension MPHomeView {
     VStack {
       Button(action: {viewStore.send(.카테고리선택하기)}){
         HStack {
-          if let cat = viewStore.selectedCat?.rawValue {
-            Text("\(cat)")
+            Text("\(viewStore.selectedCat?.rawValue ?? "전체")")
               .font(.subB)
               .foregroundColor(Color(.systemgray07))
               .padding(.horizontal, 10)
               .padding(.vertical, 6)
               .background(RoundedRectangle(cornerRadius: 6).fill(Color(.systemgray02)))
-          }
           ImageAsset.chevronRight.toImage()
         }
         .hLeading()
@@ -113,6 +117,18 @@ extension MPHomeView {
       HStack {
         ScrollingTab(selection: viewStore.binding(get: \.selectedTab, send: Action.selectTab), tabs: Tab.allCases)
         Spacer()
+        Button(action: {viewStore.send(.tappedShowOnlyProceedingButton)}){
+          HStack(spacing: 5){
+            Text("모집중만 보기")
+              .font(.descriptionR)
+            ImageAsset.check.toImage()
+              .renderingMode(.template)
+              .resizable()
+              .aspectRatio(contentMode: .fit)
+              .frame(height: 24)
+          }
+        }
+        .foregroundColor(viewStore.isCheckedShowOnlyProceeding ? Color(.black) : Color(.gray07))
       }
       .padding(.horizontal, 10)
       Divider()
@@ -123,22 +139,21 @@ extension MPHomeView {
     ScrollView {
       LazyVStack(spacing: 0) {
 
-        NavigationLink(destination: MPPostingReadView(store: .init(initialState: MPPostingRead.State()){MPPostingRead()})) {
-          MPPostListCell(postType: .도움요청, postStatus: .모집중, pointAmount: 100, title: "이번주 토요일 같이 말동무 해주실 분", commentCnt: 1, locationName: "정릉3동", createdAt: Date())
-            .padding(.vertical, 16)
+        ForEach(viewStore.postList, id: \.self){ data in
+          Button(action: {viewStore.send(.tappedReadPost(data.postId))}){
+            MPPostListCell(post: data)
+              .padding(.horizontal, 16)
+              .padding(.vertical, 16)
+              .frame(maxWidth: .infinity)
+              .background(Color(.white))
+          }
+          Divider()
         }
-        Divider()
-        MPPostListCell(postType: .도움요청, postStatus: .모집완료, pointAmount: 200, title: "죽 좀 끓여주실분", commentCnt: 0, locationName: "정릉3동", createdAt: Date())
-          .padding(.vertical, 16)
-        MPPostListCell(postType: .도움제공, postStatus: .모집완료, pointAmount: 200, title: "대신 장봐드립니다", commentCnt: 0, locationName: "정릉3동", createdAt: Date())
-          .padding(.vertical, 16)
-        MPPostListCell(postType: .도움제공, postStatus: .모집중, pointAmount: 200, title: "전등 교체 해드려요", commentCnt: 100, locationName: "정릉3동", createdAt: Date())
-          .padding(.vertical, 16)
-        Divider()
       }
-      .padding(.horizontal, 16)
-      .background(Color(.white))
       .padding(.top, 5)
+    }
+    .refreshable {
+      viewStore.send(.requestGetPostList)
     }
     .background(Color(.systemgray02))
   }
@@ -152,12 +167,17 @@ extension MPHomeView {
 
 // MARK: Store init
 extension MPHomeView {
+  
   private var marketPlaceCategorySelectionStore: StoreOf<MarketPlaceCategorySelection> {
     return store.scope(state: \.marketPlaceCategorySelectionState, action: Action.marketPlaceCategorySelectionAction)
   }
   
   private var MPPostingCreateStore: StoreOf<MPPostingCreate> {
     return store.scope(state: \.MPPostingCreateState, action: Action.MPPostingCreateAction)
+  }
+  
+  private var MPPostingReadStore: StoreOf<MPPostingRead> {
+    return store.scope(state: \.MPPostingReadState, action: Action.MPPostingReadAction)
   }
 }
 

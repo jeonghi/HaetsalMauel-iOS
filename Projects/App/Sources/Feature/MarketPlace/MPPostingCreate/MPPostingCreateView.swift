@@ -19,14 +19,12 @@ struct MPPostingCreateView {
   typealias State = Core.State
   typealias Action = Core.Action
   
-  typealias TransactionType = Core.TransactionType
-  typealias ActivityTime = Core.ActivityTime
-  
   private let store: StoreOf<Core>
   
   @ObservedObject private var viewStore: ViewStore<ViewState, Action>
   
   struct ViewState: Equatable {
+    var isDismiss: Bool
     var isAllFormFilled: Bool
     var selectedTransactionType: TransactionType?
     var selectedActivityTime: ActivityTime?
@@ -35,6 +33,7 @@ struct MPPostingCreateView {
     var estimatedTime: Int
     var maxPeople: Int
     init(state: State) {
+      isDismiss = state.isDismiss
       isAllFormFilled = state.isAllFormFilled
       selectedTransactionType = state.selectedTransactionType
       selectedActivityTime = state.selectedActivityTime
@@ -55,12 +54,9 @@ extension MPPostingCreateView: View {
   var body: some View {
     VStack {
       Color.white.frame(height: 1)
-      ScrollView(showsIndicators: false){
-        타이틀
-          .padding(.horizontal, 23.5)
-          .padding(.top, 40)
-          .padding(.bottom, 16)
+      ScrollView(showsIndicators: true){
         비추기종류
+          .padding(.top, 40)
           .padding(.horizontal, 23.5)
         분할
         입력폼
@@ -71,9 +67,9 @@ extension MPPostingCreateView: View {
           버튼들
         }
         .padding(.horizontal, 16)
-        .padding(.bottom, 54)
       }
     }
+    .hideKeyboardWhenTappedAround()
     .setCustomNavCloseButton()
     .setCustomNavBarTitle("글쓰기")
     .onAppear{
@@ -119,13 +115,13 @@ extension MPPostingCreateView {
   }
   
   private var 비추기종류: some View {
-    containerBox("비추기 종류"){
+    containerBox("도움 유형"){
       MCSelectionView(store: MCSelectionStore)
     }
   }
   
   private var 거래유형: some View {
-    containerBox("거래 유형"){
+    containerBox("교환 유형"){
       ScrollingTab(selection: viewStore.binding(get: \.selectedTransactionType, send: Action.selectTransactionType), tabs: TransactionType.allCases, inactiveTintColor: Color(.systemgray06), inactiveTabStrokeColor: Color(.systemgray06), inactiveTabBackgroundColor: Color(.white) ,radius: 12, horizontalPadding: 16, verticalPaddingg: 10)
     }
   }
@@ -249,7 +245,7 @@ extension MPPostingCreateView {
         Text("작성취소")
       }
       .buttonStyle(SecondaryButtonStyle())
-      Button(action:{dismiss()}){
+      Button(action:{viewStore.send(.tappedCreatePostButton)}){
         Text("작성완료")
       }
       .buttonStyle(PrimaryButtonStyle())

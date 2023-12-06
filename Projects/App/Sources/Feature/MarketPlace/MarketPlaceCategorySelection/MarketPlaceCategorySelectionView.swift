@@ -49,13 +49,15 @@ struct MarketPlaceCategorySelectionView: View {
         .padding(.bottom, 20)
         .padding(.horizontal, 16)
     }
+    .setCustomNavCloseButton()
+    .setCustomNavBarTitle("도움 유형 선택")
   }
 }
 
 extension MarketPlaceCategorySelectionView {
   
   private var guideComment: some View {
-    Text("어떻게 햇살을 나누실 건가요?")
+    Text("어떤 도움을 찾으시나요?")
       .font(.titleB)
       .vTop()
       .hLeading()
@@ -68,7 +70,6 @@ extension MarketPlaceCategorySelectionView {
       Text("선택 완료")
     }
     .buttonStyle(PrimaryButtonStyle())
-    .disabled(!viewStore.isSelected)
   }
 }
 

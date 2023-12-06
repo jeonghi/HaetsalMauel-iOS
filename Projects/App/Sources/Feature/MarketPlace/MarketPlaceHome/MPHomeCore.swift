@@ -8,20 +8,36 @@
 
 import Foundation
 import ComposableArchitecture
+import EumNetwork
+import Combine
 
 struct MPHome: Reducer {
   
-  typealias Category = MarketCategory
+  struct GetPostListID: Hashable {}
   
   struct State {
+    
+    var postList: [MarketPostEntity.Response] = []
     var isShowingFullSheet: Bool = false
-    var marketPlaceCategorySelectionState: MarketPlaceCategorySelection.State = .init()
-    var selectedCat: MarketCategory? {
+    var selectedCat: MPCategory? {
       marketPlaceCategorySelectionState.selectedCat
     }
+    
+    var selectedRoute: Route? = nil
     var fullSheetType: FullSheetType? = nil
-    var MPPostingCreateState: MPPostingCreate.State = .init()
+    
     var selectedTab: Tab? = nil
+    var showOnlyProceeding: Bool = false
+    
+    /// Child
+    var marketPlaceCategorySelectionState: MarketPlaceCategorySelection.State = .init()
+    var MPPostingCreateState: MPPostingCreate.State = .init()
+    var MPPostingReadState: MPPostingRead.State = .init()
+    
+  }
+  
+  enum Route {
+    case readPost
   }
   
   enum FullSheetType {
@@ -30,17 +46,20 @@ struct MPHome: Reducer {
   }
   
   enum Tab: String, CaseIterable {
-    case 줄래요 = "햇살 줄래요"
-    case 받을래요 = "햇살 받을래요"
+    case 줄래요 = "도움 줄래요"
+    case 받을래요 = "도움 받을래요"
   }
   
   enum Action {
     /// Life cycle
     case onAppear
     case onDisappear
+    case onReload
     
     /// Custom
+    case tappedReadPost(Int64)
     case tappedCreatePostButton
+    case setRoute(Route?)
     
     /// Full sheet
     case updateFullSheetType(FullSheetType?)
@@ -49,10 +68,16 @@ struct MPHome: Reducer {
     
     case 카테고리선택하기
     case 글쓰기
+    case tappedShowOnlyProceedingButton
     case selectTab(Tab?)
+    
+    /// 네트워크 처리
+    case requestGetPostList
+    case requestGetPostListResponse(Result<[MarketPostEntity.Response]?, HTTPError>)
     
     /// Child
     case marketPlaceCategorySelectionAction(MarketPlaceCategorySelection.Action)
+    case MPPostingReadAction(MPPostingRead.Action)
     case MPPostingCreateAction(MPPostingCreate.Action)
   }
   
@@ -62,15 +87,24 @@ struct MPHome: Reducer {
       switch action {
         /// Life cycle
       case .onAppear:
-        guard let _ = state.selectedCat else {
-          return .send(.카테고리선택하기)
-        }
-        return .none
+//        guard let _ = state.selectedCat else {
+//          return .send(.카테고리선택하기)
+//        }
+        return .send(.requestGetPostList)
       case .onDisappear:
         return .none
+      case .onReload:
+        return .merge(.send(.requestGetPostList))
         
+        /// Custom
+      case .tappedReadPost(let postId):
+        state.MPPostingReadState.postId = postId
+        return .send(.setRoute(.readPost))
       case .tappedCreatePostButton:
         return .send(.글쓰기)
+      case .setRoute(let selectedRoute):
+        state.selectedRoute = selectedRoute
+        return .none
         
       case .updateFullSheetType(let type):
         state.fullSheetType = type
@@ -80,7 +114,7 @@ struct MPHome: Reducer {
         return .none
       case .dismissFullSheet:
         state.isShowingFullSheet = false
-        return .none
+        return .send(.onReload)
         
       case .카테고리선택하기:
         return .merge(
@@ -94,8 +128,57 @@ struct MPHome: Reducer {
           .send(.isShowingFullSheet)
         )
         
+      case .tappedShowOnlyProceedingButton:
+        state.showOnlyProceeding.toggle()
+//        hapticService.hapticSelection()
+        return .send(.requestGetPostList)
+        
       case .selectTab(let selectedTab):
         state.selectedTab = selectedTab
+//        hapticService.hapticSelection()
+        return .send(.requestGetPostList)
+        
+        /// 네트워크
+      case .requestGetPostList:
+        var type: MarketPostEntity.TransactionType? {
+          switch state.selectedTab {
+          case .줄래요:
+            return .provideHelp
+          case .받을래요:
+            return .requestHelp
+          default:
+            return nil
+          }
+        }
+        
+        var status: MarketPostEntity.Status? {
+          state.showOnlyProceeding ? .recruiting : nil
+        }
+        
+        let filter = MarketPostEntity.Filter(
+          category: state.selectedCat,
+          type: type,
+          status: status
+        )
+        
+        return .publisher {
+          marketService.readPosts(filter)
+            .receive(on: mainQueue)
+            .map{Action.requestGetPostListResponse(.success($0))}
+            .catch{Just(Action.requestGetPostListResponse(.failure($0)))}
+        }
+//        return .none
+      case .requestGetPostListResponse(.success(let res)):
+        guard let res = res else {
+          logger.log(.warning, res)
+          return .none
+        }
+        logger.log(.debug, res)
+        
+        state.postList = res
+        return .none
+      case .requestGetPostListResponse(.failure(let error)):
+        logger.log(.error, error)
         return .none
         
         /// Child
@@ -109,15 +192,34 @@ struct MPHome: Reducer {
       case .MPPostingCreateAction(.onAppear):
         state.MPPostingCreateState = .init()
         return .none
+      case .MPPostingCreateAction(.requestCreatePostResponse(.success(_))):
+        return .merge(
+          .send(.requestGetPostList),
+          .send(.dismissFullSheet)
+        )
+      case .MPPostingReadAction(let act):
+        return .none
       case .MPPostingCreateAction(let act):
         return .none
       }
+      
     }
+    
     Scope(state: \.marketPlaceCategorySelectionState, action: /Action.marketPlaceCategorySelectionAction){
       MarketPlaceCategorySelection()
     }
+    
     Scope(state: \.MPPostingCreateState, action: /Action.MPPostingCreateAction){
       MPPostingCreate()
     }
+    
+    Scope(state: \.MPPostingReadState, action: /Action.MPPostingReadAction){
+      MPPostingRead()
+    }
   }
+  
+  @Dependency(\.appService.marketService) var marketService
+  @Dependency(\.mainQueue) var mainQueue
+  @Dependency(\.appService.hapticService) var hapticService
+  @Dependency(\.logger) var logger
 }
