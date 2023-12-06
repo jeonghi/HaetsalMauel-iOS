@@ -8,7 +8,7 @@
 import UISystem
 import DesignSystemFoundation
 
-enum MarketCategory: String, CaseIterable {
+enum MPCategory: String, Codable, CaseIterable, Equatable {
   case 이동
   case 심부름
   case 교육
@@ -18,7 +18,7 @@ enum MarketCategory: String, CaseIterable {
   case 기타
 }
 
-extension MarketCategory {
+extension MPCategory {
   func cvtAssetImage() -> ImageAsset {
     switch self {
     case .이동:
