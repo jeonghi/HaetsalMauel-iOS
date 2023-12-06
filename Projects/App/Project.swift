@@ -13,7 +13,9 @@ let project = Project.makeAppModule(
     platform: .iOS,
     product: .app,
     packages: [
-      .remote(url: "https://github.com/exyte/Chat.git", requirement: .upToNextMajor(from: "1.2.2"))
+      .remote(url: "https://github.com/exyte/Chat.git", requirement: .upToNextMajor(from: "1.2.2")),
+      .remote(url: "https://github.com/pointfreeco/swift-composable-architecture.git", requirement: .upToNextMajor(from: "1.5.0")),
+      .remote(url: "https://github.com/firebase/firebase-ios-sdk.git", requirement: .upToNextMajor(from: "10.11.0"))
     ],
     dependencies: [
         .Projcet.EumNetwork,
@@ -23,15 +25,18 @@ let project = Project.makeAppModule(
         .sdk(name: "WebKit", type: .framework, status: .required),
         .package(product: "ExyteChat"),
         .package(product: "ExyteMediaPicker"),
-        .external(name: "SnapKit"),
-        .external(name: "ComposableArchitecture"),
-        .external(name: "SwiftUIPager"),
-        .external(name: "LinkNavigator"),
+        .package(product: "ComposableArchitecture"),
+        .package(product: "FirebaseStorage"),
+        .package(product: "FirebaseAuth"),
+        .package(product: "FirebaseAuthCombine-Community"),
+        .package(product: "FirebaseFirestore"),
+        .package(product: "FirebaseFirestoreCombine"),
+        .package(product: "FirebaseFirestoreSwift"),
+        .external(name: "Moya"),
+        .external(name: "CombineMoya"),
         .external(name: "PopupView"),
         .external(name: "Kingfisher"),
         .external(name: "KakaoSDK")
-//        .external(name: "ExyteChat"),
-//        .external(name: "ExyteMediaPicker")
     ],
     resources: ["Resources/**"],
     infoPlist: .file(path: "Sources/Info.plist"),
