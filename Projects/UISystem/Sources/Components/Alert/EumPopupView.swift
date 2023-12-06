@@ -44,6 +44,7 @@ extension EumPopupView: View {
           Text(title)
             .foregroundColor(Color(.black))
             .font(.headerB)
+            .multilineTextAlignment(.center)
         }
         if let subtitle = self.subtitle {
           Text(subtitle)
@@ -55,22 +56,47 @@ extension EumPopupView: View {
       .padding(.horizontal, 16)
       .padding(.vertical, 12)
       
-      VStack(spacing: 5) {
-        if let firstButtonName = self.firstButtonName {
-          Button(action: {firstButtonAction?()}){
-            Text(firstButtonName)
+      Group {
+        switch type {
+        case .oneLineOneButton, .oneLineTwoButton:
+          HStack(spacing: 10) {
+            Group {
+              if let firstButtonName = self.firstButtonName {
+                Button(action: {firstButtonAction?()}){
+                  Text(firstButtonName)
+                }
+                .buttonStyle(SecondaryButtonStyle())
+              }
+              
+              if let secondButtonName = self.secondButtonName {
+                Button(action: {secondButtonAction?()}){
+                  Text(secondButtonName)
+                }
+                .buttonStyle(PrimaryButtonStyle())
+              }
+            }
           }
-          .buttonStyle(PrimaryButtonStyle())
-        }
-        
-        if let secondButtonName = self.secondButtonName {
-          Button(action: {secondButtonAction?()}){
-            Text(secondButtonName)
+        case .twoLineOneButton, .twoLineTwoButton:
+          VStack(spacing: 10) {
+            Group {
+              if let firstButtonName = self.firstButtonName {
+                Button(action: {firstButtonAction?()}){
+                  Text(firstButtonName)
+                }
+                .buttonStyle(PrimaryButtonStyle())
+              }
+              
+              if let secondButtonName = self.secondButtonName {
+                Button(action: {secondButtonAction?()}){
+                  Text(secondButtonName)
+                }
+                .buttonStyle(SecondaryButtonStyle())
+              }
+            }
           }
-          .buttonStyle(SecondaryButtonStyle())
         }
       }
-      .padding(.horizontal, 8)
+      .padding(.horizontal, 16)
     }
     .padding(.vertical, 12)
     .background(
@@ -80,9 +106,10 @@ extension EumPopupView: View {
   }
 }
 
+
 #Preview {
   return VStack{ 
-    EumPopupView(title: "댓글 수정", subtitle: "sub", type: .twoLineTwoButton, firstButtonName: "확인", secondButtonName: "취소", firstButtonAction: {print("위")}, secondButtonAction: {print("아래")})
+    EumPopupView(title: "댓글 수정", subtitle: "sub", type: .oneLineTwoButton, firstButtonName: "확인", secondButtonName: "취소", firstButtonAction: {print("위")}, secondButtonAction: {print("아래")})
     EumPopupView(title: "댓글 수정", subtitle: "sub", type: .twoLineTwoButton, firstButtonName: "확인", secondButtonName: "취소", firstButtonAction: {print("위")}, secondButtonAction: {print("아래")})
   }
 }
