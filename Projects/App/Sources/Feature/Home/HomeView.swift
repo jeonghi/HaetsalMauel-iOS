@@ -11,6 +11,7 @@ import ComposableArchitecture
 import UISystem
 import DesignSystemFoundation
 import PopupView
+import Kingfisher
 
 struct HomeView: View {
   
@@ -23,8 +24,31 @@ struct HomeView: View {
   @ObservedObject private var viewStore: ViewStore<ViewState, Action>
   
   struct ViewState: Equatable {
+    
+    /// 화면 데이터
+    var address: String
+    var characterUrl: URL?
+    var balance: Int64
+    var characterName: String
+    var levelName: String
+    var nickName: String
+    
+    /// 로딩
+    var isLoading: Bool
+    
+    /// 팝업
     var showingPopup: Bool
+    
     init(state: State) {
+      address = state.address
+      characterUrl = state.characterUrl
+      balance = state.balance
+      characterName = state.characterName
+      levelName = state.levelName
+      nickName = state.nickName
+      
+      isLoading = state.isLoading
+      
       showingPopup = state.showingPopup
     }
   }
@@ -36,21 +60,46 @@ struct HomeView: View {
   
   // MARK: Layout init
   var body: some View {
-    
-    VStack(spacing: 0){
-      ScrollView {
-        프로필
-          .padding(.top, 10)
-        VStack(spacing: 10){
-          햇살카드대시보드
-          활동신청목록
-          햇살지수대시보드
+    ZStack {
+      
+      if viewStore.isLoading {
+        ProgressView()
+      } else {
+        VStack(spacing: 0){
+          Color.clear.frame(height: 1)
+          ScrollView {
+            프로필
+              .padding(.top, 10)
+            VStack(spacing: 10){
+              햇살카드대시보드
+              활동신청목록
+              햇살지수대시보드
+            }
+            .padding(.top, 10)
+            .padding(.horizontal, 10)
+            .padding(.bottom, 20)
+          }
         }
-        .padding(.top, 10)
-        .padding(.horizontal, 10)
-        .padding(.bottom, 20)
       }
     }
+    .eumPopup(isShowing: viewStore.binding(get: \.showingPopup, send: Action.showingPopup)){
+      AnyView (
+        VStack(spacing: 20) {
+          RoundedRectangle(cornerRadius: 6)
+            .frame(width: 67, height: 5)
+            .foregroundColor(Color(.gray06))
+          LevelGuildView()
+        }
+          .padding(22)
+          .background(
+            Color(.white)
+              .cornerRadius(12, corners: .allCorners)
+          )
+          .padding(.vertical, 40)
+      )
+    }
+    .frame(maxWidth: .infinity, maxHeight: .infinity)
+    .foregroundColor(Color(.black))
     .background(
       LinearGradient(
         gradient: Gradient(
@@ -63,21 +112,6 @@ struct HomeView: View {
         startPoint: .top,
         endPoint: .bottom)
     )
-    .eumPopup(isShowing: viewStore.binding(get: \.showingPopup, send: Action.showingPopup)){
-        VStack(spacing: 20) {
-          RoundedRectangle(cornerRadius: 6)
-            .frame(width: 67, height: 5)
-            .foregroundColor(Color(.gray06))
-          LevelGuildView()
-        }
-        .padding(22)
-        .background(
-          Color(.white)
-            .cornerRadius(12, corners: .allCorners)
-        )
-        .padding(.vertical, 40)
-    }
-    .frame(maxWidth: .infinity, maxHeight: .infinity)
     .onAppear{
       viewStore.send(.onAppear)
     }
@@ -108,42 +142,45 @@ extension HomeView {
     }
   }
   
-  private var trailingItem: some View {
-    Text("왜 안돼")
-  }
-  
   private var 활동신청목록: some View {
-    containerBox (
-      HStack {
-        VStack(alignment: .leading, spacing: 10){
-          HStack(spacing: 2) {
-            ImageAsset.위치.toImage()
-              .renderingMode(.template)
-              .resizable()
-              .scaledToFit()
-              .frame(height: 24)
-            
-            Text("정릉제2동")
-              .font(.subR)
+    NavigationLink(destination: MPMyApplyView(store: .init(initialState: MPMyApply.State()){MPMyApply()})){
+      containerBox (
+        HStack {
+          VStack(alignment: .leading, spacing: 10){
+            HStack(spacing: 2) {
+              ImageAsset.위치.toImage()
+                .renderingMode(.template)
+                .resizable()
+                .scaledToFit()
+                .frame(height: 24)
+              
+              Text("\(viewStore.address)")
+                .font(.subR)
+            }
+            .foregroundColor(Color(.systemgray07))
+            Text("활동 신청 목록")
+              .font(.headerB)
           }
-          .foregroundColor(Color(.systemgray07))
-          Text("활동신청목록")
-            .font(.headerB)
-        }
-        .hLeading()
-        NavigationLink(destination: PayHomeView(store: payHomeStore)){
+          .hLeading()
+          
           화살표
-        }
-      }
-    )
+            .foregroundColor(Color(.primaryLight))
+            .background(
+              Circle()
+                .foregroundColor(Color(.primary))
+            )
+        },
+        color: Color(.white)
+      )
+    }
   }
   
   private var 프로필: some View {
     return VStack(spacing: 30) {
-      Text("햇살주민 님 안녕하세요!")
+      Text("\(viewStore.nickName) 님 안녕하세요!")
         .foregroundColor(Color.white)
         .font(.titleB)
-      ImageAsset.character.toImage()
+      KFImage(viewStore.characterUrl)
         .resizable()
         .aspectRatio(contentMode: .fit)
         .frame(height: 225)
@@ -151,34 +188,41 @@ extension HomeView {
   }
   
   private var 햇살카드대시보드: some View {
-    containerBox(
-      HStack(spacing: 15) {
-        ImageAsset.햇살아이콘.toImage()
-          .renderingMode(.template)
-          .resizable()
-          .foregroundColor(Color.orange)
-          .aspectRatio(contentMode: .fit)
-          .frame(height: 48)
+    NavigationLink(destination: PayHomeView(store: payHomeStore)){
+      containerBox(
+        HStack(spacing: 15) {
+          ImageAsset.햇살아이콘.toImage()
+            .renderingMode(.template)
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .frame(height: 43)
           
-        VStack(alignment: .leading, spacing: 1){
-          Text("지금 바로 보낼 수 있어요")
-            .font(.subR)
-            .foregroundColor(Color(.gray07))
-          
-          HStack(spacing: 5) {
-            Text("20")
-              .font(.largeTitleB)
-            Text("햇살")
-              .font(.titleB)
+          VStack(alignment: .leading, spacing: 1){
+            Text("지금 바로 보낼 수 있어요")
+              .font(.subR)
+            
+            HStack(spacing: 5) {
+              Text("\(viewStore.balance)")
+                .font(.largeTitleB)
+              Text("햇살")
+                .font(.titleB)
+            }
           }
-        }
-        .hLeading()
-        
-        NavigationLink(destination: PayHomeView(store: payHomeStore)){
+          .hLeading()
+          
+          
           화살표
-        }
-      }
-    )
+            .foregroundColor(Color(.primary))
+            .background(
+              Circle()
+                .foregroundColor(Color(.primaryLight))
+            )
+          
+        }.foregroundColor(Color(.white))
+        ,
+        color: Color(.primary)
+      )
+    }
   }
   
   private var 햇살지수대시보드: some View {
@@ -190,7 +234,7 @@ extension HomeView {
             Spacer()
             Button(action: {viewStore.send(.showingPopup(true))}){
               HStack {
-                Text("아기 햇님")
+                Text("\(viewStore.levelName)")
                 ImageAsset.questionmarkCircleFill
                   .resizable()
                   .aspectRatio(contentMode: .fit)
@@ -213,22 +257,18 @@ extension HomeView {
           }
           .foregroundColor(Color(.gray07))
         }
-      }
+      },
+      color: .white
     )
   }
   
   private var 화살표: some View {
-        ImageAsset.rightArrow.toImage()
-          .resizable()
-          .renderingMode(.template)
-          .foregroundColor(Color(.white))
-          .aspectRatio(contentMode: .fit)
-          .frame(width: 48)
-          .padding(5)
-          .background(
-            Circle()
-              .foregroundColor(Color(.primary))
-          )
+    ImageAsset.rightArrow.toImage()
+      .resizable()
+      .renderingMode(.template)
+      .aspectRatio(contentMode: .fit)
+      .frame(width: 48)
+      .padding(5)
   }
   
   private func progressBar(_ value: Float) -> some View {
@@ -245,9 +285,9 @@ extension HomeView {
     }
   }
   
-  @ViewBuilder private func containerBox(_ content: some View) -> some View {
+  @ViewBuilder private func containerBox(_ content: some View, color: Color = .white) -> some View {
     ZStack {
-      Color.white
+      color
         .cornerRadius(20, corners: .allCorners)
       content
         .padding(.vertical, 20)
@@ -260,11 +300,8 @@ extension HomeView {
 
 // MARK: Store init
 extension HomeView {
-  private var settingStore: StoreOf<Setting> {
-    return store.scope(state: \.settingState, action: Action.settingAction)
-  }
   private var payHomeStore: StoreOf<PayHome> {
-    return store.scope(state: \.payHomeState, action: Action.payHomeAction)
+    return Store(initialState: PayHome.State()){PayHome()}
   }
 }
 

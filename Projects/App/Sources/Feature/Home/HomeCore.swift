@@ -7,46 +7,117 @@
 //
 
 import ComposableArchitecture
+import EumNetwork
+import Combine
+import Foundation
 
 struct Home: Reducer {
   
   struct State {
+    
+    /// 화면 데이터
+    var address: String = ""
+    var characterUrl: URL? = nil
+    var balance: Int64 = 0
+    var characterName: String = ""
+    var levelName: String = ""
+    var nickName: String = ""
+    
+    /// 로딩
+    var isLoading: Bool = true
+    
+    /// 팝업
     var showingPopup: Bool = false
-    var settingState: Setting.State = .init()
-    var payHomeState: PayHome.State = .init()
   }
   
   
   enum Action {
     case onAppear
     case onDisappear
-    case settingAction(Setting.Action)
-    case payHomeAction(PayHome.Action)
+    
+    case isLoading(Bool)
     case showingPopup(Bool)
+    
+    /// 네트워크
+    case requestGetProfile
+    case requestGetProfileResponse(Result<ProfileEntity.Response?, HTTPError>)
+    case requestGetMyPayInfo
+    case requestGerMyPayInfoResponse(Result<PayAccountEntity.Response?, HTTPError>)
+    
+
   }
   
   var body: some ReducerOf<Self> {
     Reduce<State, Action> { state, action in
       switch action {
+        
       case .onAppear:
-        return .none
+        return .concatenate([
+          .send(.isLoading(true)),
+          .merge(
+            .send(.requestGetProfile),
+            .send(.requestGetMyPayInfo)
+          )
+        ])
       case .onDisappear:
         return .none
-      case .settingAction:
+        
+      case .isLoading(let isLoading):
+        state.isLoading = isLoading
         return .none
-      case .payHomeAction:
-        return .none
+        
       case .showingPopup(let showingPopup):
         state.showingPopup = showingPopup
         return .none
+        
+        /// 네트워크
+      case .requestGetProfile:
+        
+        return .publisher {
+          profileService.readProfile()
+            .receive(on: mainQueue)
+            .map{Action.requestGetProfileResponse(.success($0))}
+            .catch{Just(Action.requestGetProfileResponse(.failure($0)))}
+        }
+        
+      case .requestGetProfileResponse(.success(let res)):
+        guard let res = res else {
+          logger.log(.warning, res)
+          return .none
+        }
+        logger.log(.debug, res)
+        state.address = res.address
+        state.characterUrl = URL(string: res.avatarPhotoURL)
+        state.characterName = res.characterName
+        state.levelName = res.levelName
+        state.nickName = res.nickname
+        return .send(.isLoading(false))
+        
+      case .requestGetProfileResponse(.failure(let error)):
+        logger.log(.error, error)
+        return .none
+        
+      case .requestGetMyPayInfo:
+        return .publisher{
+          payService.getMyCardInfo()
+            .receive(on: mainQueue)
+            .map{Action.requestGerMyPayInfoResponse(.success($0))}
+            .catch{Just(Action.requestGerMyPayInfoResponse(.failure($0)))}
+        }
+      case .requestGerMyPayInfoResponse(.success(let res)):
+        guard let res = res else {
+          return .none
+        }
+        state.balance = res.balance
+        return .none
+      case .requestGerMyPayInfoResponse(.failure(let error)):
+        return .none
       }
     }
-    Scope(state: \.payHomeState, action: /Action.payHomeAction){
-      PayHome()
-    }
-    Scope(state: \.settingState, action: /Action.settingAction){
-      Setting()
-    }
-    
   }
+  
+  @Dependency(\.appService.profileService) var profileService
+  @Dependency(\.appService.payService) var payService
+  @Dependency(\.mainQueue) var mainQueue
+  @Dependency(\.logger) var logger
 }
