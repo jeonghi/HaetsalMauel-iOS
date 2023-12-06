@@ -49,6 +49,6 @@ struct NewPostingView_Previews: PreviewProvider {
     let store = Store(initialState: NewPosting.State()){
       NewPosting()
     }
-    NewPostingView(store: store)
+    return NewPostingView(store: store)
   }
 }

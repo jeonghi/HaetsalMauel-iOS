@@ -81,14 +81,14 @@ struct MainTabView: View {
         }
       
       /// 소통
-      CMHomeView(store: communityStore)
-        .tag(Tab.소통)
-        .tabItem {
-          VStack {
-            viewStore.selectedTab == .소통 ? fitToImage(.소통fill, 28) : fitToImage(.소통, 28)
-            Text("소통")
-          }
-        }
+//      CMHomeView(store: communityStore)
+//        .tag(Tab.소통)
+//        .tabItem {
+//          VStack {
+//            viewStore.selectedTab == .소통 ? fitToImage(.소통fill, 28) : fitToImage(.소통, 28)
+//            Text("소통")
+//          }
+//        }
       
       /// 우리 마을
       EventHomeView(store: eventHomeStore)
@@ -130,7 +130,7 @@ struct MainTabView: View {
             .font(.headerB)
         }
         ToolbarItemGroup(placement: .navigationBarTrailing){
-          Button(action:{}){
+          NavigationLink(destination: MPSearchView(store: marketPlaceSearchStore)) {
             fitToImage(.검색, 24)
           }
           .foregroundColor(Color(.black))
@@ -180,6 +180,10 @@ extension MainTabView {
   
   private var settingStore: StoreOf<Setting> {
     return store.scope(state: \.settingState, action: Action.settingAction)
+  }
+  
+  private var marketPlaceSearchStore: StoreOf<MPSearch> {
+    return .init(initialState: MPSearch.State()){MPSearch()}
   }
   
   private func fitToImage(_ image: ImageAsset, _ imageHeight: CGFloat) -> some View {

@@ -10,7 +10,7 @@ import ComposableArchitecture
 
 struct MCSelection: Reducer {
   
-  typealias Category = MarketCategory
+  typealias Category = MPCategory
   
   struct State: Equatable {
     var selectedCategory: Category?

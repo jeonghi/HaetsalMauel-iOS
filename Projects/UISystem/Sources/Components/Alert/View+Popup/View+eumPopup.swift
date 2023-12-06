@@ -12,9 +12,9 @@ import PopupView
 import DesignSystemFoundation
 
 public extension View {
-  func eumPopup(isShowing: Binding<Bool>, popupContent: @escaping () -> some View) -> some View {
+  func eumPopup(isShowing: Binding<Bool>, popupContent: @escaping () -> AnyView) -> some View {
     self.popup(isPresented: isShowing) {
-      popupContent()
+      AnyView(popupContent())
         .padding(.horizontal, 16)
     } customize: {
       $0

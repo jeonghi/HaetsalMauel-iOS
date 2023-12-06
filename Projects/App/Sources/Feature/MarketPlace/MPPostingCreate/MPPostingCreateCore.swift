@@ -8,12 +8,15 @@
 
 import Foundation
 import ComposableArchitecture
+import EumNetwork
+import Combine
 
 struct MPPostingCreate: Reducer {
   
-  typealias Category = MarketCategory
+  typealias Category = MPCategory
   
   struct State {
+    
     var selectedCategory: Category? {
       marketCategorySelectionState.selectedCategory
     }
@@ -26,6 +29,7 @@ struct MPPostingCreate: Reducer {
       postTextFormState.content
     }
     
+    var isDismiss: Bool = false
     var selectedTransactionType: TransactionType? = nil // 거래 유형
     var activityLocation: String = "" // 활동 장소
     var activityDate: Date = Date() // 활동날짜
@@ -55,21 +59,11 @@ struct MPPostingCreate: Reducer {
     var postTextFormState: PostTextForm.State = .init()
   }
   
-  enum TransactionType: String, CaseIterable {
-    case 햇살보내기 = "햇살 보내기"
-    case 햇살받기 = "햇살 받기"
-  }
-  
-  enum ActivityTime: String, CaseIterable {
-    case 오전
-    case 오후
-    case 상관없음
-  }
-  
   enum Action {
     /// Life cycle
     case onAppear
     case onDisappear
+    case dismiss
     
     /// Form
     case updateLocation(String)
@@ -78,6 +72,13 @@ struct MPPostingCreate: Reducer {
     case updateMaxPeople(Int)
     case selectTransactionType(TransactionType?)
     case selectActivityTime(ActivityTime?)
+    
+    /// 버튼
+    case tappedCreatePostButton
+    
+    /// 네트워크
+    case requestCreatePost
+    case requestCreatePostResponse(Result<MarketPostEntity.Response?, HTTPError>)
     
     /// Child
     case marketCategorySelectionAction(MCSelection.Action)
@@ -92,6 +93,9 @@ struct MPPostingCreate: Reducer {
       case .onAppear:
         return .none
       case .onDisappear:
+        return .none
+      case .dismiss:
+        state.isDismiss = true
         return .none
         
         /// Form
@@ -115,8 +119,46 @@ struct MPPostingCreate: Reducer {
         state.selectedActivityTime = selected
         return .none
         
-        /// Custom
-      case .marketCategorySelectionAction(let act):
+      case .tappedCreatePostButton:
+        return .send(.requestCreatePost)
+      
+        /// 네트워크
+      case .requestCreatePost:
+        
+        guard let cat = state.selectedCategory, let type = state.selectedTransactionType?.cvtToEntityType(), let slot = state.selectedActivityTime?.cvtToEntityTime() else {
+          return .none
+        }
+        
+        let request = MarketPostEntity.Request(
+          category: cat,
+          content: state.content,
+          location: state.activityLocation,
+          marketType: type,
+          maxNumOfPeople: Int32(state.maxPeople),
+          slot: slot,
+          startTime: state.activityDate,
+          title: state.title,
+          volunteerTime: Int32(state.estimatedTime)
+        
+        )
+        return .publisher {
+          marketService.createPost(request)
+            .receive(on: mainQueue)
+            .map{Action.requestCreatePostResponse(.success($0))}
+            .catch{Just(Action.requestCreatePostResponse(.failure($0)))}
+        }
+        
+      case .requestCreatePostResponse(.success(let res)):
+        guard let res = res else {
+          return .none
+        }
+        return .none
+      case .requestCreatePostResponse(.failure(let error)):
+        logger.log(.error,  error)
+        return .none
+        
+        /// Child
+      case .marketCategorySelectionAction:
         return .none
       case .postTextFormAction:
         return .none
@@ -131,4 +173,8 @@ struct MPPostingCreate: Reducer {
       PostTextForm()
     }
   }
+  
+  @Dependency(\.appService.marketService) var marketService
+  @Dependency(\.mainQueue) var mainQueue
+  @Dependency(\.logger) var logger
 }

@@ -15,7 +15,7 @@ struct MarketPlaceCategorySelection: Reducer {
     var isSelected: Bool {
       marketCategorySelectionState.isSelectedAnyOne
     }
-    var selectedCat: MarketCategory? {
+    var selectedCat: MPCategory? {
       marketCategorySelectionState.selectedCategory
     }
   }

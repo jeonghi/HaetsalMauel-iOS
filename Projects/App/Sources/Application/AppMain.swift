@@ -6,7 +6,6 @@
 //  Copyright © 2023 kr.k-eum. All rights reserved.
 //
 
-import LinkNavigator
 import SwiftUI
 import ComposableArchitecture
 
@@ -15,7 +14,6 @@ import ComposableArchitecture
 @main
 struct AppMain {
   @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
-  @StateObject var userManager: UserManager = .init()
 }
 
 

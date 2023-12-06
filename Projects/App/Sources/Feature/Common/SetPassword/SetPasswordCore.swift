@@ -7,6 +7,8 @@
 //
 
 import ComposableArchitecture
+import Combine
+import EumNetwork
 
 struct SetPassword: Reducer {
   
@@ -24,7 +26,7 @@ struct SetPassword: Reducer {
   }
   
   
-  enum Action: Equatable {
+  enum Action {
     /// Life cycle
     case onAppear
     case onDisappear
@@ -32,7 +34,13 @@ struct SetPassword: Reducer {
     case updateInitialPassword(String)
     case updateOneMorePassword(String)
     case updateStep(Step)
+    
+    case passwordSetFail
     case passwordSetDone
+    
+    /// 네트워크
+    case requestSetPassword(String)
+    case requestSetPasswordResponse(Result<PayAccountEntity.Response?, HTTPError>)
   }
   
   var body: some ReducerOf<Self> {
@@ -54,17 +62,43 @@ struct SetPassword: Reducer {
       case .updateOneMorePassword(let updated):
         state.oneMorePassword = updated
         if(state.oneMorePassword.count == 4){
-          return .send(.passwordSetDone)
+          if(state.oneMorePassword == state.initalPassword){
+            return .send(.requestSetPassword(state.oneMorePassword))
+          }
+          return .send(.passwordSetFail)
         }
         return .none
         
       case .updateStep(let updatedStep):
         state.currStep = updatedStep
         return .none
+        
+      case .passwordSetFail:
+        return .none
       case .passwordSetDone:
         return .none
+        
+      case .requestSetPassword(let password):
+        let request = PayAccountEntity.Request.CreatePassword(password: password)
+        return .publisher {
+          payService.createCardPassword(request)
+            .receive(on: mainQueue)
+            .map{Action.requestSetPasswordResponse(.success($0))}
+            .catch{Just(Action.requestSetPasswordResponse(.failure($0)))}
+        }
+      case .requestSetPasswordResponse(.success(let res)):
+        guard let res = res else {
+          return .send(.passwordSetDone)
+        }
+        return .send(.passwordSetDone)
+      case .requestSetPasswordResponse(.failure(let error)):
+        return .send(.passwordSetFail)
       }
     }
   }
+  
+  @Dependency(\.appService.payService) var payService
+  @Dependency(\.mainQueue) var mainQueue
+  @Dependency(\.logger) var logger
 }
 

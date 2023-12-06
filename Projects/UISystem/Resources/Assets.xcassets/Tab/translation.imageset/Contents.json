@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "translation.svg",
+      "filename" : "tool(28)-1.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "translation 1.svg",
+      "filename" : "tool(28)@2x-1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "translation 2.svg",
+      "filename" : "tool(28)@3x-1.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

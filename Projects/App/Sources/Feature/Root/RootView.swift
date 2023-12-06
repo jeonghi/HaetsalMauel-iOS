@@ -18,6 +18,7 @@ struct RootView: View {
   
   private let store: StoreOf<Core>
   @ObservedObject var viewStore: ViewStore<ViewState, Action>
+  @StateObject var networkMonitor = NetworkMonitor()
   
   struct ViewState: Equatable {
     var route: Route
@@ -51,12 +52,25 @@ struct RootView: View {
             )
           }
         }
+        if !networkMonitor.isConnected {
+          waitingForNetwork
+        }
       }
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .onAppear{
       viewStore.send(.onAppear)
     }
+  }
+}
+
+extension RootView {
+  private var waitingForNetwork : some View {
+    ZStack {
+      Color.white
+      ProgressView()
+    }
+    .ignoresSafeArea(.all)
   }
 }
 
@@ -75,6 +89,6 @@ struct RootView_Previews: PreviewProvider {
       Root()
     }
     
-      RootView(store: store)
+    RootView(store: store)
   }
 }

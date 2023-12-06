@@ -15,3 +15,9 @@ extension String {
         return emailTest.evaluate(with: self)
   }
 }
+
+extension String {
+    func toURL() -> URL? {
+        URL(string: self)
+    }
+}

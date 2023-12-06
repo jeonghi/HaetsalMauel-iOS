@@ -55,6 +55,7 @@ extension PostTextFormView: View {
         .hLeading()
         .vTop()
     }.padding(.horizontal, 5)
+      .hideKeyboardWhenTappedAround()
   }
 }
 

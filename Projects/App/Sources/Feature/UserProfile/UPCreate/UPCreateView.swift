@@ -35,27 +35,32 @@ struct UPCreateView {
 
 extension UPCreateView: View {
   var body: some View {
-    
-    ScrollView(showsIndicators: false) {
-      VStack(spacing: 0){
-        Text("프로필을 작성해주세요")
-          .font(.titleB)
-          .hLeading()
-          .foregroundColor(Color(.black))
-          .padding(.top, 30)
-          .padding(.bottom, 48)
-        
-        VStack(spacing: 30) {
-          닉네임_텍스트필드
-          지역_선택_버튼
-          캐릭터_선택_버튼
+    VStack(spacing: 0) {
+      Color.white.frame(height: 1)
+      ScrollView(showsIndicators: false) {
+        VStack(spacing: 0){
+          Text("프로필을 작성해주세요")
+            .font(.titleB)
+            .hLeading()
+            .foregroundColor(Color(.black))
+            .padding(.top, 30)
+            .padding(.bottom, 48)
+          
+          VStack(spacing: 30) {
+            닉네임_텍스트필드
+            지역_선택_버튼
+            캐릭터_선택_버튼
+          }
+          nextButton
+            .padding(.top, 30)
+            .padding(.bottom, 20)
         }
-        nextButton
-          .padding(.top, 30)
-          .padding(.bottom, 20)
+        .padding(.horizontal, 20)
       }
-      .padding(.horizontal, 20)
     }
+    .hideKeyboardWhenTappedAround()
+    .foregroundColor(Color(.black))
+    .background(Color.white)
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .setCustomNavBackButton()
     .setCustomNavBarTitle("")
@@ -80,11 +85,9 @@ extension UPCreateView {
   }
   
   private var 지역_선택_버튼: some View {
-    let btn = VStack {
-      
-    }
+    
     return containerBox("마을"){
-      btn
+      RegionSelectionView(store: regionSelectionStore)
     }
   }
   
@@ -111,6 +114,9 @@ extension UPCreateView {
 extension UPCreateView {
   private var CCSelectionStore: StoreOf<CCSelection> {
     return store.scope(state: \.CCSelectionState, action: Action.CCSelectionAction)
+  }
+  private var regionSelectionStore: StoreOf<RegionSelection> {
+    return store.scope(state: \.regionSelectionState, action: Action.regionSelectionAction)
   }
 }
 

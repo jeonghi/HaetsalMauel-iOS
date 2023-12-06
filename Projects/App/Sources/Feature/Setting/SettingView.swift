@@ -39,60 +39,73 @@ struct SettingView: View {
       list
     }
     .eumPopup(isShowing: viewStore.binding(get: \.showingPopup, send: Action.showingPopup)){
-      EumPopupView.init(
-        title: "로그아웃 하시겠습니까?",
-        type: .twoLineTwoButton,
-        firstButtonName: "로그아웃",
-        secondButtonName: "취소",
-        firstButtonAction: {
-          viewStore.send(.showingPopup(false))
-          viewStore.send(.logout)
-        },
-        secondButtonAction: {
-          viewStore.send(.showingPopup(false))
-        }
+      AnyView (
+        EumPopupView.init(
+          title: "로그아웃 하시겠습니까?",
+          type: .twoLineTwoButton,
+          firstButtonName: "로그아웃",
+          secondButtonName: "취소",
+          firstButtonAction: {
+            viewStore.send(.showingPopup(false))
+            viewStore.send(.logout)
+          },
+          secondButtonAction: {
+            viewStore.send(.showingPopup(false))
+          }
+        )
       )
     }
     .setCustomNavBarTitle("설정")
     .setCustomNavBackButton()
     .background(Color(.white))
+    .foregroundColor(Color(.black))
     .frame(maxWidth: .infinity, maxHeight: .infinity)
+    .onAppear{
+      
+      viewStore.send(.onAppear)
+    }
+    .onDisappear{
+      viewStore.send(.onDisappear)
+    }
   }
 }
 
 extension SettingView {
   private var list: some View {
     List {
-      Section {
+      Section() {
         NavigationLink(destination: UserProfileSettingView(store: userProfileSettingStore)){
           containerBox(leadingText: "최소융", leadingFont: .headerB, trailingText: "내 정보 수정")
         }
       }
-      Section {
-        //        NavigationLink(destination: EmptyView()){
-        //          containerBox(leadingText: "글씨 크기", trailingText: "보통")
-        //        }
-        NavigationLink(destination: EmptyView()){
+      Section(header: Text("게시글 관리")) {
+        NavigationLink(destination: MPScrapPostListView(store: .init(initialState: MPScrapPostList.State()){MPScrapPostList()})){
           containerBox(leadingText: "관심 게시글")
+        }
+        NavigationLink(destination: MyPostListView(store: .init(initialState: MyPostList.State()){MyPostList()})){
+          containerBox(leadingText: "내가 쓴 게시글")
         }
       }
       .listRowSeparator(.hidden)
-      Section {
+      Section(header: Text("햇살 관리")) {
         NavigationLink(destination: EmptyView()){
           containerBox(leadingText: "카드 비밀번호 변경")
         }
       }
       .listRowSeparator(.hidden)
-      Section {
+      Section(header: Text("서비스 이용")) {
         NavigationLink(destination: EmptyView()){
           containerBox(leadingText: "문의하기")
+        }
+        NavigationLink(destination: EmptyView()){
+          containerBox(leadingText: "개인정보처리방침")
         }
         Button(action: {viewStore.send(.logoutButtonTapped)}){
           containerBox(leadingText: "로그아웃")
         }
       }
       .listRowSeparator(.hidden)
-      Section {
+      Section(header: Text("소프트웨어 정보")) {
         containerBox(leadingText: "버전", trailingText: "최신버전")
         NavigationLink(destination: EmptyView()){
           containerBox(leadingText: "오픈소스 라이선스")
@@ -106,7 +119,9 @@ extension SettingView {
         }
       }
       .listRowSeparator(.hidden)
+      
     }
+    .environment(\.defaultMinListHeaderHeight, 0)
     .listStyle(.grouped)
   }
   private func containerBox(leadingText: String, leadingFont: Font = .headerR, leadingColor: Color = Color.black, trailingText: String? = nil, trailingFont: Font = .subB, trailingColor: Color = Color(.systemgray07)) -> some View {

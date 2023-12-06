@@ -17,18 +17,32 @@ struct WithdrawalReason: Reducer {
       "새 계정을 만들고 싶어요",
       "기타"
     ]
+    var isAnythingSelected: Bool {
+      selectedReason != nil
+    }
     var selectedReason: String? = nil
+    var withdrawalDetailReasonState: WithdrawalDetailReason.State = .init()
   }
   enum Action {
-    case selectReason(String)
+    case onAppear
+    case selectReason(String?)
+    case withdrawalDetailReasonAction(WithdrawalDetailReason.Action)
   }
   var body: some ReducerOf<Self> {
     Reduce<State, Action> { state, action in
       switch action {
+      case .onAppear:
+        state.selectedReason = nil
+        return .none
       case .selectReason(let selectedReason):
         state.selectedReason = selectedReason
         return .none
+      case .withdrawalDetailReasonAction(let act):
+        return .none
       }
+    }
+    Scope(state: \.withdrawalDetailReasonState, action: /Action.withdrawalDetailReasonAction){
+      WithdrawalDetailReason()
     }
   }
 }
