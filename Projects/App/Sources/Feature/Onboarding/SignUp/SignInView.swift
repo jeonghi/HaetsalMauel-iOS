@@ -43,16 +43,20 @@ struct SignInView {
 
 extension SignInView: View {
   var body: some View {
-    return VStack(spacing: 48) {
-      guideComment
-        .hLeading()
-        .padding(.horizontal, 16)
-        .padding(.top, 30)
-      
-      textFieldVStack
-        .padding(.horizontal, 22)
-      
-      Spacer()
+    return VStack(spacing: 0) {
+      Color.white.frame(height: 1)
+      ScrollView {
+        VStack(spacing: 48) {
+          guideComment
+            .hLeading()
+            .padding(.horizontal, 16)
+            .padding(.top, 30)
+          
+          textFieldVStack
+            .padding(.horizontal, 22)
+        }
+      }
+      .frame(maxHeight: .infinity)
       
       VStack(spacing: 18) {
         signUpGuide
@@ -64,6 +68,7 @@ extension SignInView: View {
     .sheet(isPresented: viewStore.binding(get: \.isShowingSheet, send: Action.isShowingSheet)){
       WebView(url: "https://eumweb.netlify.app/", viewModel: .init())
     }
+    .hideKeyboardWhenTappedAround()
     .navigationBarTitle("")
     .navigationBarTitleDisplayMode(.inline)
     .navigationBarHidden(false)

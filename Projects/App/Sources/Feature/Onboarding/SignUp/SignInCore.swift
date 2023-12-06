@@ -39,8 +39,6 @@ struct SignIn: Reducer {
     /// Network
     case requestSignIn
     case requestSignInResponse(Result<SignInEntity.Response?, HTTPError>)
-    
-    case loginDone
   }
   
   var body: some ReducerOf<Self> {
@@ -81,17 +79,10 @@ struct SignIn: Reducer {
             .map{Action.requestSignInResponse(.success($0))}
             .catch{Just(Action.requestSignInResponse(.failure($0)))}
         }
-        return .none 
-      case .requestSignInResponse(.success(let res)):
-        guard let token = res?.toOAuthToken(), authService.saveToken(token) else {
-          return .none
-        }
-        return .send(.loginDone)
+      case .requestSignInResponse(.success(_)):
+        return .none
       case .requestSignInResponse(.failure(let error)):
         print(error)
-        return .none
-        
-      case .loginDone:
         return .none
       }
     }
