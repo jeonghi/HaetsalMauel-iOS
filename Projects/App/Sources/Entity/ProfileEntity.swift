@@ -11,24 +11,32 @@ import EumNetwork
 
 enum ProfileEntity {
   
+  enum AvatarName: String, Codable, JSONConvertible {
+      case middle = "MIDDLE"
+      case old = "OLD"
+      case organization = "ORGANIZATION"
+      case young = "YOUNG"
+      case youth = "YOUTH"
+  }
+  
   struct Request: Codable, JSONConvertible {
     
-    let accountPassword: String
     let avatarName: AvatarName
     let introduction: String
     let nickname: String
-    let townShip: String
-    
-    enum AvatarName: String, Codable, JSONConvertible {
-        case middle = "MIDDLE"
-        case old = "OLD"
-        case organization = "ORGANIZATION"
-        case young = "YOUNG"
-        case youth = "YOUTH"
-    }
+    let regionId: Int64
   }
   
-  struct Response: Codable {
-    
+  struct Response: Codable, Hashable {
+    let address: String
+    let avatarPhotoURL: String
+    let characterName: String
+    let introduction: String?
+    let levelName: String
+    let nextStandard: Int64
+    let nickname: String
+    let profileId: Int64
+    let totalSunrisePay: Int64
+    let userId: Int64
   }
 }

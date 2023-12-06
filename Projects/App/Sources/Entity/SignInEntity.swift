@@ -32,12 +32,17 @@ enum SignInEntity {
     let refreshTokenExpirationTime: Int64
     let role: UserRole
   }
+  
+  struct VerifyResponse: Codable {
+    let role: UserRole
+  }
 }
 
 enum UserRole: String, Codable {
   case authUser = "ROLE_AUTH_USER"
   case organization = "ROLE_ORGANIZATION"
-  case temporaryUser = "ROLE_TEMPORARY_USER"
+  case unprofileUser = "ROLE_UNPROFILE_USER"
+  case unpasswordUser = "ROLE_UNPASSWORD_USER"
   case user = "ROLE_USER"
   case test = "TEST"
 }
