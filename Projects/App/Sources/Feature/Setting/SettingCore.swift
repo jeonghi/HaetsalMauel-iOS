@@ -18,10 +18,19 @@ struct Setting: Reducer {
   }
   
   enum Action {
+    /// Life cycle
+    case onAppear
+    case onDisappear
+    
+    /// View defined
     case logoutButtonTapped
     case showingPopup(Bool)
+    
+    /// ButtonAction
     case logout // 로그아웃
     case signOut // 회원탈퇴
+    
+    /// Child
     case userProfileSettingAction(UserProfileSetting.Action)
     case withdrawalReasonAction(WithdrawalReason.Action)
   }
@@ -29,6 +38,13 @@ struct Setting: Reducer {
   var body: some ReducerOf<Self> {
     Reduce<State, Action> { state, action in
       switch action {
+        /// Life cycle
+      case .onAppear:
+        return .none
+      case .onDisappear:
+        return .none
+        
+        /// View defined
       case .logoutButtonTapped:
         return .send(.showingPopup(true))
       case .showingPopup(let showingPopup):
