@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "sunIcon.svg",
+      "filename" : "Vector.svg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "sunIcon 1.svg",
+      "filename" : "Vector 1.svg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "sunIcon 2.svg",
+      "filename" : "Vector 2.svg",
       "idiom" : "universal",
       "scale" : "3x"
     }
