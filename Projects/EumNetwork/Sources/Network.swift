@@ -34,6 +34,14 @@ public extension Network {
       .tryMap { response -> R? in
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
+        
+        let dateFormatter = DateFormatter()
+              dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+        dateFormatter.locale = Locale(identifier: "ko_KR") // 한국 지역 설정
+        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0) // 날짜 문자열이 특정 시간대를 포함하는 경우 조정
+        decoder.dateDecodingStrategy = .formatted(dateFormatter)
+        
+        ///
         let apiResponse = try response.map(APIResponse<R>.self, using: decoder)
         return apiResponse.data
       }
