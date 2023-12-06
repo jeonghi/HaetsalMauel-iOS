@@ -20,8 +20,10 @@ struct WithdrawalReasonView {
   
   struct ViewState: Equatable {
     var reasonList: [String]
+    var isAnythingSelected: Bool
     init(state: State) {
       reasonList = state.reasonList
+      isAnythingSelected = state.isAnythingSelected
     }
   }
   
@@ -34,12 +36,25 @@ struct WithdrawalReasonView {
 extension WithdrawalReasonView: View {
   var body: some View {
     VStack(alignment: .leading){
-      guideComment
-        .padding(.top, 30)
-        .padding(.horizontal, 22)
-      reasonListView
-        .padding(.horizontal, 22)
-      Spacer()
+      Color.white.frame(height: 1)
+      ScrollView {
+        VStack(alignment: .leading, spacing: 30) {
+          guideComment
+            .padding(.top, 30)
+            .padding(.horizontal, 22)
+          reasonListView
+            .padding(.horizontal, 22)
+        }
+      }
+      NavigationLink(
+        "",
+        destination: WithdrawalDetailReasonView(store: withdrawalDetailReasonStore),
+        isActive:
+          viewStore.binding(
+            get: \.isAnythingSelected,
+            send: Action.selectReason(nil)
+          )
+      )
     }
     .setCustomNavBackButton()
     .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -51,7 +66,9 @@ extension WithdrawalReasonView {
     VStack(alignment: .leading, spacing: 16) {
       Text("탈퇴 이유가 궁금해요")
         .font(.titleB)
+        .hLeading()
       Text("계정을 삭제하면 활동 기록, 게시글, 채팅 등 모든 기록이 삭제됩니다")
+        .hLeading()
         .font(.subR)
         .multilineTextAlignment(.leading)
         .foregroundColor(Color(.systemgray07))
@@ -61,6 +78,7 @@ extension WithdrawalReasonView {
   private var reasonListView: some View {
     LazyVStack {
       ForEach(viewStore.reasonList, id:\.self) { reason in
+        
         Button(action: {viewStore.send(.selectReason(reason))}){
             Text(reason)
             .font(.headerR)
@@ -70,6 +88,13 @@ extension WithdrawalReasonView {
         }
       }
     }
+  }
+}
+
+// MARK: store init
+extension WithdrawalReasonView {
+  private var withdrawalDetailReasonStore: StoreOf<WithdrawalDetailReason>{
+    return store.scope(state: \.withdrawalDetailReasonState, action: Action.withdrawalDetailReasonAction)
   }
 }
 
