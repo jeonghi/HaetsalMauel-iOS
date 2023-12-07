@@ -109,6 +109,7 @@ struct Root: Reducer {
         }
       case .requestVerifyTokenResponse(.failure(let error)):
         logger.log(.error, error)
+        authService.resetToken()
         return .send(.setRoute(.onboarding))
         
         /// Child
