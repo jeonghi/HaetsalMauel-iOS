@@ -82,35 +82,14 @@ struct HomeView: View {
         }
       }
     }
-    .eumPopup(isShowing: viewStore.binding(get: \.showingPopup, send: Action.showingPopup)){
-      AnyView (
-        VStack(spacing: 20) {
-          RoundedRectangle(cornerRadius: 6)
-            .frame(width: 67, height: 5)
-            .foregroundColor(Color(.gray06))
-          LevelGuildView()
-        }
-          .padding(22)
-          .background(
-            Color(.white)
-              .cornerRadius(12, corners: .allCorners)
-          )
-          .padding(.vertical, 40)
-      )
+    .sheet(isPresented: viewStore.binding(get: \.showingPopup, send: Action.showingPopup(false))){
+      WebView(url: "https://achieved-crawdad-960.notion.site/a030acbb9f2746e98f883c254e33867c?pvs=4".toURL())
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .foregroundColor(Color(.black))
     .background(
-      LinearGradient(
-        gradient: Gradient(
-          colors: [
-            Color(.deepSkyBlue),
-            Color(.lightSkyBlue),
-            Color(.white)
-          ]
-        ),
-        startPoint: .top,
-        endPoint: .bottom)
+      getBackground()
+        .ignoresSafeArea()
     )
     .onAppear{
       viewStore.send(.onAppear)
@@ -139,6 +118,35 @@ extension HomeView {
         .aspectRatio(contentMode: .fit)
         .frame(height: 24)
         .foregroundColor(Color.white)
+    }
+  }
+  
+  private func getBackground() -> some View {
+    switch Date().timeOfDayInKorea {
+    case .day:
+      return LinearGradient(
+        gradient: Gradient(
+          colors: [
+            Color(.deepSkyBlue),
+            Color(.lightSkyBlue),
+            Color(.white)
+          ]
+        ),
+        startPoint: .top,
+        endPoint: .bottom
+      )
+    case .night:
+      return LinearGradient(
+        gradient: Gradient(
+          colors: [
+            Color(.secondaryDark),
+            Color(.secondaryDark),
+            Color(.primary)
+          ]
+        ),
+        startPoint: .top,
+        endPoint: .bottom
+      )
     }
   }
   

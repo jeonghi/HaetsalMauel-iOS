@@ -10,18 +10,21 @@ import ComposableArchitecture
 import EumNetwork
 import Combine
 import Foundation
+import SwiftUI
 
 struct Home: Reducer {
   
+  
+  
   struct State {
     
+    @AppStorage("userName") var nickName : String = ""
     /// 화면 데이터
     var address: String = ""
     var characterUrl: URL? = nil
     var balance: Int64 = 0
     var characterName: String = ""
     var levelName: String = ""
-    var nickName: String = ""
     
     /// 로딩
     var isLoading: Bool = true
