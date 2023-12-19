@@ -198,15 +198,15 @@ extension MPPostingReadView {
     }
     
     var 남의_게시글_버튼: [EumActionSheetButton] = [
-      .init(title: "이 게시글 신고하기", action: {
+      .init(title: "이 게시글 차단하기", action: {
         viewStore.send(.dismissActionSheet)
-      })
+      }),
     ]
 
     if let isScrap = viewStore.marketPost?.isScrap {
       if isScrap {
         남의_게시글_버튼.insert(.init(title: "관심 게시글에서 제외", action: {}), at: 0)
-      }else {
+      } else {
         남의_게시글_버튼.insert(.init(title: "관심 게시글로 등록", action: {}), at: 0)
       }
     }
@@ -260,7 +260,7 @@ extension MPPostingReadView {
 }
 
 #Preview {
-  let store = Store(initialState: MPPostingRead.State(postId: 4)){
+  let store = Store(initialState: MPPostingRead.State(postId: 1)){
     MPPostingRead()
   }
   return NavigationView {
