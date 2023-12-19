@@ -16,6 +16,7 @@ protocol AppServiceType {
   var payService: PayService { get }
   var hapticService: HapticService { get }
   var signInService: SignInService { get }
+  var chatService: ChatService { get }
 }
 
 final class AppService: AppServiceType {
@@ -31,6 +32,7 @@ final class AppService: AppServiceType {
   var payService: PayService
   var hapticService: HapticService
   var signInService: SignInService
+  var chatService: ChatService
   
   private init(){
     authService = AuthService.shared
@@ -40,6 +42,7 @@ final class AppService: AppServiceType {
     payService = PayService.shared
     hapticService = HapticService.shared
     signInService = SignInService.shared
+    chatService = ChatService.shared
   }
 }
 extension DependencyValues {

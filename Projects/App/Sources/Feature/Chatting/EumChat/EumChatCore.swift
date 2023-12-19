@@ -47,6 +47,10 @@ struct EumChat: Reducer {
     /// Popup
     case showingPopup(Bool)
     case dismissPopup
+    
+    /// Network
+    case requestGetData
+    case requestGetDataReponse
   }
   
   var body: some ReducerOf<Self> {
@@ -77,65 +81,13 @@ struct EumChat: Reducer {
       case .dismissPopup:
         state.showingPopup = false
         return .none
+        
+        /// Network
+      case .requestGetData:
+        return .none
+      case .requestGetDataReponse:
+        return .none
       }
     }
   }
-}
-
-extension DraftMessage {
-    func makeMockImages() async -> [MockImage] {
-        await medias
-            .filter { $0.type == .image }
-            .asyncMap { (media : Media) -> (Media, URL?, URL?) in
-                (media, await media.getThumbnailURL(), await media.getURL())
-            }
-            .filter { (media: Media, thumb: URL?, full: URL?) -> Bool in
-                thumb != nil && full != nil
-            }
-            .map { media, thumb, full in
-                MockImage(id: media.id.uuidString, thumbnail: thumb!, full: full!)
-            }
-    }
-
-    func makeMockVideos() async -> [MockVideo] {
-        await medias
-            .filter { $0.type == .video }
-            .asyncMap { (media : Media) -> (Media, URL?, URL?) in
-                (media, await media.getThumbnailURL(), await media.getURL())
-            }
-            .filter { (media: Media, thumb: URL?, full: URL?) -> Bool in
-                thumb != nil && full != nil
-            }
-            .map { media, thumb, full in
-                MockVideo(id: media.id.uuidString, thumbnail: thumb!, full: full!)
-            }
-    }
-
-    func toMockMessage(user: MockUser, status: Message.Status = .read) async -> MockMessage {
-        MockMessage(
-            uid: id ?? UUID().uuidString,
-            sender: user,
-            createdAt: createdAt,
-            status: user.isCurrentUser ? status : nil,
-            text: text,
-            images: await makeMockImages(),
-            videos: await makeMockVideos(),
-            recording: recording,
-            replyMessage: replyMessage
-        )
-    }
-}
-
-extension Sequence {
-    func asyncMap<T>(
-        _ transform: (Element) async throws -> T
-    ) async rethrows -> [T] {
-        var values = [T]()
-
-        for element in self {
-            try await values.append(transform(element))
-        }
-
-        return values
-    }
 }
