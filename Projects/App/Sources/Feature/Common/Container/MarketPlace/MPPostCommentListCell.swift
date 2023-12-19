@@ -16,6 +16,7 @@ struct MPPostCommentListCell: View {
   @State var isShowingBottomPopup: Bool = false
   let comment: MarketPostCommmentEntity.Response
   var deleteAction: ((Int64) -> Void)? = nil
+  var blockAction: ((Int64) -> Void)? = nil
   
   var body: some View {
     HStack(spacing: 10) {
@@ -76,7 +77,8 @@ struct MPPostCommentListCell: View {
             isShowingBottomPopup = false
           })
         ] : [
-          .init(title: "댓글 신고", action: {
+          .init(title: "댓글 차단", action: {
+            blockAction?(comment.writerInfo.userId)
             isShowingBottomPopup = false
           })
         ]
