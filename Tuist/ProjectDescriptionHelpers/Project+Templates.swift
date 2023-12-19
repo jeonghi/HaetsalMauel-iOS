@@ -3,7 +3,7 @@ import ProjectDescriptionHelpers
 
 public extension Project {
   
-  static let organizationName = "kr.k-eum"
+  static let organizationName = "com.haetsal"
   static let targetVersion = "16.0"
   
   
