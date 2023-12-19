@@ -29,41 +29,39 @@ enum MarketPostEntity {
   
   struct Response: Codable, Hashable {
     
-//    
-//    static func == (lhs: MarketPostEntity.Response, rhs: MarketPostEntity.Response) -> Bool {
-//      lhs.postId == rhs.postId
-//    }
+    // MARK: Required
+    let category: MPCategory
+    let commentCount: Int
+    let createdDate: Date
+    let location: String
+    let marketType: TransactionType
+    let pay: Int64
+    let postId: Int64
+    let status: Status
+    let title: String
+    let volunteerTime: Int
     
+    // MARK: Optional
+    let content: String?
+    let currentApplicant: Int?
+    let maxNumOfPeople: Int?
     let isWriter: Bool?
     let isScrap: Bool?
     let isApplicant: Bool?
-    let postId: Int64 //
-    let category: MPCategory //
-    let commentCount: Int
-    let content: String?
     let commentResponses: [MarketPostCommmentEntity.Response]?
-    let createdDate: Date //
-    let location: String //
-    let marketType: TransactionType //
-    let pay: Int64 //
-    let status: Status //
-    let title: String //
-    let currentApplicant: Int?
-    let maxNumOfPeople: Int?
-    let volunteerTime: Int //
     let writerInfo: WriterInfo?
   }
   
   struct Filter: ParamsConvertible, Codable, Equatable {
     let search: String?
     let category: MPCategory?
-    let type: TransactionType?
+    let marketType: TransactionType?
     let status: Status?
     
     init(search: String? = nil, category: MPCategory? = nil, type: TransactionType? = nil, status: Status? = nil) {
       self.search = search
       self.category = category
-      self.type = type
+      self.marketType = type
       self.status = status
     }
   }
