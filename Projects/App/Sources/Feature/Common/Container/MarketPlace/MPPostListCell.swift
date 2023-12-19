@@ -128,6 +128,6 @@ private extension MPPostListCell {
 
 #Preview {
   LazyVStack(spacing: 0) {
-    MPPostListCell(post: .init(isWriter: true, isScrap: true, isApplicant: false, postId: 1, category: .교육, commentCount: 0, content: "aa", commentResponses: [], createdDate: Date(), location: "정릉 3동", marketType: .provideHelp, pay: 0, status: .recruiting, title: "군밤 구해요", currentApplicant: 0, maxNumOfPeople: 0, volunteerTime: 0, writerInfo: nil))
+
   }
 }
