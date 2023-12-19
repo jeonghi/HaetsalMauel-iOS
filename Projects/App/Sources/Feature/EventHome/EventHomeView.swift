@@ -33,7 +33,7 @@ struct EventHomeView {
 extension EventHomeView: View {
   var body: some View {
     VStack {
-      WebView(url: "https://eumweb.netlify.app/", viewModel: WebViewModel())
+      WebView(url: "https://eumweb.netlify.app/".toURL())
     }
     .navigationBarTitleDisplayMode(.inline)
   }
