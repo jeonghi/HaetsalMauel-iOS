@@ -18,10 +18,20 @@ protocol AuthServiceType {
   func verifyToken() -> AnyPublisher<SignInEntity.VerifyResponse?, HTTPError>
   func saveToken(_ token: OAuthToken) -> Bool
   func resetToken() -> Bool
+  func withdrawal(_ body: WithdrawalEntity.Request) -> AnyPublisher<Box?, HTTPError>
+  func getWithdrawalReasonList() -> AnyPublisher<[WithdrawalEntity.ReasonCategory]?, HTTPError>
   func logout() -> Bool
 }
 
 final class AuthService: AuthServiceType {
+  func withdrawal(_ body: WithdrawalEntity.Request) -> AnyPublisher<Box?, EumNetwork.HTTPError> {
+    return network.request(.withdrawal(body), responseType: Box.self)
+  }
+  
+  func getWithdrawalReasonList() -> AnyPublisher<[WithdrawalEntity.ReasonCategory]?, EumNetwork.HTTPError> {
+    return network.request(.getWithdrawalReasonList, responseType: [WithdrawalEntity.ReasonCategory].self)
+  }
+  
   
   static var shared = AuthService()
   let network = Network<AuthAPI>()

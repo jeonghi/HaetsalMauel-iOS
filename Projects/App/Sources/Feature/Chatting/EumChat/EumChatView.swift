@@ -64,38 +64,40 @@ extension EumChatView: View {
         .foregroundColor(Color.gray.opacity(0.09))
         .frame(height: 7)
       
-      ChatView(messages: viewStore.messages){ _ in
-      }
-      .enableLoadMore(offset: 3){ message in
-        
-      }
-      .messageUseMarkdown(messageUseMarkdown: true)
-      //    .chatNavigation(
-      //      title: "안녕",
-      //      status: "",
-      //      cover: URL(string: "https://kr.object.ncloudstorage.com/k-eum/characterAsset/sun_middle%402x.png")
-      //    )
-      .mediaPickerTheme(
-      )
+//      ChatView(messages: viewStore.messages){ _ in
+//      }
+//      .enableLoadMore(offset: 3){ message in
+//        
+//      }
+//      .messageUseMarkdown(messageUseMarkdown: true)
+//      //    .chatNavigation(
+//      //      title: "안녕",
+//      //      status: "",
+//      //      cover: URL(string: "https://kr.object.ncloudstorage.com/k-eum/characterAsset/sun_middle%402x.png")
+//      //    )
+//      .mediaPickerTheme(
+//      )
     }
     .setCustomNavBackButton()
     .setCustomNavBarTitle("\(viewStore.userName)")
     .eumPopup(
       isShowing: viewStore.binding(get: \.showingPopup, send: Action.dismissPopup)
     ){
-      EumPopupView(
-        title: "채팅방에서 나가겠습니까?",
-        subtitle: "채팅방을 나가면 채팅 목록 및 대화 내용이 삭제되고 복구할 수 없어요.",
-        type: .twoLineTwoButton,
-        firstButtonName: "네, 나갈래요",
-        secondButtonName: "취소",
-        firstButtonAction: {
-          viewStore.send(.dismissPopup)
-          dismiss()
-        },
-        secondButtonAction: {
-          viewStore.send(.dismissPopup)
-        }
+      AnyView(
+        EumPopupView(
+          title: "채팅방에서 나가겠습니까?",
+          subtitle: "채팅방을 나가면 채팅 목록 및 대화 내용이 삭제되고 복구할 수 없어요.",
+          type: .twoLineTwoButton,
+          firstButtonName: "네, 나갈래요",
+          secondButtonName: "취소",
+          firstButtonAction: {
+            viewStore.send(.dismissPopup)
+            dismiss()
+          },
+          secondButtonAction: {
+            viewStore.send(.dismissPopup)
+          }
+        )
       )
     }
     .eumActionSheet(

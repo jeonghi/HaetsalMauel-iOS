@@ -66,7 +66,7 @@ extension SignInView: View {
       .padding(.bottom, 20)
     }
     .sheet(isPresented: viewStore.binding(get: \.isShowingSheet, send: Action.isShowingSheet)){
-      WebView(url: "https://eumweb.netlify.app/", viewModel: .init())
+      WebView(url: "https://achieved-crawdad-960.notion.site/25d40c0c4c654d5ab7444228db540656?pvs=4".toURL())
     }
     .hideKeyboardWhenTappedAround()
     .navigationBarTitle("")

@@ -8,10 +8,12 @@
 
 import Foundation
 import ComposableArchitecture
+import SwiftUI
 
 struct Setting: Reducer {
   
   struct State {
+    @AppStorage("userName") var nickName: String = ""
     var userProfileSettingState: UserProfileSetting.State = .init()
     var withdrawalReasonState: WithdrawalReason.State = .init()
     var showingPopup: Bool = false

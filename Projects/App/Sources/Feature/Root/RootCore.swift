@@ -126,7 +126,9 @@ struct Root: Reducer {
       case .mainTabAction(.settingAction(.logout)):
         state.mainTabState = nil
         return .send(.setRoute(.onboarding))
-      case .mainTabAction(.settingAction(.withdrawalReasonAction(.withdrawalDetailReasonAction(.tappedWithdrawalButton)))):
+        
+        /// 탈퇴 성공시 온보딩으로 이동
+      case .mainTabAction(.settingAction(.withdrawalReasonAction(.withdrawalDetailReasonAction(.requestWithdrawalServiceResponse(.success(_)))))):
         return .send(.setRoute(.onboarding))
       case .mainTabAction(.settingAction(.signOut)):
         return .send(.setRoute(.onboarding))

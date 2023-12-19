@@ -30,7 +30,6 @@ let project = Project.makeAppModule(
         .package(product: "FirebaseAuth"),
         .package(product: "FirebaseAuthCombine-Community"),
         .package(product: "FirebaseFirestore"),
-        .package(product: "FirebaseFirestoreCombine"),
         .package(product: "FirebaseFirestoreSwift"),
         .external(name: "Moya"),
         .external(name: "CombineMoya"),

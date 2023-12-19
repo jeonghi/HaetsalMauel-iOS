@@ -10,6 +10,7 @@ import SwiftUI
 import ComposableArchitecture
 import UISystem
 import DesignSystemFoundation
+import Foundation
 
 struct SettingView: View {
   
@@ -23,8 +24,10 @@ struct SettingView: View {
   
   struct ViewState: Equatable {
     var showingPopup: Bool
+    var userName: String
     init(state: State){
       showingPopup = state.showingPopup
+      userName = state.nickName
     }
   }
   
@@ -75,7 +78,7 @@ extension SettingView {
     List {
       Section() {
         NavigationLink(destination: UserProfileSettingView(store: userProfileSettingStore)){
-          containerBox(leadingText: "최소융", leadingFont: .headerB, trailingText: "내 정보 수정")
+          containerBox(leadingText: "\(viewStore.userName)", leadingFont: .headerB, trailingText: "내 정보 수정")
         }
       }
       Section(header: Text("게시글 관리")) {
@@ -94,10 +97,16 @@ extension SettingView {
       }
       .listRowSeparator(.hidden)
       Section(header: Text("서비스 이용")) {
-        NavigationLink(destination: EmptyView()){
+        
+        NavigationLink(destination: 문의하기){
           containerBox(leadingText: "문의하기")
         }
-        NavigationLink(destination: EmptyView()){
+        
+        NavigationLink(destination: 이용약관){
+          containerBox(leadingText: "이용약관")
+        }
+        
+        NavigationLink(destination: 개인정보처리방침){
           containerBox(leadingText: "개인정보처리방침")
         }
         Button(action: {viewStore.send(.logoutButtonTapped)}){
@@ -107,9 +116,6 @@ extension SettingView {
       .listRowSeparator(.hidden)
       Section(header: Text("소프트웨어 정보")) {
         containerBox(leadingText: "버전", trailingText: "최신버전")
-        NavigationLink(destination: EmptyView()){
-          containerBox(leadingText: "오픈소스 라이선스")
-        }
       }
       .listRowSeparator(.hidden)
       
@@ -137,6 +143,29 @@ extension SettingView {
     }
   }
   
+}
+
+extension SettingView {
+  private var 문의하기: some View {
+    ZStack {
+      Color.white
+      WebView(url: "https://achieved-crawdad-960.notion.site/63f6effbdefd4a82a2a70be9c577c642?pvs=4".toURL())
+    }
+  }
+  
+  private var 이용약관: some View {
+    ZStack {
+      Color.white
+      WebView(url: "https://achieved-crawdad-960.notion.site/191b1734f32840258d7c113fc6b53858?pvs=4".toURL())
+    }
+  }
+  
+  private var 개인정보처리방침: some View {
+    ZStack {
+      Color.white
+      WebView(url: "https://achieved-crawdad-960.notion.site/2cbd879e8f0147139b3f9ee7a5b6b9dd?pvs=4".toURL())
+    }
+  }
 }
 
 

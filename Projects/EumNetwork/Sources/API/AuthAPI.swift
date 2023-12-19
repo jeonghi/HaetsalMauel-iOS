@@ -14,6 +14,8 @@ public enum AuthAPI {
   case kakaoLogin(JSONConvertible)
   case firebaseLogin(JSONConvertible)
   case logout(JSONConvertible)
+  case getWithdrawalReasonList
+  case withdrawal(JSONConvertible)
   case reissue
   case verify
 }
@@ -34,10 +36,14 @@ extension AuthAPI: TargetType {
       return "/auth/signin/firebase"
     case .logout:
       return "/logout"
+    case .withdrawal:
+      return "/withdrawal"
     case .reissue:
       return "/auth/reissue"
     case .verify:
       return "/token"
+    case .getWithdrawalReasonList:
+      return "/withdrawal/category"
     }
   }
   
@@ -45,7 +51,11 @@ extension AuthAPI: TargetType {
     switch self {
     case .firebaseLogin, .kakaoLogin, .localLogin, .reissue, .logout:
       return .post
+    case .withdrawal:
+      return .post
     case .verify:
+      return .get
+    case .getWithdrawalReasonList:
       return .get
     }
   }
@@ -63,6 +73,10 @@ extension AuthAPI: TargetType {
     case .reissue:
       return .requestPlain
     case .verify:
+      return .requestPlain
+    case .withdrawal(let request):
+      return .requestJSONEncodable(request)
+    case .getWithdrawalReasonList:
       return .requestPlain
     }
   }

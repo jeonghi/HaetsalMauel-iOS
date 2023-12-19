@@ -43,6 +43,9 @@ extension ChatHomeView: View {
         ScrollView {
           탭바내용
         }
+        .refreshable {
+          
+        }
       }
     }
     .background(Color(.white))
@@ -73,34 +76,10 @@ extension ChatHomeView {
     VStack(spacing: 0) {
       switch viewStore.selectedTab {
       case .내_게시글:
-        내_게시글
+        EmptyView()
       case .이웃_게시글:
-        이웃_게시글
+        EmptyView()
       }
-    }
-  }
-  
-  private var 내_게시글: some View {
-    LazyVStack(spacing: 0) {
-      NavigationLink( destination: EumChatView(store: eumChatStore)){
-        ChatListCell(profileUrl: URL(string: ""), userName: "성북구 토박이", description: "이번주 토요일 오후 1시 30분에 성북이발소에서", createdAt: Date(), unread: 100)
-      }
-      
-      NavigationLink( destination: EumChatView(store: eumChatStore)){
-        ChatListCell(profileUrl: URL(string: ""), userName: "마을 이장님", description: "더미데이터더미데이터데이터더미데이터더미데이터더미데이터데이터더미데이터", createdAt: Date(), unread: 1)
-      }
-      
-      ChatListCell(profileUrl: URL(string: ""), userName: "정릉동 수호신", description: "더미데이터더미데이터데이터더미데이터", createdAt: Date(), unread: 0)
-    }
-  }
-  
-  private var 이웃_게시글: some View {
-    LazyVStack(spacing: 0) {
-      NavigationLink( destination: EumChatView(store: eumChatStore)){
-        ChatListCell(profileUrl: URL(string: ""), userName: "닉네임", description: "채팅 내용", createdAt: Date(), unread: 0)
-      }
-      ChatListCell(profileUrl: URL(string: ""), userName: "닉네임", description: "채팅 내용", createdAt: Date(), unread: 1)
-      ChatListCell(profileUrl: URL(string: ""), userName: "닉네임", description: "채팅 내용", createdAt: Date(), unread: 0)
     }
   }
 }
