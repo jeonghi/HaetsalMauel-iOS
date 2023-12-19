@@ -8,23 +8,6 @@ import FirebaseCore
 
 final class AppDelegate: UIResponder, UIApplicationDelegate {
   
-  static var orientationLock = UIInterfaceOrientationMask.all
-
-  static func lockOrientationToPortrait() {
-      orientationLock = .portrait
-      if #available(iOS 16, *) {
-          if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
-              scene.requestGeometryUpdate(.iOS(interfaceOrientations: .portrait))
-          }
-          UIViewController.attemptRotationToDeviceOrientation()
-      } else {
-          UIDevice.current.setValue(UIDeviceOrientation.portrait.rawValue, forKey: "orientation")
-      }
-  }
-  
-  func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
-      return AppDelegate.orientationLock
-  }
   
   func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
     if (AuthApi.isKakaoTalkLoginUrl(url)) {
@@ -32,6 +15,10 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     return false
+  }
+  
+  func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
+      return UIInterfaceOrientationMask.portrait
   }
   
   func application(
