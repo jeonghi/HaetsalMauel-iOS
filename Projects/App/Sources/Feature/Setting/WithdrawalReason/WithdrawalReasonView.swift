@@ -19,11 +19,13 @@ struct WithdrawalReasonView {
   @ObservedObject private var viewStore: ViewStore<ViewState, Action>
   
   struct ViewState: Equatable {
-    var reasonList: [String]
+    var reasonList: [WithdrawalEntity.ReasonCategory]
     var isAnythingSelected: Bool
+    var isLoading: Bool
     init(state: State) {
       reasonList = state.reasonList
       isAnythingSelected = state.isAnythingSelected
+      isLoading = state.isLoading
     }
   }
   
@@ -35,29 +37,38 @@ struct WithdrawalReasonView {
 }
 extension WithdrawalReasonView: View {
   var body: some View {
-    VStack(alignment: .leading){
-      Color.white.frame(height: 1)
-      ScrollView {
-        VStack(alignment: .leading, spacing: 30) {
-          guideComment
-            .padding(.top, 30)
-            .padding(.horizontal, 22)
-          reasonListView
-            .padding(.horizontal, 22)
+    ZStack {
+      VStack(alignment: .leading){
+        Color.white.frame(height: 1)
+        ScrollView {
+          VStack(alignment: .leading, spacing: 30) {
+            guideComment
+              .padding(.top, 30)
+              .padding(.horizontal, 22)
+            reasonListView
+              .padding(.horizontal, 22)
+          }
         }
+        NavigationLink(
+          "",
+          destination: WithdrawalDetailReasonView(store: withdrawalDetailReasonStore),
+          isActive:
+            viewStore.binding(
+              get: \.isAnythingSelected,
+              send: Action.selectReason(nil)
+            )
+        )
       }
-      NavigationLink(
-        "",
-        destination: WithdrawalDetailReasonView(store: withdrawalDetailReasonStore),
-        isActive:
-          viewStore.binding(
-            get: \.isAnythingSelected,
-            send: Action.selectReason(nil)
-          )
-      )
+      if(viewStore.isLoading){
+        Color.white
+        ProgressView()
+      }
     }
     .setCustomNavBackButton()
     .frame(maxWidth: .infinity, maxHeight: .infinity)
+    .onAppear{
+      viewStore.send(.onAppear)
+    }
   }
 }
 
@@ -79,8 +90,8 @@ extension WithdrawalReasonView {
     LazyVStack {
       ForEach(viewStore.reasonList, id:\.self) { reason in
         
-        Button(action: {viewStore.send(.selectReason(reason))}){
-            Text(reason)
+        Button(action: {viewStore.send(.selectReason(reason.categoryId))}){
+          Text(reason.content)
             .font(.headerR)
             .padding(.vertical, 10)
             .hLeading()

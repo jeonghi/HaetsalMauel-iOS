@@ -14,6 +14,7 @@ import EumNetwork
 struct WithdrawalDetailReason: Reducer {
   
   struct State {
+    @BindingState var reasonId: Int64?
     var detailReason: String = ""
     var isShowingPopup: Bool = false
   }
@@ -34,6 +35,10 @@ struct WithdrawalDetailReason: Reducer {
     /// 팝업
     case showingPopup
     case dismissPopup
+    
+    /// 네트워크 요청
+    case requestWithdrawalService
+    case requestWithdrawalServiceResponse(Result<Box?, HTTPError>)
   }
   
   var body: some ReducerOf<Self> {
@@ -53,7 +58,7 @@ struct WithdrawalDetailReason: Reducer {
       case .tappedNextButton:
         return .send(.showingPopup)
       case .tappedWithdrawalButton:
-        return .none
+        return .send(.requestWithdrawalService)
       case .tappedCancelProcessButton:
         return .none
         
@@ -65,11 +70,33 @@ struct WithdrawalDetailReason: Reducer {
         state.isShowingPopup = false
         return .none
         
+      case .requestWithdrawalService:
+        
+        guard let reasonId = state.reasonId else {
+          return .none
+        }
+        let body = WithdrawalEntity.Request(
+          categoryId: reasonId,
+          reason: state.detailReason
+        )
+        let publisher = Effect.publisher {
+          authService.withdrawal(body)
+            .receive(on: mainQueue)
+            .map{Action.requestWithdrawalServiceResponse(.success($0))}
+            .catch{Just(Action.requestWithdrawalServiceResponse(.failure($0)))}
+        }
+        return .merge(
+          publisher
+        )
+        
+      case .requestWithdrawalServiceResponse(.success(let res)):
+        return .none
+      case .requestWithdrawalServiceResponse(.failure(let error)):
+        return .none
       }
     }
   }
-  
-  @Dependency(\.appService.marketService) var marketService
   @Dependency(\.mainQueue) var mainQueue
   @Dependency(\.logger) var logger
+  @Dependency(\.appService.authService) var authService
 }
