@@ -22,7 +22,7 @@ enum RegionEntity {
   struct Response: Codable, Hashable {
     let name: String
     let regionId: Int64
-    let parentId: Int64
+    let parentId: Int64?
     let regionType: RegionType
   }
 }
